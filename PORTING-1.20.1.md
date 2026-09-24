@@ -195,9 +195,18 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
 
 ## Known issues
 
-- **Runtime coverage:** most gameplay features haven't been exercised in game, only compiled and statically checked.
-  That includes the optional compat mods (JEI, Curios, CC: Tweaked, the compasses, Embeddium/Oculus) and Offroad
-  vehicles.
+- **Runtime coverage:** on a production server, these have been run:
+  - propeller thrust, including through analog transmissions and a gearshift
+  - hot air balloon lift
+  - an Offroad vehicle driving on tires
+
+  Embeddium and Oculus with a shader pack were run on a production client. Many other features have only been
+  compiled and statically checked: most block interactions and GUIs, and the JEI, Curios, CC: Tweaked and compass
+  compat.
+- **Create bearing contraptions on sub-levels** (e.g. a mechanical or propeller bearing with sails, mounted on a
+  physics contraption) haven't been checked with Flywheel's backend off (shader packs).
+- **Sable log noise:** after a new sub-level splits, the client can log "Received a sub-level movement packet for a
+  non-existent sub-level". It's a harmless race, and upstream Sable logs it too.
 - **Sable config reload:** Sable builds before `af027cc` reload shaders from Forge's config watcher thread. When
   `sable-client.toml` is created or corrected, this logs a harmless "No GLCapabilities instance set" error.
 - **`simulated/neoforge/src/generated` is stale:** it's leftover upstream output that no build uses.
