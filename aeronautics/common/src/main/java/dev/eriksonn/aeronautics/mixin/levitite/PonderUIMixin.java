@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PonderUI.class)
+@Mixin(value = PonderUI.class, remap = false)
 public class PonderUIMixin {
     @Inject(method = "renderScene",at = @At("HEAD"))
     protected void renderScene(GuiGraphics graphics, int mouseX, int mouseY, int i, float partialTicks, CallbackInfo ci) {

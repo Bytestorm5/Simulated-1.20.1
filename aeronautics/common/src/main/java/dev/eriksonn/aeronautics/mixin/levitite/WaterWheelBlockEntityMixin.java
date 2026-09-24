@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(WaterWheelBlockEntity.class)
+@Mixin(value = WaterWheelBlockEntity.class, remap = false)
 public class WaterWheelBlockEntityMixin {
 
     @ModifyReturnValue(method = "getFlowVectorAtPosition", at = @At("RETURN"))

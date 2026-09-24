@@ -18,7 +18,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
     @Final
     public ModelPart body;
 
-    @Inject(method = "setupAnim*", at = @At("RETURN"))
+    @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("RETURN"))
     private void simulated$afterSetupAnim(final T pEntity, final float pLimbSwing, final float pLimbSwingAmount, final float pAgeInTicks, final float pNetHeadYaw, final float pHeadPitch, final CallbackInfo callbackInfo) {
         if (!(pEntity instanceof final AbstractClientPlayer player))
             return;

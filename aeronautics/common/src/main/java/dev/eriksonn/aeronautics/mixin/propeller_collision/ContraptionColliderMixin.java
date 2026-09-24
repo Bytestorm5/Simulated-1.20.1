@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ContraptionCollider.class)
+@Mixin(value = ContraptionCollider.class, remap = false)
 public abstract class ContraptionColliderMixin {
 
     @Shadow
@@ -24,12 +24,12 @@ public abstract class ContraptionColliderMixin {
         return null;
     }
 
-    @Inject(method = "collideEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isAlive()Z"))
+    @Inject(method = "collideEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isAlive()Z", remap = true))
     private static void sable$removeInitialDeltaMovement(final CallbackInfo ci, @Local(argsOnly = true) final AbstractContraptionEntity contraptionEntity, @Local(ordinal = 0) final Entity entity, @Share("previousDeltaMovement") final LocalRef<Vec3> previousDeltaMovement) {
         previousDeltaMovement.set(null);
     }
 
-    @Inject(method = "collideEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"))
+    @Inject(method = "collideEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;", remap = true))
     private static void sable$saveInitialDeltaMovement(final CallbackInfo ci, @Local(argsOnly = true) final AbstractContraptionEntity contraptionEntity, @Local(ordinal = 0) final Entity entity, @Share("previousDeltaMovement") final LocalRef<Vec3> previousDeltaMovement) {
         if (contraptionEntity instanceof final PropellerBearingContraptionEntity propeller) {
             final PropellerBearingBlockEntity bearing = propeller.getBearingEntity();
@@ -40,7 +40,7 @@ public abstract class ContraptionColliderMixin {
         }
     }
 
-    @Redirect(method = "collideEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"))
+    @Redirect(method = "collideEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", remap = true))
     private static void sable$setDeltaMovement(final Entity instance, final Vec3 deltaMovement, @Share("previousDeltaMovement") final LocalRef<Vec3> previousDeltaMovement) {
         if (previousDeltaMovement.get() != null) {
             instance.setDeltaMovement(deltaMovement.lerp(previousDeltaMovement.get(), 0.75));

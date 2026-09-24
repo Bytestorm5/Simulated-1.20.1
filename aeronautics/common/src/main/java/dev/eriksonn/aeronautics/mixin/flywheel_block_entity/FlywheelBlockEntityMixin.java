@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(FlywheelBlockEntity.class)
+@Mixin(value = FlywheelBlockEntity.class, remap = false)
 public abstract class FlywheelBlockEntityMixin extends SmartBlockEntity {
     public FlywheelBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);

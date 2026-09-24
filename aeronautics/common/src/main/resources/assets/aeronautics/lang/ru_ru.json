@@ -217,5 +217,5 @@
   "item.aeronautics.end_stone_powder": "Эндерняковый порошок",
   "item.aeronautics.levitite_blend_bucket": "Ведро левититовой смеси",
   "item.aeronautics.music_disc_cloud_skipper": "Пластинка",
-  "jukebox_song.aeronautics.cloud_skipper": "Starlotte — Cloud Skipper"
+  "item.aeronautics.music_disc_cloud_skipper.desc": "Starlotte — Cloud Skipper"
 }

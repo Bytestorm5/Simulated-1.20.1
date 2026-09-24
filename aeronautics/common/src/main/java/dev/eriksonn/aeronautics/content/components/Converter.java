@@ -30,7 +30,8 @@ public record Converter(ItemStack item, int ticks, Optional<ResourceLocation> so
 	public static Converter cloudSkipper() {
 		return new Converter(AeroItems.MUSIC_DISC_CLOUD_SKIPPER.asStack(), 60,
 				Optional.of(AeroSoundEvents.CLOUD_SKIPPER_TRANSFORM.id()),
-				Optional.of(new ResourceLocation("white_smoke")));
+				// 1.20.1: white smoke particles don't exist yet, poof is the closest white puff
+				Optional.of(new ResourceLocation("poof")));
 	}
 
 	public Converter(Converter converter, int ticks) {

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.Map;
 
-@Mixin(PropellerBearingContraptionEntity.class)
+@Mixin(value = PropellerBearingContraptionEntity.class, remap = false)
 public abstract class PropellerBearingContraptionEntityMixin implements KinematicContraption {
 
 	@Override

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PotatoProjectileEntity.class)
 public class PotatoProjectileEntityMixin implements PotatoProjectileEntityExtension {
 
-	@Shadow protected float additionalDamageMult;
+	@Shadow(remap = false) protected float additionalDamageMult;
 	@Unique
 	public boolean aeronautics$isFromMountedPotatoCannon = false;
 

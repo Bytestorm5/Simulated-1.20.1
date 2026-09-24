@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-@Mixin(DisplayWorldSectionInstruction.class)
+@Mixin(value = DisplayWorldSectionInstruction.class, remap = false)
 public abstract class DisplayWorldSectionInstructionMixin extends FadeIntoSceneInstruction<WorldSectionElement> {
     @Shadow @Final @Nullable private Supplier<WorldSectionElement> mergeOnto;
 

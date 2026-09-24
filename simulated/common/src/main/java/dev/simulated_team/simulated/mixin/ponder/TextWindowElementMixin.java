@@ -31,7 +31,7 @@ public class TextWindowElementMixin implements TextWindowElementExtension {
         original.call(instance, x1, y1, x2, y2, z, colorFrom, colorTo);
     }
 
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(FF)F"))
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(FF)F"), remap = false)
     public float simulated$shiftItALittleToTheLeftIfThereIsntALine(final float a, final float b, final Operation<Float> original) {
         if (this.simulated$shouldHidePointer) {
             return original.call(a, b - 50);

@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  *     occurrences for the requested ordinal</li>
  *     <li>{@code @Shadow}, {@code @Accessor} and {@code @Invoker} members exist in the target class hierarchy</li>
  * </ul>
- * Run through the {@code checkMixins} Gradle task of the {@code :forge} project. Mixins whose target class is not on
+ * Run through the {@code checkMixins} Gradle task of each loader project. Mixins whose target class is not on
  * the classpath (optional compat targets) are reported separately and not checked further.
  */
 public final class MixinChecker {

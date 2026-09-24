@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.BitSet;
 import java.util.List;
 
-@Mixin(ChunkRenderTypeSet.class)
+@Mixin(value = ChunkRenderTypeSet.class, remap = false)
 public interface ChunkRenderTypeSetAccessor {
 
     @Mutable

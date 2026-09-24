@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * TODO: event hook please (or some system to register things)
  */
-@Mixin(SubLevelAssemblyHelper.class)
+@Mixin(value = SubLevelAssemblyHelper.class, remap = false)
 public class SubLevelAssemblyHelperMixin {
 
     @Inject(method = "needsBitSet", at = @At("HEAD"), cancellable = true)

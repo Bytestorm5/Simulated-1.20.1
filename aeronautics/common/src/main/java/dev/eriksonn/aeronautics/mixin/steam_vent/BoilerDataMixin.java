@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(BoilerData.class)
+@Mixin(value = BoilerData.class, remap = false)
 public abstract class BoilerDataMixin {
 	@Shadow
 	public int attachedEngines;

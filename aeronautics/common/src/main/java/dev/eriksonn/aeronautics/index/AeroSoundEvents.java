@@ -113,9 +113,10 @@ public class AeroSoundEvents {
                 .addFileVariant(mc("music/game/floating_dream"), UnaryOperator.identity())
                 .addFileVariant(mc("music/game/infinite_amethyst"), UnaryOperator.identity())
                 .addFileVariant(mc("music/game/echo_in_the_wind"), UnaryOperator.identity())
-                .addFileVariant(mc("music/game/clark"), UnaryOperator.identity())
-                .addFileVariant(mc("music/game/subwoofer_lullaby"), UnaryOperator.identity())
-                .addFileVariant(mc("music/game/watcher"), UnaryOperator.identity())
+                // 1.20.1: C418's tracks still use their old file names (calm2 = Clark, hal1 = Subwoofer Lullaby),
+                // and Watcher was only added in 1.21
+                .addFileVariant(mc("music/game/calm2"), UnaryOperator.identity())
+                .addFileVariant(mc("music/game/hal1"), UnaryOperator.identity())
         ),
 
         MUSIC_AIRSHIP_RAIN = REGISTRY.create("music.rain", SoundSource.MUSIC, definition -> definition

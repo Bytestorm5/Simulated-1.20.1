@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
-    @Inject(method = "useItemOn", at = @At(value = "INVOKE", target = "Lorg/apache/commons/lang3/mutable/MutableObject;<init>()V"), cancellable = true)
+    @Inject(method = "useItemOn", at = @At(value = "INVOKE", target = "Lorg/apache/commons/lang3/mutable/MutableObject;<init>()V", remap = false), cancellable = true)
     private void quietUseIntercept(final LocalPlayer player, final InteractionHand hand, final BlockHitResult result, final CallbackInfoReturnable<InteractionResult> cir) {
         final BlockState state = player.level().getBlockState(result.getBlockPos());
         if (state.getBlock() instanceof final QuietUse quietUse) {

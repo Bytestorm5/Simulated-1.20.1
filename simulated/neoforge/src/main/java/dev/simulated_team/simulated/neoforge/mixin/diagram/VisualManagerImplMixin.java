@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(VisualManagerImpl.class)
 public abstract class VisualManagerImplMixin<T, S extends Storage<T>> implements VisualManagerExtension {
 
-    @Shadow public abstract S getStorage();
+    @Shadow(remap = false) public abstract S getStorage();
 
     @Override
     public SubLevelEmbedding sable$getBEEmbeddingInfo(final ClientSubLevel subLevel) {

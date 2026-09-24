@@ -2,7 +2,7 @@ package dev.eriksonn.aeronautics.neoforge.compat.jei;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.ConversionRecipe;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.index.AeroBlocks;
 import dev.eriksonn.aeronautics.index.AeroItems;
@@ -15,7 +15,6 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.List;
 
@@ -23,8 +22,8 @@ import java.util.List;
 public final class AeroJEI implements IModPlugin {
 
     private static final ResourceLocation ID = Aeronautics.path("jei_plugin");
-    private static final RecipeType<RecipeHolder<ConversionRecipe>> MYSTERY_CONVERSION =
-            RecipeType.createRecipeHolderType(Create.asResource("mystery_conversion"));
+    private static final RecipeType<ConversionRecipe> MYSTERY_CONVERSION =
+            new RecipeType<>(Create.asResource("mystery_conversion"), ConversionRecipe.class);
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -45,16 +44,15 @@ public final class AeroJEI implements IModPlugin {
         ));
     }
 
-    private static RecipeHolder<ConversionRecipe> createConversion(
+    private static ConversionRecipe createConversion(
             final String name,
             final Ingredient input,
             final ItemStack output
     ) {
         final ResourceLocation recipeId = Aeronautics.path("conversion_" + name);
-        final ConversionRecipe recipe = new StandardProcessingRecipe.Builder<>(ConversionRecipe::new, recipeId)
+        return new ProcessingRecipeBuilder<>(ConversionRecipe::new, recipeId)
                 .withItemIngredients(input)
                 .withSingleItemOutput(output)
                 .build();
-        return new RecipeHolder<>(recipeId, recipe);
     }
 }

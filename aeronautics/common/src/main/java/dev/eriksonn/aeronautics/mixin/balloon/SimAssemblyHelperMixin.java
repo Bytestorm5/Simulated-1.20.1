@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * TODO: event hook please (or some system to register things)
  */
-@Mixin(SimAssemblyHelper.class)
+@Mixin(value = SimAssemblyHelper.class, remap = false)
 public class SimAssemblyHelperMixin {
 
     @Inject(method = "disassembleSubLevel", at = @At(value = "INVOKE", target = "Ldev/ryanhcode/sable/sublevel/SubLevel;getPlot()Ldev/ryanhcode/sable/sublevel/plot/LevelPlot;", ordinal = 1))

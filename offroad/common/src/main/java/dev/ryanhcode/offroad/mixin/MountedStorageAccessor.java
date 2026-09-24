@@ -11,7 +11,7 @@ import java.util.Map;
 @Mixin(MountedStorageManager.class)
 public interface MountedStorageAccessor {
 
-    @Accessor
+    @Accessor(remap = false)
     Map<BlockPos, MountedItemStorage> getItemsBuilder();
 
 }

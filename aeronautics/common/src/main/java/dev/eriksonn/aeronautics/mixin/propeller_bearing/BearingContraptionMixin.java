@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BearingContraption.class)
+@Mixin(value = BearingContraption.class, remap = false)
 public class BearingContraptionMixin implements BearingContraptionExtension {
-    @Shadow(remap = false)
+    @Shadow
     protected int sailBlocks;
 
     @Shadow private boolean isWindmill;
@@ -29,8 +29,7 @@ public class BearingContraptionMixin implements BearingContraptionExtension {
     @Inject(method = "assemble",
             at = @At(value = "INVOKE",
                     target = "Lcom/simibubi/create/content/contraptions/bearing/BearingContraption;expandBoundsAroundAxis(Lnet/minecraft/core/Direction$Axis;)V",
-                    shift = At.Shift.AFTER),
-            remap = false)
+                    shift = At.Shift.AFTER))
     private void aeronautics$addSailsWithTempSails(final Level world, final BlockPos pos, final CallbackInfoReturnable<Boolean> cir) throws AssemblyException {
         this.aeronautics$tryCustomFailAssembly();
         this.aeronautics$tryFailAssembly();

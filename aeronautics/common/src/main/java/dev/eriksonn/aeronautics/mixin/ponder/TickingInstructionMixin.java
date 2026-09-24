@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(TickingInstruction.class)
+@Mixin(value = TickingInstruction.class, remap = false)
 public class TickingInstructionMixin implements TickingInstructionExtension {
     @Unique
     boolean aeronautics$isStopped;

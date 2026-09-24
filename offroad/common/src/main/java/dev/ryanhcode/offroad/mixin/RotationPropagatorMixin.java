@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(RotationPropagator.class)
 public class RotationPropagatorMixin {
 
-    @WrapMethod(method = "getAxisModifier")
+    @WrapMethod(method = "getAxisModifier", remap = false)
     private static float offroad$boreheadBearingRotation(final KineticBlockEntity be, final Direction direction, final Operation<Float> original) {
         if (be.hasSource() && be instanceof final BoreheadBearingBlockEntity bhbe) {
             return bhbe.handleAxisModification(direction);

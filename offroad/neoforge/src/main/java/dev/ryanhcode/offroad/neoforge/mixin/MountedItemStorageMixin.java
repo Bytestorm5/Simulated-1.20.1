@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 @Mixin(MountedItemStorage.class)
 public class MountedItemStorageMixin {
 
-    @WrapMethod(method = "getHandlerForMenu")
+    @WrapMethod(method = "getHandlerForMenu", remap = false)
     public IItemHandlerModifiable offroad$wrapHandler(final StructureTemplate.StructureBlockInfo info, final Contraption contraption, final Operation<IItemHandlerModifiable> original) {
         final IItemHandlerModifiable originalCall = original.call(info, contraption);
         if (contraption instanceof BoreheadBearingContraption && originalCall != null) {
