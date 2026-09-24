@@ -25,6 +25,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -246,9 +247,15 @@ public interface BlockEntityLiftingGasProvider {
 
     double getClientPredictedVolume();
 
-    BlockPos getBlockPos();
+    // 1.20.1: BlockEntity's getBlockPos/getLevel are renamed to SRG names in production, so they can't implement
+    // abstract interface methods of the same name. Delegate to them instead.
+    default BlockPos getBlockPos() {
+        return ((BlockEntity) this).getBlockPos();
+    }
 
-    Level getLevel();
+    default Level getLevel() {
+        return ((BlockEntity) this).getLevel();
+    }
 
     boolean isChunkUnloaded();
 
