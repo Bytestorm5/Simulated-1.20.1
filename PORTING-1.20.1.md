@@ -13,7 +13,7 @@ Sable 2.0.5 (`Bytestorm5/sable-1.20.1`), which keep their 4.x / 2.x APIs.
    This also installs the sable-companion jar that Sable jar-in-jars. Alternatively, build them from source with
    `./gradlew publishToMavenLocal`, Veil first:
    - Veil: `veil-1-20-1-migration-aan416`, at or after `ecffcee`
-   - Sable: `claude/sable-1-20-1-migration-1vdzus`, at or after `47aff72`
+   - Sable: `claude/sable-1-20-1-migration-1vdzus`, at or after `f6c0b6b`
 
    Both routes install the same coordinates.
 2. Build:
@@ -140,6 +140,9 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
     Veil now does this sync, so Aeronautics no longer has upstream's `fixChunkRenderTypeSet`.
   - Builds before `3b0b6fd` also don't set `NormalMat`, `VeilBlockFaceBrightness` or
     `VeilRenderTime` for Veil's own shader programs. That makes levitite render black on sub-levels.
+- **Sable `f6c0b6b` or later is required.** Earlier builds' `BlockEntityPropeller` declared `getLevel`/`getBlockPos`,
+  which crash every propeller on a sub-level in production with `AbstractMethodError`. `9fb3089` also fails the build
+  of any mod built against it (`reobfJar`: "Duplicate key getLevel()").
 - **Sable `47aff72` or later is required.** Earlier builds place sub-level block entities wrongly whenever Flywheel's
   backend is off, which Oculus shader packs force: cogs, shafts, propellers and chests slide with the view or vanish.
   That Sable build also adds a view pose parameter to `SubLevelRenderDispatcher#renderBlockEntities`, which the
@@ -172,6 +175,8 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
   - With Embeddium 0.3.31 added, the client loads into a world and levitite renders.
   - With `/flywheel backend flywheel:off` (what shader packs force), block entities on sub-levels and in the Ponder
     propeller scene render in place.
+- Production server: a sub-level with spinning andesite and wooden propellers and a hot air burner runs its physics with
+  no errors.
 - Datagen output (`<mod>/common/src/generated`) was regenerated with the 1.20.1 code.
 
 ## Known issues
