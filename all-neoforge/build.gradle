@@ -55,6 +55,13 @@ legacyForge {
             gameDirectory = project.file('runs/server')
             programArgument 'nogui'
         }
+
+        // Simulated's GameTests with all three mods loaded (the stream codec round trip covers Aeronautics and Offroad)
+        gameTest {
+            type = "gameTestServer"
+            gameDirectory = project.file('runs/gametest')
+            systemProperty('forge.enabledGameTestNamespaces', 'simulated')
+        }
     }
 
     mods {

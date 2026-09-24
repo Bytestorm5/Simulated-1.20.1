@@ -44,7 +44,9 @@ public class ThrottleLeverBlockEntity extends SmartBlockEntity implements IHaveG
     protected void read(final CompoundTag compound, final boolean clientPacket) {
         this.state = compound.getInt("State");
         this.lastChange = compound.getInt("ChangeTimer");
-        this.clientAngle.chase(this.getBlockState().getValue(ThrottleLeverBlock.INVERTED) ? 15 - this.state : this.state, 0.5f, LerpedFloat.Chaser.EXP);
+        // 1.20.1: tolerate a block entity left behind without its block (e.g. by sub-level assembly in older Sable builds)
+        final boolean inverted = this.getBlockState().hasProperty(ThrottleLeverBlock.INVERTED) && this.getBlockState().getValue(ThrottleLeverBlock.INVERTED);
+        this.clientAngle.chase(inverted ? 15 - this.state : this.state, 0.5f, LerpedFloat.Chaser.EXP);
         super.read(compound, clientPacket);
     }
 

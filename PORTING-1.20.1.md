@@ -57,7 +57,10 @@ Project layout is unchanged:
   - `./gradlew :all-neoforge:runClient` (`-PquickPlay=<world>` loads straight into a world)
   - `:all-neoforge:runServer`
   - `:all-neoforge:runDataAll`
-- `:simulated:neoforge:runGameTest` runs the GameTests.
+- `:simulated:neoforge:runGameTest` runs the GameTests. `:all-neoforge:runGameTest` runs them with all three mods
+  loaded. It includes `StreamCodecRoundTripTest`, which encodes, decodes and re-encodes a sample of every stream codec
+  in the three mods. Singleplayer never serializes custom packets, so a broken codec would otherwise only show on
+  dedicated servers.
 
 ## How it was ported
 
@@ -165,7 +168,7 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
 - **Production:** a stock Forge 1.20.1-47.4.10 dedicated server runs the release jar with Create 6.0.8 and Sable
   `af027cc`. It boots and assembles regions of Simulated, Aeronautics and Offroad blocks into sub-levels. It then saves,
   and reloads the sub-levels with no errors.
-- GameTest server: all 4 required tests pass.
+- GameTest server: all 5 required tests pass, including the stream codec round trip (58 codecs).
 - Dedicated dev server with all three mods: boots and generates a world with no errors.
 - Dev client with all three mods (Mesa software GL):
   - Simulated, Aeronautics and Offroad blocks render with their block entity renderers.
@@ -176,7 +179,14 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
   - With `/flywheel backend flywheel:off` (what shader packs force), block entities on sub-levels and in the Ponder
     propeller scene render in place.
 - Production server: a sub-level with spinning andesite and wooden propellers and a hot air burner runs its physics with
-  no errors.
+  no errors. Every block of the three mods, placed and assembled into sub-levels, runs, saves and reloads with no
+  errors.
+- Production client (stock Forge launcher layout, release jars):
+  - loads, renders every block, and assembles sub-levels
+  - opens every Ponder scene and shows every creative tab item's tooltip
+  - joins a dedicated server
+  - with Embeddium 0.3.31, Oculus 1.8.0 and Complementary Reimagined, block entities on sub-levels and Ponder scenes
+    render correctly
 - Datagen output (`<mod>/common/src/generated`) was regenerated with the 1.20.1 code.
 
 ## Known issues
