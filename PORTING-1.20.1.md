@@ -12,8 +12,8 @@ Sable 2.0.5 (`Bytestorm5/sable-1.20.1`), which keep their 4.x / 2.x APIs.
    ```
    This also installs the sable-companion jar that Sable jar-in-jars. Alternatively, build them from source with
    `./gradlew publishToMavenLocal`, Veil first:
-   - Veil: `veil-1-20-1-migration-aan416`, at or after `ecffcee`
-   - Sable: `claude/sable-1-20-1-migration-1vdzus`, at or after `f6c0b6b`
+   - Veil: `veil-1-20-1-migration-aan416`, at or after `04a1ee7`
+   - Sable: `claude/sable-1-20-1-migration-1vdzus`, at or after `7e4b4cd`
 
    Both routes install the same coordinates.
 2. Build:
@@ -56,6 +56,7 @@ Project layout is unchanged:
 - `all-neoforge` holds the combined dev runs:
   - `./gradlew :all-neoforge:runClient` (`-PquickPlay=<world>` loads straight into a world)
   - `:all-neoforge:runServer`
+  - `-PquickPlayMultiplayer=<host:port>` on `runClient` joins a server directly
   - `:all-neoforge:runDataAll`
 - `:simulated:neoforge:runGameTest` runs the GameTests. `:all-neoforge:runGameTest` runs them with all three mods
   loaded. It includes `StreamCodecRoundTripTest`, which encodes, decodes and re-encodes a sample of every stream codec
@@ -143,6 +144,9 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
     Veil now does this sync, so Aeronautics no longer has upstream's `fixChunkRenderTypeSet`.
   - Builds before `3b0b6fd` also don't set `NormalMat`, `VeilBlockFaceBrightness` or
     `VeilRenderTime` for Veil's own shader programs. That makes levitite render black on sub-levels.
+- **Sable `7e4b4cd` or later is required.** Earlier builds leave the block entity of a diode-based block (redstone
+  accumulator, inductor) or a throttle lever behind when assembling it into a sub-level. That logs "invalid for
+  ticking" warnings, and the leftover gets saved with the chunk.
 - **Sable `f6c0b6b` or later is required.** Earlier builds' `BlockEntityPropeller` declared `getLevel`/`getBlockPos`,
   which crash every propeller on a sub-level in production with `AbstractMethodError`. `9fb3089` also fails the build
   of any mod built against it (`reobfJar`: "Duplicate key getLevel()").

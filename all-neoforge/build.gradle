@@ -48,6 +48,10 @@ legacyForge {
             if (project.hasProperty('quickPlay')) {
                 programArguments.addAll('--quickPlaySingleplayer', project.property('quickPlay').toString())
             }
+            // Run with -PquickPlayMultiplayer=<host:port> to join a server directly (e.g. to test packet serialization)
+            if (project.hasProperty('quickPlayMultiplayer')) {
+                programArguments.addAll('--quickPlayMultiplayer', project.property('quickPlayMultiplayer').toString())
+            }
         }
 
         server {
