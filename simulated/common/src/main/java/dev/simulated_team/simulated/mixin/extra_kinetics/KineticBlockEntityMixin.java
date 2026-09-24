@@ -52,7 +52,7 @@ public abstract class KineticBlockEntityMixin extends SmartBlockEntity implement
         return this.simulated$extraKineticsConnected;
     }
 
-    @Inject(method = "switchToBlockState", at = @At("TAIL"))
+    @Inject(method = "switchToBlockState", at = @At("TAIL"), remap = false)
     private static void simulated$switchExtraKinetics(final Level world, final BlockPos pos, final BlockState state, final CallbackInfo ci, @Local final BlockEntity be) {
         if (be instanceof final ExtraKinetics ek) {
             final KineticBlockEntity extraKinetics = ek.getExtraKinetics();
@@ -170,7 +170,7 @@ public abstract class KineticBlockEntityMixin extends SmartBlockEntity implement
                 if (clientPacket) {
                     extraKinetics.readClient(extraKineticsTag);
                 } else {
-                    extraKinetics.loadCustomOnly(extraKineticsTag);
+                    extraKinetics.load(extraKineticsTag);
                 }
             }
         }

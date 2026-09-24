@@ -47,7 +47,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
     }
 
     @Override
-    protected void defineSynchedData(final SynchedEntityData.Builder builder) {
+    protected void defineSynchedData() {
 
     }
 
@@ -231,8 +231,8 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
         this.setBoundingBox(bounds);
         this.resetPositionToBounds();
 
-        this.blockMin = BlockPos.containing(bounds.getMinPosition());
-        this.blockMax = BlockPos.containing(bounds.getMaxPosition());
+        this.blockMin = BlockPos.containing(new Vec3(bounds.minX, bounds.minY, bounds.minZ));
+        this.blockMax = BlockPos.containing(new Vec3(bounds.maxX, bounds.maxY, bounds.maxZ));
     }
 
     @Override
@@ -276,7 +276,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull final Pose pose) {
-        return super.getDimensions(pose).withEyeHeight(0.0F);
+    protected float getEyeHeight(@NotNull final Pose pose, @NotNull final EntityDimensions dimensions) {
+        return 0.0F;
     }
 }

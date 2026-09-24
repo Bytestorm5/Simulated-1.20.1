@@ -24,29 +24,26 @@ import dev.simulated_team.simulated.index.SimBlocks;
 import dev.simulated_team.simulated.index.SimTags;
 import dev.simulated_team.simulated.index.SimWorldPresets;
 import dev.simulated_team.simulated.mixin_interface.PrimaryLevelDataExtension;
-import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class SimulatedCommonEvents {
     /**
@@ -118,7 +115,7 @@ public class SimulatedCommonEvents {
     }
 
     public static @Nullable InteractionResult rightClickBlock(final Level level, final BlockPos pos, final Player player, final ItemStack useStack) {
-        if (level.getBlockState(pos).is(SimBlocks.SPRING) && useStack.is(SimTags.Items.SPRING_ADJUSTER)) {
+        if (SimBlocks.SPRING.has(level.getBlockState(pos)) && useStack.is(SimTags.Items.SPRING_ADJUSTER)) {
             if (SpringBlock.tryAdjustSpring(level, pos, player)) {
                 return InteractionResult.SUCCESS;
             } else {
@@ -147,28 +144,41 @@ public class SimulatedCommonEvents {
         SableEventPlatform.INSTANCE.onSubLevelContainerReady(SimulatedCommonEvents::onContainerReady);
     }
 
-    public static void modifyDefaultComponents(final BiConsumer<ItemLike, Consumer<DataComponentPatch.Builder>> modify) {
-        final ResourceLocation basePunchStrengthId = Simulated.path("base_punch_strength");
-        final ResourceLocation basePunchCooldownId = Simulated.path("base_punch_cooldown");
+    private static final UUID BASE_PUNCH_STRENGTH_ID = modifierId(Simulated.path("base_punch_strength"));
+    private static final UUID BASE_PUNCH_COOLDOWN_ID = modifierId(Simulated.path("base_punch_cooldown"));
 
-        modify.accept(AllItems.EXTENDO_GRIP, builder -> {
-            final AttributeModifier strengthModifier = new AttributeModifier(basePunchStrengthId, 10.0f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-            final AttributeModifier cooldownModifier = new AttributeModifier(basePunchCooldownId, 0.5f, AttributeModifier.Operation.ADD_VALUE);
+    private static UUID modifierId(final ResourceLocation id) {
+        return UUID.nameUUIDFromBytes(id.toString().getBytes(StandardCharsets.UTF_8));
+    }
 
-            builder.set(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
-                    .add(SableAttributes.PUNCH_STRENGTH, strengthModifier, EquipmentSlotGroup.MAINHAND)
-                    .add(SableAttributes.PUNCH_COOLDOWN, cooldownModifier, EquipmentSlotGroup.MAINHAND)
-                    .build());
-        });
+    /**
+     * Adds Simulated's attribute modifiers to items of other mods.
+     * <p>
+     * 1.20.1: items have no default {@code ATTRIBUTE_MODIFIERS} component, so the loader calls this from its item
+     * attribute modifier event for every stack and slot, and the modifiers are added to the item's existing ones
+     * (on 1.21 they replaced the default component).
+     *
+     * @param stack       The stack whose attribute modifiers are being gathered
+     * @param slot        The slot the modifiers are for
+     * @param addModifier Adds a modifier to the stack's modifiers
+     */
+    public static void modifyItemAttributes(final ItemStack stack, final EquipmentSlot slot, final BiConsumer<Attribute, AttributeModifier> addModifier) {
+        if (slot != EquipmentSlot.MAINHAND) {
+            return;
+        }
 
-        modify.accept(AllItems.CARDBOARD_SWORD, builder -> {
-            final AttributeModifier attributeModifier = new AttributeModifier(basePunchStrengthId, 2.0f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        if (AllItems.EXTENDO_GRIP.isIn(stack)) {
+            final AttributeModifier strengthModifier = new AttributeModifier(BASE_PUNCH_STRENGTH_ID, "base_punch_strength", 10.0f, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            final AttributeModifier cooldownModifier = new AttributeModifier(BASE_PUNCH_COOLDOWN_ID, "base_punch_cooldown", 0.5f, AttributeModifier.Operation.ADDITION);
 
-            builder.set(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
-                    .add(SableAttributes.PUNCH_STRENGTH, attributeModifier, EquipmentSlotGroup.MAINHAND)
-                    .build());
-        });
+            addModifier.accept(SableAttributes.PUNCH_STRENGTH.get(), strengthModifier);
+            addModifier.accept(SableAttributes.PUNCH_COOLDOWN.get(), cooldownModifier);
+        }
 
-        SimulatedRegistrate.onAddDefaultComponents(modify);
+        if (AllItems.CARDBOARD_SWORD.isIn(stack)) {
+            final AttributeModifier attributeModifier = new AttributeModifier(BASE_PUNCH_STRENGTH_ID, "base_punch_strength", 2.0f, AttributeModifier.Operation.MULTIPLY_TOTAL);
+
+            addModifier.accept(SableAttributes.PUNCH_STRENGTH.get(), attributeModifier);
+        }
     }
 }

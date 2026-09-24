@@ -16,10 +16,8 @@ import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.lang.FontHelper;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.ChatFormatting;
-import foundry.veil.backport.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -33,6 +31,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import java.util.List;
  */
 public class LinkedTypewriterItemBindHandler {
 
-    public static final LayeredDraw.Layer OVERLAY = LinkedTypewriterItemBindHandler::renderOverlay;
+    public static final IGuiOverlay OVERLAY = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> renderOverlay(guiGraphics, partialTick);
 
     private static BlockPos clickedPos;
     private static final List<AABB> outlines = new ArrayList<>();
@@ -118,7 +117,7 @@ public class LinkedTypewriterItemBindHandler {
         reset();
     }
 
-    public static void renderOverlay(final GuiGraphics guiGraphics, final DeltaTracker deltaTracker) {
+    public static void renderOverlay(final GuiGraphics guiGraphics, final float partialTick) {
         if (LinkedTypewriterInteractionHandler.getMode() != LinkedTypewriterInteractionHandler.Mode.BINDING_FROM_ITEM) {
             return;
         }

@@ -124,7 +124,7 @@ public class MergingGlueRenderer extends SmartBlockEntityRenderer<MergingGlueBlo
     }
 
     private static VertexConsumer addVertex(final VertexConsumer buffer, final Matrix4f pose, final Vector3dc pos) {
-        return buffer.addVertex(pose, (float) pos.x(), (float) pos.y(), (float) pos.z());
+        return buffer.vertex(pose, (float) pos.x(), (float) pos.y(), (float) pos.z());
     }
     private static void renderGlueCross(final Vector3dc posA,
                                         final Vector3dc upA,
@@ -139,25 +139,25 @@ public class MergingGlueRenderer extends SmartBlockEntityRenderer<MergingGlueBlo
         final Vector3d vertex = new Vector3d();
 
         // vertical plane & backface
-        addVertex(buffer, pose, posA.fma(-0.5, upA, vertex)).setColor(0xffffffff).setUv(0.0f, 0.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posA.fma(0.5, upA, vertex)).setColor(0xffffffff).setUv(0.0f, 1.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posB.fma(0.5, upB, vertex)).setColor(0xffffffff).setUv(1.0f, 1.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posB.fma(-0.5, upB, vertex)).setColor(0xffffffff).setUv(1.0f, 0.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
+        addVertex(buffer, pose, posA.fma(-0.5, upA, vertex)).color(0xffffffff).uv(0.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posA.fma(0.5, upA, vertex)).color(0xffffffff).uv(0.0f, 1.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posB.fma(0.5, upB, vertex)).color(0xffffffff).uv(1.0f, 1.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posB.fma(-0.5, upB, vertex)).color(0xffffffff).uv(1.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
 
-        addVertex(buffer, pose, posB.fma(-0.5, upB, vertex)).setColor(0xffffffff).setUv(1.0f, 0.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posB.fma(0.5, upB, vertex)).setColor(0xffffffff).setUv(1.0f, 1.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posA.fma(0.5, upA, vertex)).setColor(0xffffffff).setUv(0.0f, 1.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posA.fma(-0.5, upA, vertex)).setColor(0xffffffff).setUv(0.0f, 0.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
+        addVertex(buffer, pose, posB.fma(-0.5, upB, vertex)).color(0xffffffff).uv(1.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posB.fma(0.5, upB, vertex)).color(0xffffffff).uv(1.0f, 1.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posA.fma(0.5, upA, vertex)).color(0xffffffff).uv(0.0f, 1.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posA.fma(-0.5, upA, vertex)).color(0xffffffff).uv(0.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
 
         // horizontal plane & backface
-        addVertex(buffer, pose, posA.fma(-0.5, rightA, vertex)).setColor(0xffffffff).setUv(0.0f, 0.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posA.fma(0.5, rightA, vertex)).setColor(0xffffffff).setUv(0.0f, 1.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posB.fma(0.5, rightB, vertex)).setColor(0xffffffff).setUv(1.0f, 1.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posB.fma(-0.5, rightB, vertex)).setColor(0xffffffff).setUv(1.0f, 0.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
+        addVertex(buffer, pose, posA.fma(-0.5, rightA, vertex)).color(0xffffffff).uv(0.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posA.fma(0.5, rightA, vertex)).color(0xffffffff).uv(0.0f, 1.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posB.fma(0.5, rightB, vertex)).color(0xffffffff).uv(1.0f, 1.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posB.fma(-0.5, rightB, vertex)).color(0xffffffff).uv(1.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
 
-        addVertex(buffer, pose, posB.fma(-0.5, rightB, vertex)).setColor(0xffffffff).setUv(1.0f, 0.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posB.fma(0.5, rightB, vertex)).setColor(0xffffffff).setUv(1.0f, 1.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posA.fma(0.5, rightA, vertex)).setColor(0xffffffff).setUv(0.0f, 1.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
-        addVertex(buffer, pose, posA.fma(-0.5, rightA, vertex)).setColor(0xffffffff).setUv(0.0f, 0.0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(ms.last(), 0.0f, 1.0f, 0.0f);
+        addVertex(buffer, pose, posB.fma(-0.5, rightB, vertex)).color(0xffffffff).uv(1.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posB.fma(0.5, rightB, vertex)).color(0xffffffff).uv(1.0f, 1.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posA.fma(0.5, rightA, vertex)).color(0xffffffff).uv(0.0f, 1.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
+        addVertex(buffer, pose, posA.fma(-0.5, rightA, vertex)).color(0xffffffff).uv(0.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ms.last().normal(), 0.0f, 1.0f, 0.0f).endVertex();
     }
 }

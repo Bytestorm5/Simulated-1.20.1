@@ -11,10 +11,8 @@ import dev.ryanhcode.sable.util.SableDistUtil;
 import dev.simulated_team.simulated.index.SimRenderTypes;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -114,14 +112,16 @@ public abstract class AbstractLaserRenderer<T extends AbstractLaserBlockEntity> 
         pose.pushPose();
         final Quaternionf rotationQuat = Axis.ZN.rotationDegrees(90);
 
+        // 1.20.1: elements are written in the laser render type's POSITION_TEX_COLOR order; the light, overlay and
+        // normal the 1.21 code also set are not part of that format and were ignored there too
         for (int i = 0; i < 4; i++) {
             final Matrix4f matrix = pose.last().pose();
 
-            builder.addVertex(matrix, 0, 0f, 0).setColor(red, green, blue, alpha).setUv(0, endU).setLight(LightTexture.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
-            builder.addVertex(matrix, 1, 0f, 0).setColor(red, green, blue, alpha).setUv(0, endU).setLight(LightTexture.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
+            builder.vertex(matrix, 0, 0f, 0).uv(0, endU).color(red, green, blue, alpha).endVertex();
+            builder.vertex(matrix, 1, 0f, 0).uv(0, endU).color(red, green, blue, alpha).endVertex();
             // offset makes the end of the laser spread out, helping reduce z-fighting
-            builder.addVertex(matrix, 1 + offset, -offset, length + 0.5f).setColor(red, green, blue, endAlpha).setUv(endU, endU).setLight(LightTexture.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
-            builder.addVertex(matrix, -offset, -offset, length + 0.5f).setColor(red, green, blue, endAlpha).setUv(endU, endU).setLight(LightTexture.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
+            builder.vertex(matrix, 1 + offset, -offset, length + 0.5f).uv(endU, endU).color(red, green, blue, endAlpha).endVertex();
+            builder.vertex(matrix, -offset, -offset, length + 0.5f).uv(endU, endU).color(red, green, blue, endAlpha).endVertex();
 
             pose.translate(0.5, 0.5, 0.5);
             pose.mulPose(rotationQuat);
