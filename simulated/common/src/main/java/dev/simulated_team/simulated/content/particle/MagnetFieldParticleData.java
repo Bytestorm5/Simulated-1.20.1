@@ -9,9 +9,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
 
 public class MagnetFieldParticleData implements ParticleOptions, ICustomParticleDataWithSprite<MagnetFieldParticleData> {
     public static final MapCodec<MagnetFieldParticleData> CODEC = RecordCodecBuilder.mapCodec((i) -> {

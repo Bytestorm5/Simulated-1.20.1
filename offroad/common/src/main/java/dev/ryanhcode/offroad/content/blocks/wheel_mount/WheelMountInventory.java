@@ -18,7 +18,7 @@ public class WheelMountInventory extends SingleSlotContainer {
 
     @Override
     public boolean canInsertItem(final ItemInfoWrapper item) {
-        final TireLike tireLike = ItemInfoWrapper.generateFromInfo(item).get(OffroadDataComponents.TIRE);
+        final TireLike tireLike = OffroadDataComponents.TIRE.get(ItemInfoWrapper.generateFromInfo(item));
         return tireLike != null;
     }
 

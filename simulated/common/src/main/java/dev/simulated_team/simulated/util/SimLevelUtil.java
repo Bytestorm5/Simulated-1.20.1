@@ -6,14 +6,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkSource;
-import net.neoforged.neoforge.common.extensions.ILevelReaderExtension;
+import net.minecraftforge.common.extensions.IForgeLevelReader;
 
 public class SimLevelUtil {
     public static boolean isAreaActuallyLoaded(final Level level, final BlockPos center, final int range) {
         if (Sable.HELPER.getContaining(level, center) != null) return true;
 
         // TODO: This should be common
-        if (!((ILevelReaderExtension) level).isAreaLoaded(center, range)) {
+        if (!((IForgeLevelReader) level).isAreaLoaded(center, range)) {
             return false;
         } else {
             if (level.isClientSide) {

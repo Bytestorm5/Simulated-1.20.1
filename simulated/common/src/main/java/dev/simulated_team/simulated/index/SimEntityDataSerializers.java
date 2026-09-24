@@ -1,8 +1,8 @@
 package dev.simulated_team.simulated.index;
 
 import dev.simulated_team.simulated.service.SimEntityDataSerialization;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.phys.Vec3;
 

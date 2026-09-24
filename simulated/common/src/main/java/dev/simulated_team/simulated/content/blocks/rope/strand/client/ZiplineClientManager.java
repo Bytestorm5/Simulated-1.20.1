@@ -193,7 +193,7 @@ public class ZiplineClientManager implements InteractCallback {
         final ClosestQuery query = getClosestPointOnStrand(strand, playerPosition);
 
         final boolean isEnd = query.position().distanceSquared(strand.getPoints().getLast().position()) < 0.25;
-        final boolean isStart = query.position().distanceSquared(strand.getPoints().getFirst().position()) < 0.25;
+        final boolean isStart = query.position().distanceSquared(strand.getPoints().get(0).position()) < 0.25;
 
         final Vec3 mojNormal = new Vec3(query.normal.x, query.normal.y, query.normal.z);
 

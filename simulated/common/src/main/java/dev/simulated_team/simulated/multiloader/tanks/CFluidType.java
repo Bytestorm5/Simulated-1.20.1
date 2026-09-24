@@ -37,14 +37,14 @@ public record CFluidType(Fluid fluid, DataComponentPatch data) {
     }
 
     public static CFluidType read(final CompoundTag tag) {
-        final Fluid fluid = BuiltInRegistries.FLUID.get(ResourceLocation.parse(tag.getString("Fluid")));
+        final Fluid fluid = BuiltInRegistries.FLUID.get(new ResourceLocation(tag.getString("Fluid")));
         DataComponentPatch data = DataComponentPatch.EMPTY;
         if (tag.contains("data")) {
             final DataResult<Pair<DataComponentPatch, Tag>> result = DataComponentPatch.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("data"));
             if (result.isError()) {
                 Simulated.LOGGER.warn(result.error().get().message());
             } else {
-                data = result.result().get().getFirst();
+                data = result.result().get().get(0);
             }
         }
 
@@ -57,9 +57,9 @@ public record CFluidType(Fluid fluid, DataComponentPatch data) {
             return true;
         }
 
-        if (obj instanceof CFluidType(Fluid fluid1, DataComponentPatch data1)) {
+        if (obj instanceof final CFluidType other) {
             // both haves tag, or both no haves tag
-            return this.fluid.isSame(fluid1) && this.data.equals(data1);
+            return this.fluid.isSame(other.fluid()) && this.data.equals(other.data());
         }
         return false;
     }

@@ -30,7 +30,7 @@ public record Converter(ItemStack item, int ticks, Optional<ResourceLocation> so
 	public static Converter cloudSkipper() {
 		return new Converter(AeroItems.MUSIC_DISC_CLOUD_SKIPPER.asStack(), 60,
 				Optional.of(AeroSoundEvents.CLOUD_SKIPPER_TRANSFORM.id()),
-				Optional.of(ResourceLocation.withDefaultNamespace("white_smoke")));
+				Optional.of(new ResourceLocation("white_smoke")));
 	}
 
 	public Converter(Converter converter, int ticks) {
@@ -41,12 +41,12 @@ public record Converter(ItemStack item, int ticks, Optional<ResourceLocation> so
 		if(converter.item().isEmpty()) return;
 
 		if(converter.ticks() > 0) {
-			stack.set(AeroDataComponents.CONVERTER, new Converter(converter, converter.ticks() - 1));
+			AeroDataComponents.CONVERTER.set(stack, new Converter(converter, converter.ticks() - 1));
 		} else {
 			int count = stack.getCount();
 			entity.setItem(converter.item().copy());
 			ItemStack newItem = entity.getItem();
-			newItem.remove(AeroDataComponents.CONVERTER);
+			AeroDataComponents.CONVERTER.remove(newItem);
 			newItem.setCount(count);
 
 			if(converter.sound().isPresent()) {

@@ -120,7 +120,7 @@ public class BalloonBurnerSoundInstance extends AbstractTickableSoundInstance {
                 }
 
 
-                this.meanVolume += Math.clamp(intensityScaling * 4.0f, 0.0f, 2.0f);
+                this.meanVolume += Mth.clamp(intensityScaling * 4.0f, 0.0f, 2.0f);
                 volumeChangers++;
             }
         }

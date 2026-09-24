@@ -22,7 +22,6 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -294,11 +293,11 @@ public class AugerShaftBlockEntity extends KineticBlockEntity implements ItemRec
     }
 
     @Override
-    protected void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    protected void write(final CompoundTag compound, final boolean clientPacket) {
+        super.write(compound, clientPacket);
 
-        compound.put("Inventory", this.inventory.write(registries));
-        compound.put("ActorInventory", this.actorInventory.write(registries));
+        compound.put("Inventory", this.inventory.write());
+        compound.put("ActorInventory", this.actorInventory.write());
 
         if (!clientPacket) {
             compound.putFloat("Progress", this.updateTracker.getValue());
@@ -306,11 +305,11 @@ public class AugerShaftBlockEntity extends KineticBlockEntity implements ItemRec
     }
 
     @Override
-    protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
+    protected void read(final CompoundTag compound, final boolean clientPacket) {
+        super.read(compound, clientPacket);
 
-        this.inventory.read(registries, compound.getCompound("Inventory"));
-        this.actorInventory.read(registries, compound.getCompound("ActorInventory"));
+        this.inventory.read(compound.getCompound("Inventory"));
+        this.actorInventory.read(compound.getCompound("ActorInventory"));
 
         if (!clientPacket) {
             this.updateTracker.setValue(compound.getFloat("Progress"));

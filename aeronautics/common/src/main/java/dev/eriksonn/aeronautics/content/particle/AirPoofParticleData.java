@@ -7,8 +7,8 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.StreamCodec;
 
 public class AirPoofParticleData implements ParticleOptions, ICustomParticleDataWithSprite<AirPoofParticleData> {
     public static final AirPoofParticleData INSTANCE = new AirPoofParticleData();

@@ -20,7 +20,7 @@ import dev.simulated_team.simulated.util.hold_interaction.HoldTipManager;
 import foundry.veil.api.client.render.MatrixStack;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
+import foundry.veil.backport.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;

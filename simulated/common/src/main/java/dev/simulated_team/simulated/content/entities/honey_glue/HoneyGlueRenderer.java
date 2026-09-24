@@ -13,7 +13,7 @@ public class HoneyGlueRenderer extends EntityRenderer<HoneyGlueEntity> {
 
 	@Override
 	public ResourceLocation getTextureLocation(final HoneyGlueEntity entity) {
-		return ResourceLocation.parse("");
+		return new ResourceLocation("");
 	}
 
 	@Override

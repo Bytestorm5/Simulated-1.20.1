@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'net.neoforged.moddev'
+    id 'net.neoforged.moddev.legacyforge'
     id "me.modmuss50.mod-publish-plugin" version "1.1.0" // https://github.com/modmuss50/mod-publish-plugin
 }
 
@@ -20,11 +20,11 @@ base {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+    toolchain.languageVersion = JavaLanguageVersion.of(java_toolchain_version)
 }
 
-neoForge {
-    version = neoforge_version
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
 
     parchment {
         minecraftVersion = parchment_minecraft
@@ -55,15 +55,14 @@ processResources {
             'group'                        : project.group, //Else we target the task's group.
             'minecraft_version'            : minecraft_version,
             'minecraft_version_range'      : minecraft_version_range,
-            'fabric_version'               : fabric_version,
-            'fabric_loader_version'        : fabric_loader_version,
             'mod_name'                     : mod_name,
             'mod_author'                   : mod_author,
             'mod_id'                       : mod_id,
             'license'                      : license,
             'description'                  : project.description,
-            'neoforge_version'             : neoforge_version,
-            'neoforge_loader_version_range': neoforge_loader_version_range,
+            'forge_version'                : forge_version,
+            'forge_version_range'          : forge_version_range,
+            'forge_loader_version_range'   : forge_loader_version_range,
             'sable_mod_version_range'            : sable_mod_version_range,
             'create_mod_version'           : create_mod_version,
             'flywheel_mod_version'         : flywheel_mod_version,
@@ -97,7 +96,7 @@ publishMods {
 
     version = "$project.version+mc$minecraft_version"
     displayName = "$mod_name $project.version for mc$minecraft_version"
-    modLoaders.add("neoforge")
+    modLoaders.add("forge")
 
     curseforge {
         accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")

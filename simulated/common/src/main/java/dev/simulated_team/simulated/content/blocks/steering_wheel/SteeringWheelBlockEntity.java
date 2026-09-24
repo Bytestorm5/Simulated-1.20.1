@@ -24,14 +24,13 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -223,8 +222,8 @@ public class SteeringWheelBlockEntity extends GeneratingKineticBlockEntity {
     }
 
     @Override
-    protected void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    protected void write(final CompoundTag compound, final boolean clientPacket) {
+        super.write(compound, clientPacket);
 
         compound.putFloat("Angle", this.angle);
         compound.putFloat("TargetAngle", this.targetAngle);
@@ -240,26 +239,26 @@ public class SteeringWheelBlockEntity extends GeneratingKineticBlockEntity {
     }
 
     @Override
-    public void writeSafe(final CompoundTag compound, final HolderLookup.Provider registries) {
-        super.writeSafe(compound, registries);
+    public void writeSafe(final CompoundTag compound) {
+        super.writeSafe(compound);
         compound.put("Material", NbtUtils.writeBlockState(this.material));
     }
 
     @Override
-    protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
+    protected void read(final CompoundTag compound, final boolean clientPacket) {
+        super.read(compound, clientPacket);
         // todo pr create to validate this for all scroll value behaviours
         this.angleInput.value = Mth.clamp(this.angleInput.value, 1, 360);
 
-        this.angle = Math.clamp(compound.getFloat("Angle"), -360, 360);
+        this.angle = Mth.clamp(compound.getFloat("Angle"), -360, 360);
         if (clientPacket) {
             this.held = compound.getBoolean("Held");
         }
 
         if (!clientPacket || !SimClickInteractions.STEERING_WHEEL_MANAGER.isBlockActive(this.getBlockPos())) {
-            this.updateTargetAngle(Math.clamp(compound.getFloat("TargetAngle"), -360, 360));
+            this.updateTargetAngle(Mth.clamp(compound.getFloat("TargetAngle"), -360, 360));
             if (compound.contains("TargetAngleToUpdate")) {
-                this.targetAngleToUpdate = Math.clamp(compound.getFloat("TargetAngleToUpdate"), -360, 360);
+                this.targetAngleToUpdate = Mth.clamp(compound.getFloat("TargetAngleToUpdate"), -360, 360);
             } else {
                 this.targetAngleToUpdate = this.targetAngle;
             }

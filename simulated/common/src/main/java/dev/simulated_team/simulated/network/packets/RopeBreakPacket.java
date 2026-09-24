@@ -9,21 +9,21 @@ import dev.simulated_team.simulated.content.blocks.rope.strand.server.ServerLeve
 import dev.simulated_team.simulated.content.blocks.rope.strand.server.ServerRopeStrand;
 import foundry.veil.api.network.handler.ServerPacketContext;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.UUID;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record RopeBreakPacket(UUID uuid) implements CustomPacketPayload {
     public static Type<RopeBreakPacket> TYPE = new Type<>(Simulated.path("break_rope"));
 
     public static StreamCodec<RegistryFriendlyByteBuf, RopeBreakPacket> CODEC = StreamCodec.composite(
-            UUIDUtil.STREAM_CODEC, RopeBreakPacket::uuid,
+            VanillaStreamCodecs.UUID, RopeBreakPacket::uuid,
             RopeBreakPacket::new
     );
 
@@ -60,7 +60,7 @@ public record RopeBreakPacket(UUID uuid) implements CustomPacketPayload {
                 return;
             }
 
-            holder.destroyRope(player, null, !player.hasInfiniteMaterials());
+            holder.destroyRope(player, null, !player.getAbilities().instabuild);
         }
     }
 }

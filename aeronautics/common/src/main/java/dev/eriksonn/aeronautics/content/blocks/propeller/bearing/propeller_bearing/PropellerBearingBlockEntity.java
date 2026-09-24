@@ -28,7 +28,6 @@ import dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor
 import dev.simulated_team.simulated.api.BearingSlowdownController;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -228,7 +227,7 @@ public class PropellerBearingBlockEntity extends MechanicalBearingBlockEntity im
     }
 
     @Override
-    public void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
+    public void write(final CompoundTag compound, final boolean clientPacket) {
         compound.putFloat("LastGenerated", this.lastGeneratedSpeed);
         compound.putFloat("RotationSpeed", this.getRotationSpeed());
 
@@ -237,11 +236,11 @@ public class PropellerBearingBlockEntity extends MechanicalBearingBlockEntity im
             this.slowdownController.serializeIntoNBT(compound);
         }
 
-        super.write(compound, registries, clientPacket);
+        super.write(compound, clientPacket);
     }
 
     @Override
-    protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
+    protected void read(final CompoundTag compound, final boolean clientPacket) {
         if (!this.wasMoved) {
             this.lastGeneratedSpeed = compound.getFloat("LastGenerated");
         }
@@ -252,7 +251,7 @@ public class PropellerBearingBlockEntity extends MechanicalBearingBlockEntity im
             this.slowdownController.deserializeFromNBT(compound);
         }
 
-        super.read(compound, registries, clientPacket);
+        super.read(compound, clientPacket);
     }
 
     @Override

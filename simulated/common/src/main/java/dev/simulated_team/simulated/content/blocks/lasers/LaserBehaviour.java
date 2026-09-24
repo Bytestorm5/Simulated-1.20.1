@@ -66,7 +66,7 @@ public class LaserBehaviour extends BlockEntityBehaviour {
         this.laserPositions = positions;
         this.range = range;
 
-        this.context = () -> this.getClipContext(positions.get().getFirst(), positions.get().getSecond());
+        this.context = () -> this.getClipContext(positions.get().get(0), positions.get().getSecond());
     }
 
     @Override
@@ -90,7 +90,7 @@ public class LaserBehaviour extends BlockEntityBehaviour {
             this.blockHitResult = level.clip(this.context.get());
 
             final Couple<Vec3> positions = this.laserPositions.get();
-            final Vec3 start = positions.getFirst();
+            final Vec3 start = positions.get(0);
             final Vec3 end = positions.getSecond();
             final AABB checkingBB = new AABB(start, start).inflate(0.5f)
                     .expandTowards(end.subtract(start));
@@ -105,8 +105,8 @@ public class LaserBehaviour extends BlockEntityBehaviour {
                 this.entityHitResult = null;
             }
 
-            if (this.entityHitResult != null && Sable.HELPER.distanceSquaredWithSubLevels(this.getWorld(), positions.getFirst(), this.entityHitResult.getLocation())
-                    < Sable.HELPER.distanceSquaredWithSubLevels(this.getWorld(), positions.getFirst(), this.blockHitResult.getLocation())) {
+            if (this.entityHitResult != null && Sable.HELPER.distanceSquaredWithSubLevels(this.getWorld(), positions.get(0), this.entityHitResult.getLocation())
+                    < Sable.HELPER.distanceSquaredWithSubLevels(this.getWorld(), positions.get(0), this.blockHitResult.getLocation())) {
                 this.closestHitResult = this.entityHitResult;
             } else {
                 this.closestHitResult = this.blockHitResult;
@@ -167,7 +167,7 @@ public class LaserBehaviour extends BlockEntityBehaviour {
     }
 
     public boolean shouldCast() {
-        return this.shouldCast.getAsBoolean();
+        return this.shouldCast.get();
     }
 
     /**

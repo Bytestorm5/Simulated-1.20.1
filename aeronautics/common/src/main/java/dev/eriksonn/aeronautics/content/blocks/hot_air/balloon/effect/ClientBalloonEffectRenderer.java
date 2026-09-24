@@ -85,7 +85,7 @@ public class ClientBalloonEffectRenderer {
      */
     private static void renderBalloonEffects(final BalloonMap balloonMap, final Matrix4fc frustumMatrix, final Matrix4fc projectionMatrix, final int renderTick) {
         final Minecraft minecraft = Minecraft.getInstance();
-        final float partialTicks = minecraft.getTimer().getGameTimeDeltaPartialTick(false);
+        final float partialTicks = minecraft.getFrameTime();
 
         final ShaderProgram shader = VeilRenderSystem.setShader(SHADER_ID);
         if (shader == null) return;

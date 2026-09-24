@@ -20,7 +20,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,6 +44,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Vector3d;
 
+import net.minecraft.world.InteractionResult;
 public class HotAirBurnerBlock extends Block implements IBE<HotAirBurnerBlockEntity>, IWrenchable {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final EnumProperty<Variant> VARIANT = EnumProperty.create("variant", Variant.class);
@@ -94,7 +95,12 @@ public class HotAirBurnerBlock extends Block implements IBE<HotAirBurnerBlockEnt
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(final ItemStack stack, final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+    public ItemInteractionResult useItemOn(final ItemStack stack, final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
         final Variant conversion = Variant.getConversionFromItem(stack.getItem());
 
         if (conversion != null) {

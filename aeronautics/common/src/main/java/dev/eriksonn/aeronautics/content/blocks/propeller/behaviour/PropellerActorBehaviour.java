@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
+import net.minecraft.util.Mth;
 public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHaveGoggleInformation {
     public static final BehaviourType<PropellerActorBehaviour> TYPE = new BehaviourType<>("prop_behaviour");
     private static final int MAX_ACCELERATION = 5;
@@ -237,7 +238,7 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
 
     public float getParticleSpeed() {
         final float speed = this.getAirflowTickSpeed();
-        return Math.clamp(speed, -5, 5);
+        return Mth.clamp(speed, -5, 5);
     }
 
     /**

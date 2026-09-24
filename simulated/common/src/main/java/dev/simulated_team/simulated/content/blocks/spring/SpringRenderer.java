@@ -135,7 +135,7 @@ public class SpringRenderer extends SmartBlockEntityRenderer<SpringBlockEntity> 
 
         final Vector3d startUpDir = JOMLConversion.toJOML(this.getUpDirection(be, otherCenter.sub(center, new Vector3d())));
 
-        pointNormal.set(splinePoints.getFirst().normal);
+        pointNormal.set(splinePoints.get(0).normal);
 
         final Matrix3d matrix = new Matrix3d(
                 startUpDir,

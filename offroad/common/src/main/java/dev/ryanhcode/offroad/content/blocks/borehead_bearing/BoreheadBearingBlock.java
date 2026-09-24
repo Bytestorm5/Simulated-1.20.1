@@ -14,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -49,7 +49,12 @@ public class BoreheadBearingBlock extends DirectionalAxisKineticBlock implements
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(final ItemStack stack, final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+    public ItemInteractionResult useItemOn(final ItemStack stack, final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
         if (!player.mayBuild())
             return ItemInteractionResult.FAIL;
         if (player.isShiftKeyDown())

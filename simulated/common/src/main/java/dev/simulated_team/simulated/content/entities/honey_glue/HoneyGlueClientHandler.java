@@ -153,7 +153,7 @@ public class HoneyGlueClientHandler implements InteractCallback {
             final AABB newBounds = this.extendHoneyBB(bb, (int) deltaY);
             final Pair<Boolean, String> pair = HoneyGlueMaxSizing.checkBounds(newBounds);
 
-            if (pair.getFirst()) {
+            if (pair.get(0)) {
                 this.hoveredGlue.setBounds(newBounds);
                 VeilPacketManager.server().sendPacket(new HoneyGlueChangeBoundsPacket(newBounds, this.hoveredGlue.getUUID()));
             } else {

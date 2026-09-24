@@ -24,7 +24,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraftforge.common.Tags;
 
 public class SimItems {
     public static final SimulatedRegistrate REGISTRATE = Simulated.getRegistrate();
@@ -79,7 +79,7 @@ public class SimItems {
                     .transform(CreativeTabItemTransforms.VisibilityType.INVISIBLE.applyItem())
                     .register();
 
-    static { REGISTRATE.addExtraItem(ResourceLocation.withDefaultNamespace("slime_ball")); }
+    static { REGISTRATE.addExtraItem(new ResourceLocation("slime_ball")); }
 
     public static final ItemEntry<HoneyGlueItem> HONEY_GLUE =
             REGISTRATE.item("honey_glue", HoneyGlueItem::new)

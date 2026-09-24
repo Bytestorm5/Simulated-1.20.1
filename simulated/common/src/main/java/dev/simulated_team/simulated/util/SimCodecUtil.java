@@ -10,14 +10,15 @@ import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
 import dev.ryanhcode.sable.companion.math.BoundingBox3d;
 import dev.ryanhcode.sable.util.SableBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
 import java.util.List;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public class SimCodecUtil {
 
     public static final StreamCodec<ByteBuf, Vector3d> STREAM_VECTOR3D = StreamCodec.of(
@@ -25,15 +26,15 @@ public class SimCodecUtil {
             x -> SableBufferUtils.read(x, new Vector3d()));
 
     public static final StreamCodec<ByteBuf, Vector3dc> STREAM_VECTOR3DC = ByteBufCodecs.DOUBLE.apply(ByteBufCodecs.list(3))
-            .map(l -> new Vector3d(l.getFirst(), l.get(1), l.get(2)), (v) -> List.of(v.x(), v.y(), v.z()));
+            .map(l -> new Vector3d(l.get(0), l.get(1), l.get(2)), (v) -> List.of(v.x(), v.y(), v.z()));
 
     public static final StreamCodec<ByteBuf, BoundingBox3d> BOUNDING_BOX_3D_STREAM_CODEC = ByteBufCodecs.DOUBLE.apply(ByteBufCodecs.list(6))
-            .map(l -> new BoundingBox3d(l.getFirst(), l.get(1), l.get(2), l.get(3), l.get(4), l.get(5)), bb -> List.of(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ));
+            .map(l -> new BoundingBox3d(l.get(0), l.get(1), l.get(2), l.get(3), l.get(4), l.get(5)), bb -> List.of(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ));
 
-    public static final StreamCodec<ByteBuf, ForceGroup> STREAM_FORCE_GROUP = ResourceLocation.STREAM_CODEC.map(ForceGroups.REGISTRY::get, ForceGroups.REGISTRY::getKey);
+    public static final StreamCodec<ByteBuf, ForceGroup> STREAM_FORCE_GROUP = VanillaStreamCodecs.RESOURCE_LOCATION.map(ForceGroups.REGISTRY::get, ForceGroups.REGISTRY::getKey);
 
     public static final StreamCodec<ByteBuf, QueuedForceGroup.PointForce> STREAM_POINT_FORCE = STREAM_VECTOR3DC.apply(ByteBufCodecs.list(2))
-            .map(l -> new QueuedForceGroup.PointForce(l.getFirst(), l.get(1)), p -> List.of(p.point(), p.force()));
+            .map(l -> new QueuedForceGroup.PointForce(l.get(0), l.get(1)), p -> List.of(p.point(), p.force()));
 
     public static <T> Codec<T> withAlternative(final Codec<T> first, final Codec<T> second) {
         return new WithAlternativeButGood<>(first, second);

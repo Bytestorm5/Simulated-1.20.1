@@ -278,7 +278,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
     }
 
     public static void renderRope(final List<Vec3> positions, final MultiBufferSource multiBufferSource, final BlockAndTintGetter level, final PoseStack poseStack) {
-        final Vec3 first = positions.getFirst();
+        final Vec3 first = positions.get(0);
         final Vector3d origin = new Vector3d();
         final Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 
@@ -404,7 +404,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
 
     @Override
     public ResourceLocation getTextureLocation(final LaunchedPlungerEntity entity) {
-        return ResourceLocation.withDefaultNamespace("missing");
+        return new ResourceLocation("missing");
     }
 
     @Override

@@ -33,7 +33,7 @@ public class PrimaryLevelDataMixin implements PrimaryLevelDataExtension {
 	private static <T> void simulated$parse(final Dynamic<T> dynamic, final LevelSettings levelSettings, final PrimaryLevelData.SpecialWorldProperty specialWorldProperty, final WorldOptions worldOptions, final Lifecycle lifecycle, final CallbackInfoReturnable<PrimaryLevelData> cir) {
 		final DataResult<String> string = dynamic.get(simulated$WORLD_PRESET_KEY).asString();
 		if(string.isSuccess()) {
-			((PrimaryLevelDataExtension) cir.getReturnValue()).setPreset(ResourceLocation.parse(string.getOrThrow()));
+			((PrimaryLevelDataExtension) cir.getReturnValue()).setPreset(new ResourceLocation(string.getOrThrow(false, error -> { })));
 		}
 	}
 

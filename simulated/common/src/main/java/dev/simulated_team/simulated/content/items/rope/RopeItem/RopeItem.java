@@ -62,17 +62,17 @@ public class RopeItem extends Item {
         final boolean validLocation = isValidRopeAttachment(level, clickedPos);
 
         if (player != null && player.isShiftKeyDown()) {
-            heldStack.remove(SimDataComponents.ROPE_FIRST_CONNECTION);
+            SimDataComponents.ROPE_FIRST_CONNECTION.remove(heldStack);
             return InteractionResult.SUCCESS;
         }
 
         if (validLocation) {
-            if (heldStack.has(SimDataComponents.ROPE_FIRST_CONNECTION)) {
+            if (SimDataComponents.ROPE_FIRST_CONNECTION.has(heldStack)) {
 
                 if (!level.isClientSide) {
-                    if (!this.attachRope(level, heldStack.get(SimDataComponents.ROPE_FIRST_CONNECTION), clickedPos, !player.hasInfiniteMaterials())) {
+                    if (!this.attachRope(level, SimDataComponents.ROPE_FIRST_CONNECTION.get(heldStack), clickedPos, !player.getAbilities().instabuild)) {
                         // failure to connect
-                        heldStack.remove(SimDataComponents.ROPE_FIRST_CONNECTION);
+                        SimDataComponents.ROPE_FIRST_CONNECTION.remove(heldStack);
                         return InteractionResult.SUCCESS;
                     } else {
                         // we attached the rope!
@@ -80,16 +80,16 @@ public class RopeItem extends Item {
                     }
                 }
 
-                heldStack.remove(SimDataComponents.ROPE_FIRST_CONNECTION);
+                SimDataComponents.ROPE_FIRST_CONNECTION.remove(heldStack);
 
-                if (!player.hasInfiniteMaterials())
+                if (!player.getAbilities().instabuild)
                     context.getItemInHand()
                             .shrink(1);
 
                 return InteractionResult.SUCCESS;
             }
 
-            heldStack.set(SimDataComponents.ROPE_FIRST_CONNECTION, clickedPos);
+            SimDataComponents.ROPE_FIRST_CONNECTION.set(heldStack, clickedPos);
             return InteractionResult.SUCCESS;
         }
 

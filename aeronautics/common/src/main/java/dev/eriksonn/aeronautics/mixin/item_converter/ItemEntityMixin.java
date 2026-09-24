@@ -23,14 +23,14 @@ public abstract class ItemEntityMixin {
 
 		final ItemStack item = entity.getItem();
 		final Level level = entity.level();
-		if(item.has(AeroDataComponents.CONVERTER)) {
-			final Converter converter = item.get(AeroDataComponents.CONVERTER);
+		if(AeroDataComponents.CONVERTER.has(item)) {
+			final Converter converter = AeroDataComponents.CONVERTER.get(item);
 			Converter.tick(level, entity, item, converter);
 		}
 
 		if(level.dimension().equals(Level.OVERWORLD) && item.is(AeroTags.ItemTags.CONVERTS_TO_CLOUD_SKIPPER)) {
 			// magic cloud number, i have no idea where its actually defined
-			if(entity.getY() >= 192 && entity.getY() <= 196 && !item.has(AeroDataComponents.CONVERTER)) {
+			if(entity.getY() >= 192 && entity.getY() <= 196 && !AeroDataComponents.CONVERTER.has(item)) {
 				final DataComponentPatch patch = DataComponentPatch.builder()
 						.set(AeroDataComponents.CONVERTER, Converter.cloudSkipper())
 						.set(AeroDataComponents.LEVITATING, Levitating.DEFAULT)

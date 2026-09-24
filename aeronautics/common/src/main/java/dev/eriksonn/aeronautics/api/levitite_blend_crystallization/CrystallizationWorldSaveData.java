@@ -1,6 +1,5 @@
 package dev.eriksonn.aeronautics.api.levitite_blend_crystallization;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
@@ -13,7 +12,7 @@ public class CrystallizationWorldSaveData extends SavedData {
 	Level level;
 	
 	@Override
-	public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
+	public CompoundTag save(CompoundTag tag) {
 		ListTag list = new ListTag();
 		LevititeCrystallizerManager.saveData(list, level);
 		tag.put("Levitite Manager Data", list);
@@ -21,7 +20,7 @@ public class CrystallizationWorldSaveData extends SavedData {
 		return tag;
 	}
 
-	public static CrystallizationWorldSaveData load(ServerLevel level, CompoundTag tag, final HolderLookup.Provider registries) {
+	public static CrystallizationWorldSaveData load(ServerLevel level, CompoundTag tag) {
 		CrystallizationWorldSaveData data = new CrystallizationWorldSaveData();
 		data.level = level;
 

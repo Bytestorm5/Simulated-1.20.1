@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AeroStress extends CStress {
 
@@ -16,7 +16,7 @@ public class AeroStress extends CStress {
 	private static final Object2DoubleMap<ResourceLocation> DEFAULT_CAPACITIES = new Object2DoubleOpenHashMap<>();
 
 	@Override
-	public void registerAll(ModConfigSpec.Builder builder) {
+	public void registerAll(ForgeConfigSpec.Builder builder) {
 		builder.comment(".", Comments.su, Comments.impact).push("impact");
 		DEFAULT_IMPACTS.forEach((id, value) -> this.impacts.put(id, builder.define(id.getPath(), value)));
 		builder.pop();

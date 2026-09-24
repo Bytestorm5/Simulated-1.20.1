@@ -1,7 +1,7 @@
 package dev.eriksonn.aeronautics.config.server;
 
 import net.createmod.catnip.config.ConfigBase;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AeroServer extends ConfigBase {
 

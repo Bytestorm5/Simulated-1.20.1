@@ -5,20 +5,20 @@ import dev.simulated_team.simulated.content.navigation_targets.lodestone_compass
 import foundry.veil.api.network.handler.PacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3d;
 
 import java.util.UUID;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record UpdateClientLodestonePositionPacket(UUID id, Vector3d sentPosition) implements CustomPacketPayload {
 
 	public static final Type<UpdateClientLodestonePositionPacket> TYPE = new Type<>(Simulated.path("update_client_lodestone"));
 
 	public static final StreamCodec<ByteBuf, UpdateClientLodestonePositionPacket> STREAM_CODEC = StreamCodec.composite(
-			UUIDUtil.STREAM_CODEC, UpdateClientLodestonePositionPacket::id,
+			VanillaStreamCodecs.UUID, UpdateClientLodestonePositionPacket::id,
 			StreamCodec.of((byteBuf, p) -> {
 				byteBuf.writeDouble(p.x);
 				byteBuf.writeDouble(p.y);

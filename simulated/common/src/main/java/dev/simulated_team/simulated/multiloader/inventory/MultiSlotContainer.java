@@ -1,7 +1,6 @@
 package dev.simulated_team.simulated.multiloader.inventory;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -383,14 +382,14 @@ public abstract class MultiSlotContainer implements AbstractContainer {
     }
 
     @Override
-    public CompoundTag write(final HolderLookup.Provider provider) {
+    public CompoundTag write() {
         final CompoundTag invCompound = new CompoundTag();
 
         invCompound.putInt("Stored Count", this.storedItemCount);
 
         final ListTag inv = new ListTag();
         for (final ContainerSlot slot : this.inventory) {
-            inv.add(slot.write(provider));
+            inv.add(slot.write());
         }
 
         invCompound.put("Items", inv);
@@ -399,14 +398,14 @@ public abstract class MultiSlotContainer implements AbstractContainer {
 
     //This will be called after this container has been instantiated.
     @Override
-    public void read(final HolderLookup.Provider provider, final CompoundTag nbt) {
+    public void read(final CompoundTag nbt) {
         this.storedItemCount = nbt.getInt("Stored Count");
 
         final ListTag inv = nbt.getList("Items", Tag.TAG_COMPOUND);
         for (final Tag tag : inv) {
             final CompoundTag itemTag = (CompoundTag) tag;
             final ContainerSlot slot = this.inventory.get(itemTag.getInt("index"));
-            slot.read(provider, itemTag);
+            slot.read(itemTag);
             this.populatedSlots.add(slot);
         }
     }

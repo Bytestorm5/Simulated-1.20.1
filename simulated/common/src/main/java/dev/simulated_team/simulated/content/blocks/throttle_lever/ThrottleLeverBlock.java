@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.throttle_lever;
 
-import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -32,8 +31,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import net.minecraft.world.InteractionHand;
 public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<ThrottleLeverBlockEntity>, IWrenchable, CommonRedstoneBlock {
-    public static MapCodec<ThrottleLeverBlock> CODEC = simpleCodec(ThrottleLeverBlock::new);
     public static BooleanProperty INVERTED = BooleanProperty.create("inverted");
 
     public ThrottleLeverBlock(final Properties builder) {
@@ -60,13 +59,13 @@ public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock i
         world.updateNeighborsAt(pos.relative(getConnectedDirection(state).getOpposite()), state.getBlock());
     }
 
-    @Override
-    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
-    protected InteractionResult useWithoutItem(final BlockState state, final Level level, final BlockPos pos, final Player player, final BlockHitResult hitResult) {
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return this.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    public InteractionResult useWithoutItem(final BlockState state, final Level level, final BlockPos pos, final Player player, final BlockHitResult hitResult) {
         if (AllItems.WRENCH.isIn(player.getMainHandItem())) {
             return InteractionResult.PASS;
         }

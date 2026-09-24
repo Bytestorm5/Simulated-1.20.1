@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.lasers.laser_pointer;
 
-import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
@@ -15,7 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
@@ -39,7 +38,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class LaserPointerBlock extends DirectionalBlock implements IBE<LaserPointerBlockEntity>, IWrenchable {
-    public static final MapCodec<LaserPointerBlock> CODEC = simpleCodec(LaserPointerBlock::new);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
@@ -49,10 +47,6 @@ public class LaserPointerBlock extends DirectionalBlock implements IBE<LaserPoin
         this.registerDefaultState(this.defaultBlockState().setValue(POWERED, false).setValue(INVERTED, false));
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
@@ -114,7 +108,12 @@ public class LaserPointerBlock extends DirectionalBlock implements IBE<LaserPoin
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(final @NotNull ItemStack itemStack,
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+    public ItemInteractionResult useItemOn(final @NotNull ItemStack itemStack,
                                               final @NotNull BlockState blockState,
                                               final @NotNull Level level,
                                               final @NotNull BlockPos blockPos,

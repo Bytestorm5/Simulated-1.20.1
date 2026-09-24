@@ -39,10 +39,10 @@ public class ClientRopeItemHandler {
             if (!SimItems.ROPE_COUPLING.isIn(heldItem))
                 continue;
 
-            if (!heldItem.has(SimDataComponents.ROPE_FIRST_CONNECTION))
+            if (!SimDataComponents.ROPE_FIRST_CONNECTION.has(heldItem))
                 continue;
 
-            final BlockPos firstBlock = heldItem.get(SimDataComponents.ROPE_FIRST_CONNECTION);
+            final BlockPos firstBlock = SimDataComponents.ROPE_FIRST_CONNECTION.get(heldItem);
 
             final HitResult rayTrace = Minecraft.getInstance().hitResult;
 

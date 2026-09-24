@@ -18,11 +18,11 @@ import java.util.function.Consumer;
 public class OffroadCommonEvents {
 
     public static void modifyDefaultComponents(final BiConsumer<ItemLike, Consumer<DataComponentPatch.Builder>> modify) {
-        modify.accept(AllBlocks.FLYWHEEL, builder -> { builder.set(OffroadDataComponents.TIRE, TireLike.FLYWHEEL); });
-        modify.accept(AllBlocks.LARGE_WATER_WHEEL, builder -> { builder.set(OffroadDataComponents.TIRE, TireLike.LARGE_WATER_WHEEL); });
-        modify.accept(AllBlocks.CRUSHING_WHEEL, builder -> { builder.set(OffroadDataComponents.TIRE, TireLike.CRUSHING_WHEEL); });
-        modify.accept(AllBlocks.WATER_WHEEL, builder -> { builder.set(OffroadDataComponents.TIRE, TireLike.WATER_WHEEL); });
-        modify.accept(AllBlocks.MECHANICAL_ROLLER, builder -> { builder.set(OffroadDataComponents.TIRE, TireLike.MECHANICAL_ROLLER); });
+        modify.accept(AllBlocks.FLYWHEEL, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.FLYWHEEL); });
+        modify.accept(AllBlocks.LARGE_WATER_WHEEL, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.LARGE_WATER_WHEEL); });
+        modify.accept(AllBlocks.CRUSHING_WHEEL, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.CRUSHING_WHEEL); });
+        modify.accept(AllBlocks.WATER_WHEEL, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.WATER_WHEEL); });
+        modify.accept(AllBlocks.MECHANICAL_ROLLER, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.MECHANICAL_ROLLER); });
     }
 
     public static void physicsTick(final SubLevelPhysicsSystem physicsSystem, final double timeStep) {

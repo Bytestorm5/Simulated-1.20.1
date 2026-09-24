@@ -17,7 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.world.InteractionResult;
 public class SymmetricSailBlock extends RotatedPillarBlock implements IWrenchable, BlockSubLevelLiftProvider, SpecialBlockItemRequirement {
     private static final int placementHelperId = PlacementHelpers.register(new SymmetricSailPlacementHelper(SymmetricSailBlock::checkItem, SymmetricSailBlock::checkState));
 
@@ -101,7 +102,7 @@ public class SymmetricSailBlock extends RotatedPillarBlock implements IWrenchabl
             if (timeout-- < 0)
                 break;
 
-            final BlockPos currentPos = frontier.removeFirst();
+            final BlockPos currentPos = frontier.remove(0);
             visited.add(currentPos);
 
             for (final Direction d : Iterate.directions) {
@@ -125,7 +126,12 @@ public class SymmetricSailBlock extends RotatedPillarBlock implements IWrenchabl
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(final ItemStack itemStack, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+    public ItemInteractionResult useItemOn(final ItemStack itemStack, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
         final ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
 
         final DyeColor color = SimItemService.getDyeColor(heldItem);

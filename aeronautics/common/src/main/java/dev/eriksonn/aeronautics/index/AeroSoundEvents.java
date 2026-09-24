@@ -126,7 +126,7 @@ public class AeroSoundEvents {
         );
 
     private static ResourceLocation mc(String path) {
-        return ResourceLocation.withDefaultNamespace(path);
+        return new ResourceLocation(path);
     }
 
     private static SimSoundEntry song(String id, String path) {

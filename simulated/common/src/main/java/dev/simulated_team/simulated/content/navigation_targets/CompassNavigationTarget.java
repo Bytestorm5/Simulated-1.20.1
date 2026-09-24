@@ -16,10 +16,10 @@ public class CompassNavigationTarget implements NavigationTarget {
 	@Override
 	public @Nullable Vec3 getTarget(final NavTableBlockEntity navBE, final ItemStack self) {
 		final Level level = navBE.getLevel();
-		if (self.has(SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER)) {
+		if (SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER.has(self)) {
 			final LodestoneTrackingMap map = LodestoneTrackingMap.getOrLoad(level);
 			if (map != null) {
-				final LodestoneInformation information = map.getInformation(self.get(SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER));
+				final LodestoneInformation information = map.getInformation(SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER.get(self));
 				if (information != null) {
 					return JOMLConversion.toMojang(information.projectedPos());
 				}

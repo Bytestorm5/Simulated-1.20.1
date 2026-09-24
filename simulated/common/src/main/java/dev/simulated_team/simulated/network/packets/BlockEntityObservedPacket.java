@@ -5,16 +5,17 @@ import dev.simulated_team.simulated.util.Observable;
 import foundry.veil.api.network.handler.ServerPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record BlockEntityObservedPacket(BlockPos pos) implements CustomPacketPayload {
 
     public static Type<BlockEntityObservedPacket> TYPE = new Type<>(Simulated.path("be_observed"));
-    public static StreamCodec<ByteBuf, BlockEntityObservedPacket> CODEC = BlockPos.STREAM_CODEC.map(BlockEntityObservedPacket::new, BlockEntityObservedPacket::pos);
+    public static StreamCodec<ByteBuf, BlockEntityObservedPacket> CODEC = VanillaStreamCodecs.BLOCK_POS.map(BlockEntityObservedPacket::new, BlockEntityObservedPacket::pos);
 
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {

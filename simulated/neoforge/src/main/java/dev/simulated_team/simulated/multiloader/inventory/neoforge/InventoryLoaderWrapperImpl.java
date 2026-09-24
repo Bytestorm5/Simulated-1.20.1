@@ -5,8 +5,8 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import dev.simulated_team.simulated.multiloader.inventory.InventoryLoaderWrapper;
 import dev.simulated_team.simulated.multiloader.inventory.ItemInfoWrapper;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class InventoryLoaderWrapperImpl extends InventoryLoaderWrapper {

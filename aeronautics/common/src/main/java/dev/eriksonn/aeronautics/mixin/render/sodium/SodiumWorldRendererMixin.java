@@ -30,7 +30,7 @@ public class SodiumWorldRendererMixin {
             ShaderUniform time = shader.getUniform("time");
             if (time != null) {
                 long ticks = Minecraft.getInstance().level.getGameTime();
-                final float pt = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+                final float pt = Minecraft.getInstance().getFrameTime();
                 ticks = ticks % 100000;
 
                 time.setFloat(ticks + pt);

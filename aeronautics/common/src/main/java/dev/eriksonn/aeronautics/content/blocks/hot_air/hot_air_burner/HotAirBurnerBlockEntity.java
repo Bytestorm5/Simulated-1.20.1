@@ -22,7 +22,6 @@ import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -214,7 +213,7 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
     }
 
     @Override
-    public void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
+    public void write(final CompoundTag compound, final boolean clientPacket) {
         compound.putBoolean("IsPowered", this.powered);
         compound.putInt("SignalStrength", this.signalStrength);
 
@@ -222,11 +221,11 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
             ClientBalloonInfo.writeToNBT(compound, (ServerBalloon) this.getBalloon());
         }
 
-        super.write(compound, registries, clientPacket);
+        super.write(compound, clientPacket);
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
         this.powered = tag.getBoolean("IsPowered");
         this.signalStrength = tag.getInt("SignalStrength");
 
@@ -235,7 +234,7 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
             this.clientBalloonInfo = ClientBalloonInfo.readFromNBT(tag);
         }
 
-        super.read(tag, registries, clientPacket);
+        super.read(tag, clientPacket);
     }
 
     @Override

@@ -30,34 +30,33 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
-import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.entity.player.UseItemOnBlockEvent;
-import net.neoforged.neoforge.event.level.ChunkEvent;
-import net.neoforged.neoforge.event.server.ServerStoppedEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.ModifyDefaultComponentsEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.ChunkEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = Simulated.MOD_ID)
+@Mod.EventBusSubscriber(modid = Simulated.MOD_ID)
 public class SimNeoForgeCommonEvents {
 
 	@SubscribeEvent
@@ -146,7 +145,7 @@ public class SimNeoForgeCommonEvents {
 		}
 	}
 
-	@EventBusSubscriber(modid = Simulated.MOD_ID)
+	@Mod.EventBusSubscriber(modid = Simulated.MOD_ID)
 	public static class ModBusEvents {
 
 		@SubscribeEvent
@@ -188,7 +187,7 @@ public class SimNeoForgeCommonEvents {
 		@SubscribeEvent
 		public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
 			for (final NeoForgeSimInventoryService.InventoryGetterHolder<? extends BlockEntity> getter : NeoForgeSimInventoryService.inventoryGetters) {
-				event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, getter.type(), (be, dir) -> {
+				event.registerBlockEntity(ForgeCapabilities.ItemHandler.BLOCK, getter.type(), (be, dir) -> {
 					final AbstractContainer container = getter.castBlockEntityAndGetInv(be, dir);
 					if (container == null) {
 						return null;
@@ -199,7 +198,7 @@ public class SimNeoForgeCommonEvents {
 			}
 
 			for (final NeoForgeSimInventoryService.TankGetterHolder<? extends BlockEntity> getter : NeoForgeSimInventoryService.fluidTankGetters) {
-				event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, getter.type(), (be, dir) -> {
+				event.registerBlockEntity(ForgeCapabilities.FluidHandler.BLOCK, getter.type(), (be, dir) -> {
 					final SingleTank container = getter.castBlockEntityAndGetInv(be, dir);
 					if (container == null) {
 						return null;
@@ -210,7 +209,7 @@ public class SimNeoForgeCommonEvents {
 			}
 
 			for (final NeoForgeSimInventoryService.EnergyGetterHolder<? extends BlockEntity> getter : NeoForgeSimInventoryService.energyGetters) {
-				event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, getter.type(), (be, dir) -> {
+				event.registerBlockEntity(ForgeCapabilities.EnergyStorage.BLOCK, getter.type(), (be, dir) -> {
 					final SingleBattery battery = getter.castBlockEntityAndGetInv(be, dir);
 					if (battery == null) {
 						return null;

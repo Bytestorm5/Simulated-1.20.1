@@ -8,16 +8,17 @@ import dev.simulated_team.simulated.index.SimSoundEvents;
 import foundry.veil.api.network.handler.ClientPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record PhysicsAssemblerFailedPacket(BlockPos pos) implements CustomPacketPayload {
 
     public static Type<PhysicsAssemblerFailedPacket> TYPE = new Type<>(Simulated.path("assembler_failed"));
     public static StreamCodec<ByteBuf, PhysicsAssemblerFailedPacket> CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC,
+            VanillaStreamCodecs.BLOCK_POS,
             PhysicsAssemblerFailedPacket::pos,
             PhysicsAssemblerFailedPacket::new
     );

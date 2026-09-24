@@ -26,7 +26,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -343,7 +342,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
             dir = -dir * 5;
         }
         this.lastHatchOpenTime = this.hatchOpenTime;
-        this.hatchOpenTime = Math.clamp(this.hatchOpenTime + dir * speed, 0, 10);
+        this.hatchOpenTime = Mth.clamp(this.hatchOpenTime + dir * speed, 0, 10);
     }
 
     private boolean canOpenHatch(final Player player) {
@@ -401,22 +400,22 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
         }
     }
 
-    public void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    public void write(final CompoundTag compound, final boolean clientPacket) {
+        super.write(compound, clientPacket);
         compound.putBoolean("SuperHeated", this.superHeated);
         compound.putFloat("GeneratedSpeed", this.generatedSpeed);
         compound.putBoolean("EatingCake", this.eatingCake);
 
-        compound.put("Inventory", this.inventory.write(registries));
+        compound.put("Inventory", this.inventory.write());
 
         compound.putInt("BurnTime", this.burnTime);
     }
 
-    protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
+    protected void read(final CompoundTag compound, final boolean clientPacket) {
+        super.read(compound, clientPacket);
         this.superHeated = compound.getBoolean("SuperHeated");
 
-        this.inventory.read(registries, compound.getCompound("Inventory"));
+        this.inventory.read(compound.getCompound("Inventory"));
 
         this.burnTime = compound.getInt("BurnTime");
         this.generatedSpeed = compound.getFloat("GeneratedSpeed");

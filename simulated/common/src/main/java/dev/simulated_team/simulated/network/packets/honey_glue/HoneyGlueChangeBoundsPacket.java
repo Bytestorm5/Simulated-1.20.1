@@ -6,9 +6,9 @@ import dev.simulated_team.simulated.content.entities.honey_glue.HoneyGlueMaxSizi
 import dev.simulated_team.simulated.index.SimSoundEvents;
 import foundry.veil.api.network.handler.PacketContext;
 import net.createmod.catnip.data.Pair;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -46,7 +46,7 @@ public record HoneyGlueChangeBoundsPacket(AABB bounds, UUID honeyGlue) implement
         if (entity instanceof final HoneyGlueEntity honeyGlue) {
             final Pair<Boolean, String> pair = HoneyGlueMaxSizing.checkBounds(this.bounds);
 
-            if (!pair.getFirst()) {
+            if (!pair.get(0)) {
                 SimSoundEvents.HONEY_ADDED.play(entity.level(), null, honeyGlue.getBoundingBox().getCenter(), 0.5F, 0.5F);
                 honeyGlue.spawnParticles();
                 entity.remove(Entity.RemovalReason.KILLED);

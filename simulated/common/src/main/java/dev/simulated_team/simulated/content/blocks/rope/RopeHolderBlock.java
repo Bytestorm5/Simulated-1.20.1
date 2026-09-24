@@ -11,7 +11,7 @@ import dev.simulated_team.simulated.content.blocks.rope.strand.server.ServerRope
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,7 +42,7 @@ public interface RopeHolderBlock <T extends SmartBlockEntity> extends BlockSubLe
             final RopeStrandHolderBehavior otherHolder = smartBlockEntity.getBehaviour(RopeStrandHolderBehavior.TYPE);
             if (otherHolder == null) return ItemInteractionResult.FAIL;
 
-            otherHolder.destroyRope(player, pos.getCenter(), !player.hasInfiniteMaterials());
+            otherHolder.destroyRope(player, pos.getCenter(), !player.getAbilities().instabuild);
             return ItemInteractionResult.SUCCESS;
         });
     }

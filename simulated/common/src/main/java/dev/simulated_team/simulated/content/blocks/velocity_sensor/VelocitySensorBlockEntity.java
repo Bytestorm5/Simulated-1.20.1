@@ -18,7 +18,6 @@ import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -94,7 +93,7 @@ public class VelocitySensorBlockEntity extends SmartBlockEntity implements IHave
                 }
 
                 // int cast rounds towards 0
-                this.signedRedstoneStrength = (int) Math.clamp((this.getAdjustedVelocity() / this.maxSpeed.getValue()) * 15f, -15, 15);
+                this.signedRedstoneStrength = (int) Mth.clamp((this.getAdjustedVelocity() / this.maxSpeed.getValue()) * 15f, -15, 15);
             } else { // sublevel is null, aka on stationary ground
                 this.adjustedVelocity = 0;
                 this.signedRedstoneStrength = 0;
@@ -147,16 +146,16 @@ public class VelocitySensorBlockEntity extends SmartBlockEntity implements IHave
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(tag, registries, clientPacket);
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
+        super.write(tag, clientPacket);
 
         tag.putFloat("AdjustedVelocity", this.getAdjustedVelocity());
         tag.putInt("SignedRedstoneStrength", this.signedRedstoneStrength);
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(tag, registries, clientPacket);
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
+        super.read(tag, clientPacket);
 
         this.adjustedVelocity = tag.getFloat("AdjustedVelocity");
         this.signedRedstoneStrength = Mth.clamp(-15, 15, tag.getInt("SignedRedstoneStrength"));
@@ -246,15 +245,15 @@ public class VelocitySensorBlockEntity extends SmartBlockEntity implements IHave
         }
 
         @Override
-        public void read(final CompoundTag nbt, final HolderLookup.Provider registries, final boolean clientPacket) {
+        public void read(final CompoundTag nbt, final boolean clientPacket) {
             this.towards = nbt.getBoolean("ScrollValueTowards");
-            super.read(nbt, registries, clientPacket);
+            super.read(nbt, clientPacket);
         }
 
         @Override
-        public void write(final CompoundTag nbt, final HolderLookup.Provider registries, final boolean clientPacket) {
+        public void write(final CompoundTag nbt, final boolean clientPacket) {
             nbt.putBoolean("ScrollValueTowards", this.towards);
-            super.write(nbt, registries, clientPacket);
+            super.write(nbt, clientPacket);
         }
     }
 }

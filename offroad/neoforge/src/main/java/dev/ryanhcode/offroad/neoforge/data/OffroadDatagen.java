@@ -11,8 +11,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.concurrent.CompletableFuture;
 

@@ -10,9 +10,9 @@ import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec3;
 
 public class MagnetFieldParticleData2 implements ParticleOptions, ICustomParticleDataWithSprite<MagnetFieldParticleData2> {

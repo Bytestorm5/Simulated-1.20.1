@@ -8,12 +8,13 @@ import dev.simulated_team.simulated.util.SimCodecUtil;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public class DiagramConfig {
 
     public static final Codec<DiagramConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -26,7 +27,7 @@ public class DiagramConfig {
     ).apply(instance, DiagramConfig::new));
 
     public static final StreamCodec<ByteBuf, DiagramConfig> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()), DiagramConfig::enabledForceGroups,
+            VanillaStreamCodecs.RESOURCE_LOCATION.apply(ByteBufCodecs.list()), DiagramConfig::enabledForceGroups,
             ByteBufCodecs.BOOL, DiagramConfig::displayCenterOfMass,
             ByteBufCodecs.BOOL, DiagramConfig::mergeForces,
             ByteBufCodecs.DOUBLE, DiagramConfig::yaw,

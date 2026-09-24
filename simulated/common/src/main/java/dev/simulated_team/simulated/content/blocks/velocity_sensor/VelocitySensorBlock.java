@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.velocity_sensor;
 
-import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.block.IBE;
 import dev.simulated_team.simulated.content.blocks.util.AbstractDirectionalAxisBlock;
 import dev.simulated_team.simulated.index.SimBlockEntityTypes;
@@ -21,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class VelocitySensorBlock extends AbstractDirectionalAxisBlock implements IBE<VelocitySensorBlockEntity>, CommonRedstoneBlock {
-    public static final MapCodec<VelocitySensorBlock> CODEC = simpleCodec(VelocitySensorBlock::new);
 
     /**
      * 0 == unpowered, 1 == powered along positive axis, 2 == powered along negative axis
@@ -32,10 +30,6 @@ public class VelocitySensorBlock extends AbstractDirectionalAxisBlock implements
         super(properties);
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Nullable
     public BlockState getStateForPlacement(final BlockPlaceContext context) {

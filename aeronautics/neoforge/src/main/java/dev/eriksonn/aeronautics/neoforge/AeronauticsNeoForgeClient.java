@@ -11,14 +11,14 @@ import foundry.veil.forge.event.ForgeVeilRegisterBlockLayersEvent;
 import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Mod(value = Aeronautics.MOD_ID, dist = Dist.CLIENT)
 public class AeronauticsNeoForgeClient {
 	public AeronauticsNeoForgeClient(final IEventBus modBus, final ModContainer container) {
-		NeoForge.EVENT_BUS.register(AeroNeoForgeClientEvents.class);
+		MinecraftForge.EVENT_BUS.register(AeroNeoForgeClientEvents.class);
 		modBus.register(AeroNeoForgeClientEvents.ModBusEvents.class);
 		container.registerExtensionPoint(IConfigScreenFactory.class, ((c, l) -> new BaseConfigScreen(l, Aeronautics.MOD_ID)));
 

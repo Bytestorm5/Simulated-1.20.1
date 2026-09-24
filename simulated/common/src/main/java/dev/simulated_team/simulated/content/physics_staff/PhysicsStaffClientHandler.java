@@ -417,12 +417,12 @@ public class PhysicsStaffClientHandler {
 
         dragSessions.clear();
         for (final Pair<UUID, Vector3d> pair : newSessions) {
-            dragSessions.put(pair.getFirst(), pair.getSecond());
+            dragSessions.put(pair.get(0), pair.getSecond());
         }
     }
 
     private double clampDistance(final double distance) {
-        return Math.clamp(distance, 2.0, PhysicsStaffItem.RANGE);
+        return Mth.clamp(distance, 2.0, PhysicsStaffItem.RANGE);
     }
 
     private boolean isRotating() {

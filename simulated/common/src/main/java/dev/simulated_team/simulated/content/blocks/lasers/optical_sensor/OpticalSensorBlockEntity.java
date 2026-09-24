@@ -49,6 +49,7 @@ import org.joml.Vector3dc;
 import java.awt.*;
 import java.util.List;
 
+import net.minecraft.util.Mth;
 public class OpticalSensorBlockEntity extends AbstractLaserBlockEntity implements Clearable, ClipboardCloneable {
 
     private FilteringBehaviour filter;
@@ -168,7 +169,7 @@ public class OpticalSensorBlockEntity extends AbstractLaserBlockEntity implement
 
     public void setRange(final int blocks) {
         final int max = SimConfigService.INSTANCE.server().blocks.opticalSensorRange.get();
-        this.range.setValue(Math.clamp(blocks, 1, max));
+        this.range.setValue(Mth.clamp(blocks, 1, max));
     }
 
     public float getRayDistance() {
@@ -201,14 +202,14 @@ public class OpticalSensorBlockEntity extends AbstractLaserBlockEntity implement
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(tag, registries, clientPacket);
-        this.opacity = Math.clamp(tag.contains("Opacity") ? tag.getFloat("Opacity") : 1, 0, 1);
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
+        super.read(tag, clientPacket);
+        this.opacity = Mth.clamp(tag.contains("Opacity") ? tag.getFloat("Opacity") : 1, 0, 1);
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(tag, registries, clientPacket);
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
+        super.write(tag, clientPacket);
         tag.putFloat("Opacity", this.opacity);
     }
 

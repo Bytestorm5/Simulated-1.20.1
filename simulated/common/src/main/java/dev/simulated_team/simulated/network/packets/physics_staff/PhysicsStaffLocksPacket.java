@@ -5,11 +5,10 @@ import dev.simulated_team.simulated.SimulatedClient;
 import foundry.veil.api.network.handler.PacketContext;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
@@ -17,13 +16,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public class PhysicsStaffLocksPacket implements CustomPacketPayload {
 
     public static Type<PhysicsStaffLocksPacket> TYPE = new Type<>(Simulated.path("physics_staff_locks"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PhysicsStaffLocksPacket> CODEC = StreamCodec.composite(
             ResourceKey.streamCodec(Registries.DIMENSION), packet -> packet.dimension,
-            CatnipStreamCodecBuilders.list(UUIDUtil.STREAM_CODEC), packet -> packet.locks,
+            CatnipStreamCodecBuilders.list(VanillaStreamCodecs.UUID), packet -> packet.locks,
             PhysicsStaffLocksPacket::new
     );
 

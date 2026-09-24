@@ -134,7 +134,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
     @Override
     public void sable$physicsTick(final ServerSubLevel subLevel, final RigidBodyHandle handle, final double timeStep) {
         final ItemStack item = this.getHeldItem();
-        final TireLike tire = item.get(OffroadDataComponents.TIRE);
+        final TireLike tire = OffroadDataComponents.TIRE.get(item);
         final BlockPos blockPos = this.getBlockPos();
 
         if (tire == null) {
@@ -241,7 +241,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
         super.tick();
 
         final ItemStack item = this.getHeldItem();
-        final TireLike tire = item.get(OffroadDataComponents.TIRE);
+        final TireLike tire = OffroadDataComponents.TIRE.get(item);
 
         this.lastChasingYaw = this.chasingYaw;
         this.chasingYaw = Mth.lerp(0.4, this.chasingYaw, this.computeYaw());
@@ -464,8 +464,8 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        tag.put("CurrentStack", this.getHeldItem().saveOptional(registries));
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
+        tag.put("CurrentStack", this.getHeldItem().saveOptional());
 
         if (clientPacket) {
             tag.putInt("SteeringSignalStrength", this.lastServerSteeringSignal);
@@ -473,12 +473,12 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
             tag.putInt("SteeringSignalStrengthRight", this.lastServerSteeringSignalRight);
         }
 
-        super.write(tag, registries, clientPacket);
+        super.write(tag, clientPacket);
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        final ItemStack stack = ItemStack.parseOptional(registries, tag.getCompound("CurrentStack"));
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
+        final ItemStack stack = ItemStack.parseOptional(tag.getCompound("CurrentStack"));
 
         this.inventory.suppressUpdate = true;
         this.inventory.slot.setStack(stack);
@@ -493,7 +493,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
             this.onStackChanged();
         }
 
-        super.read(tag, registries, clientPacket);
+        super.read(tag, clientPacket);
     }
 
     @Override
@@ -512,8 +512,8 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
     @Override
     protected AABB createRenderBoundingBox() {
         AABB aabb = new AABB(this.getBlockPos());
-        if(this.getHeldItem() != null && this.getHeldItem().has(OffroadDataComponents.TIRE)) {
-            final TireLike tire = this.getHeldItem().getComponents().get(OffroadDataComponents.TIRE);
+        if(this.getHeldItem() != null && OffroadDataComponents.TIRE.has(this.getHeldItem())) {
+            final TireLike tire = OffroadDataComponents.TIRE.get(this.getHeldItem().getComponents());
             aabb = aabb.inflate(tire.radius() + 1);
         }
         return aabb;

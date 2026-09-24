@@ -10,16 +10,16 @@ import dev.simulated_team.simulated.neoforge.service.SimpleResourceManagerRegist
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.InteractionResult;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.common.util.TriState;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-@EventBusSubscriber(modid = Simulated.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Simulated.MOD_ID, value = Dist.CLIENT)
 public class SimNeoForgeClientEvents {
 
 	@SubscribeEvent
@@ -74,7 +74,7 @@ public class SimNeoForgeClientEvents {
 		SimulatedCommonClientEvents.appendTooltip(event.getItemStack(), event.getFlags(), event.getEntity(), event.getToolTip());
 	}
 
-	@EventBusSubscriber(modid = Simulated.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+	@Mod.EventBusSubscriber(modid = Simulated.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class ModBusEvents {
 
 		@SubscribeEvent
@@ -84,7 +84,7 @@ public class SimNeoForgeClientEvents {
 
 		@SubscribeEvent
 		public static void registerGuiLayers(final RegisterGuiLayersEvent event) {
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Simulated.path("linked_typewriter_binding"), LinkedTypewriterItemBindHandler.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR, Simulated.path("linked_typewriter_binding"), LinkedTypewriterItemBindHandler.OVERLAY);
 		}
 
 		@SubscribeEvent

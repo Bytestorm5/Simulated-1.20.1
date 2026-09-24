@@ -8,7 +8,6 @@ import dev.simulated_team.simulated.mixin_interface.extra_kinetics.KineticBlockE
 import dev.simulated_team.simulated.util.extra_kinetics.ExtraBlockPos;
 import dev.simulated_team.simulated.util.extra_kinetics.ExtraKinetics;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -142,15 +141,15 @@ public abstract class KineticBlockEntityMixin extends SmartBlockEntity implement
     }
 
     @Inject(method = "write", at = @At("TAIL"), remap = false)
-    public void simulated$saveConnected(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket, final CallbackInfo ci) {
+    public void simulated$saveConnected(final CompoundTag compound, final boolean clientPacket, final CallbackInfo ci) {
         if (this instanceof final ExtraKinetics ek) {
             final KineticBlockEntity extraKinetics = ek.getExtraKinetics();
             if (extraKinetics != null) {
                 final CompoundTag internalTag = new CompoundTag();
                 if (clientPacket) {
-                    extraKinetics.writeClient(internalTag, registries);
+                    extraKinetics.writeClient(internalTag);
                 } else {
-                    extraKinetics.saveAdditional(internalTag, registries);
+                    extraKinetics.saveAdditional(internalTag);
                 }
 
                 compound.put(ek.getExtraKineticsSaveName(), internalTag);
@@ -163,15 +162,15 @@ public abstract class KineticBlockEntityMixin extends SmartBlockEntity implement
     }
 
     @Inject(method = "read", at = @At("TAIL"), remap = false)
-    public void simulated$readConnected(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket, final CallbackInfo ci) {
+    public void simulated$readConnected(final CompoundTag compound, final boolean clientPacket, final CallbackInfo ci) {
         if (this instanceof final ExtraKinetics ek) {
             final KineticBlockEntity extraKinetics = ek.getExtraKinetics();
             if (extraKinetics != null) {
                 final CompoundTag extraKineticsTag = compound.getCompound(ek.getExtraKineticsSaveName());
                 if (clientPacket) {
-                    extraKinetics.readClient(extraKineticsTag, registries);
+                    extraKinetics.readClient(extraKineticsTag);
                 } else {
-                    extraKinetics.loadCustomOnly(extraKineticsTag, registries);
+                    extraKinetics.loadCustomOnly(extraKineticsTag);
                 }
             }
         }

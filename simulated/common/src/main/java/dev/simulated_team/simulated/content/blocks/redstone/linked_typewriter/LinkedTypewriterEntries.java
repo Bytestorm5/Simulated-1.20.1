@@ -11,14 +11,13 @@ import dev.simulated_team.simulated.Simulated;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public class LinkedTypewriterEntries {
 
     private final Int2ObjectLinkedOpenHashMap<KeyboardEntry> keyMap;
@@ -43,7 +43,7 @@ public class LinkedTypewriterEntries {
         this.newlyDeactivatedKeyboardEntries = new HashSet<>();
     }
 
-    public static LinkedTypewriterEntries readKeys(final HolderLookup.Provider registryAccess, final ListTag tags, final BlockPos pos) {
+    public static LinkedTypewriterEntries readKeys(final ListTag tags, final BlockPos pos) {
         final LinkedTypewriterEntries keys = new LinkedTypewriterEntries();
 
         for (final Tag tag : tags) {
@@ -52,7 +52,7 @@ public class LinkedTypewriterEntries {
             if (result.isError()) { //if there was an error saving the entry, we want to output to the console instead of crashing
                 Simulated.LOGGER.error(result.error().get().message());
             } else {
-                final KeyboardEntry entry = result.getOrThrow().getFirst();
+                final KeyboardEntry entry = result.getOrThrow(false, error -> { }).get(0);
                 entry.setLocation(pos);
                 keys.setKey(entry.glfwKeyCode, entry);
             }
@@ -138,7 +138,7 @@ public class LinkedTypewriterEntries {
         this.keyMap.putAll(newMap);
     }
 
-    public ListTag saveKeys(final HolderLookup.Provider registryAccess) {
+    public ListTag saveKeys() {
         final ListTag tags = new ListTag();
         if (this.keyMap.isEmpty()) {
             return tags;
@@ -150,7 +150,7 @@ public class LinkedTypewriterEntries {
             if (result.isError()) { //if there was an error saving the entry, we want to output to the console instead of crashing
                 Simulated.LOGGER.error(result.error().get().message());
             } else {
-                tags.add(result.getOrThrow());
+                tags.add(result.getOrThrow(false, error -> { }));
             }
         }
 
@@ -183,8 +183,8 @@ public class LinkedTypewriterEntries {
                         .apply(instance, KeyboardEntry::createFromCodec));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, KeyboardEntry> STREAM_CODEC = StreamCodec.composite(
-                ItemStack.OPTIONAL_STREAM_CODEC, KeyboardEntry::getFirstAsItemStack,
-                ItemStack.OPTIONAL_STREAM_CODEC, KeyboardEntry::getSecondAsItemStack,
+                VanillaStreamCodecs.ITEM_STACK, KeyboardEntry::getFirstAsItemStack,
+                VanillaStreamCodecs.ITEM_STACK, KeyboardEntry::getSecondAsItemStack,
                 ByteBufCodecs.INT, KeyboardEntry::getGLFWKeyCode,
                 KeyboardEntry::createFromCodec);
 
@@ -254,7 +254,7 @@ public class LinkedTypewriterEntries {
         }
 
         public ItemStack getFirstAsItemStack() {
-            return this.getFirst().getStack();
+            return this.get(0).getStack();
         }
 
         private Item getFirstItem() {

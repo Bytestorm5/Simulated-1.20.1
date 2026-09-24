@@ -2,7 +2,7 @@ package dev.simulated_team.simulated.mixin.end_sea;
 
 import dev.simulated_team.simulated.content.end_sea.EndSeaRenderer;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
+import foundry.veil.backport.client.DeltaTracker;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;

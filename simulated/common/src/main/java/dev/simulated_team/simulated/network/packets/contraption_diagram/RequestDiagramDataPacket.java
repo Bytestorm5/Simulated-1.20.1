@@ -6,21 +6,21 @@ import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.content.entities.diagram.DiagramEntity;
 import foundry.veil.api.network.handler.ServerPacketContext;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
 import java.util.UUID;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record RequestDiagramDataPacket(UUID subLevel) implements CustomPacketPayload {
 
     public static Type<RequestDiagramDataPacket> TYPE = new Type<>(Simulated.path("request_diagram_data"));
 
     public static StreamCodec<RegistryFriendlyByteBuf, RequestDiagramDataPacket> CODEC = StreamCodec.composite(
-            UUIDUtil.STREAM_CODEC, RequestDiagramDataPacket::subLevel,
+            VanillaStreamCodecs.UUID, RequestDiagramDataPacket::subLevel,
             RequestDiagramDataPacket::new);
 
     public void handle(final ServerPacketContext context) {

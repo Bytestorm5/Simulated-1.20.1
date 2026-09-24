@@ -1,6 +1,6 @@
 plugins {
-    // https://projects.neoforged.net/neoforged/moddevgradle
-    id 'net.neoforged.moddev' version '2.0.140' apply false
+    // https://projects.neoforged.net/neoforged/moddevgradle (legacy Forge mode for 1.20.1)
+    id 'net.neoforged.moddev.legacyforge' version '2.0.147' apply false
 }
 
 allprojects {
@@ -54,7 +54,18 @@ subprojects {
             }
         }
 
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Forge'
+                    url = 'https://maven.minecraftforge.net'
+                }
+            }
+            filter { includeGroupAndSubgroups('net.minecraftforge') }
+        }
+
         maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
+        maven { url = "https://maven.ithundxr.dev/mirror" } // Registrate
         maven { url = "https://mvn.devos.one/snapshots" } // Registrate
         maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // ForgeConfigAPIPort
 

@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class PairedDockingConnectorBlock extends DirectionalBlock {
 
-    public static final MapCodec<PairedDockingConnectorBlock> CODEC = simpleCodec(PairedDockingConnectorBlock::new);
 
     private static final VoxelShape[] SHAPES = {
             box(0.0, -16.0, 0.0, 16.0, 16.0, 16.0),
@@ -72,7 +71,7 @@ public class PairedDockingConnectorBlock extends DirectionalBlock {
     @Override
     public @NotNull BlockState playerWillDestroy(final @NotNull Level level, final @NotNull BlockPos pos, final @NotNull BlockState state, final @NotNull Player player) {
         if (!level.isClientSide()) {
-            if (player.hasInfiniteMaterials()) {
+            if (player.getAbilities().instabuild) {
                 final BlockPos connectorPos = pos.relative(state.getValue(FACING));
                 final BlockState connectorState = level.getBlockState(connectorPos);
                 if (connectorState.is(SimBlocks.DOCKING_CONNECTOR)) {

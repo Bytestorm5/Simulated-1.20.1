@@ -1,6 +1,6 @@
 package dev.simulated_team.simulated.multiloader.energy;
 
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class SingleBatteryWrapper implements IEnergyStorage {
     private final SingleBattery battery;

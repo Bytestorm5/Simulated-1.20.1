@@ -300,8 +300,8 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(tag, registries, clientPacket);
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
+        super.write(tag, clientPacket);
 
         final CompoundTag powers = new CompoundTag();
         for (final Map.Entry<Direction, Integer> entry : this.redstoneMap.entrySet()) {
@@ -323,8 +323,8 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(tag, registries, clientPacket);
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
+        super.read(tag, clientPacket);
 
         if (tag.contains("Powers")) {
             final CompoundTag powers = (CompoundTag) tag.get("Powers");
@@ -403,17 +403,17 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
         }
 
         @Override
-        public void write(final CompoundTag nbt, final HolderLookup.Provider registries, final boolean clientPacket) {
+        public void write(final CompoundTag nbt, final boolean clientPacket) {
             nbt.putInt("ScrollValue1", this.primaryValue);
             nbt.putInt("ScrollValue2", this.secondaryValue);
-            super.write(nbt, registries, clientPacket);
+            super.write(nbt, clientPacket);
         }
 
         @Override
-        public void read(final CompoundTag nbt, final HolderLookup.Provider registries, final boolean clientPacket) {
+        public void read(final CompoundTag nbt, final boolean clientPacket) {
             this.primaryValue = nbt.getInt("ScrollValue1");
             this.secondaryValue = nbt.getInt("ScrollValue2");
-            super.read(nbt, registries, clientPacket);
+            super.read(nbt, clientPacket);
         }
 
         @Override

@@ -22,7 +22,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
 
+import net.minecraft.world.InteractionResult;
 public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<NameplateBlockEntity>, IWrenchable, BlockSubLevelAssemblyListener {
 
     public static final EnumProperty<Position> POSITION = EnumProperty.create("position", Position.class);
@@ -149,7 +150,12 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(final ItemStack itemStack, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+    public ItemInteractionResult useItemOn(final ItemStack itemStack, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
         if (!player.isShiftKeyDown() && player.mayBuild()) {
             final IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
             if (itemStack.getItem() instanceof final BlockItem bi && blockState.is(bi.getBlock()) && placementHelper.matchesItem(itemStack)) {
@@ -247,10 +253,6 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
         return this.color;
     }
 
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     public void afterMove(final ServerLevel serverLevel, final ServerLevel resultingLevel, final BlockState blockState, final BlockPos oldPos, final BlockPos newPos) {
@@ -321,7 +323,7 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
             if (directions.isEmpty())
                 return PlacementOffset.fail();
             else {
-                return PlacementOffset.success(blockPos.relative(directions.getFirst()),
+                return PlacementOffset.success(blockPos.relative(directions.get(0)),
                         s -> s.setValue(FACING, blockState.getValue(FACING)));
             }
         }

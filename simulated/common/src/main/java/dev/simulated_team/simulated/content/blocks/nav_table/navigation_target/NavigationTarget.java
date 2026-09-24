@@ -121,6 +121,6 @@ public interface NavigationTarget {
 
     @Nullable
     static NavigationTarget ofStack(final ItemStack itemStack) {
-        return itemStack.get(SimDataComponents.TARGET);
+        return SimDataComponents.TARGET.get(itemStack);
     }
 }

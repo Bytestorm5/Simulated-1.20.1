@@ -32,8 +32,8 @@ public class ClientRopeStrand {
             point.previousPosition().set(point.position());
 
             // Remove old snapshots
-            while (!buffer.isEmpty() && buffer.getFirst().interpolationTick() < gameTick - 6) {
-                buffer.removeFirst();
+            while (!buffer.isEmpty() && buffer.get(0).interpolationTick() < gameTick - 6) {
+                buffer.remove(0);
             }
 
             // If we have no snapshots, we can't interpolate
@@ -90,7 +90,7 @@ public class ClientRopeStrand {
 
 //        if (this.startAttachment != null) {
 //            final Vec3 attachment = SubLevelHelper.projectOutOfSubLevel(SableDistUtil.getClientLevel(), this.startAttachment);
-//            this.points.getFirst().position().set(attachment.x, attachment.y, attachment.z);
+//            this.points.get(0).position().set(attachment.x, attachment.y, attachment.z);
 //        }
 //
 //        if (this.endAttachment != null) {
@@ -112,7 +112,7 @@ public class ClientRopeStrand {
         if (this.points.isEmpty()) {
             return null;
         }
-        final Vector3d point0 = this.points.getFirst().position();
+        final Vector3d point0 = this.points.get(0).position();
         AABB bounds = new AABB(point0.x, point0.y, point0.z, point0.x, point0.y, point0.z);
 
         for (final ClientRopePoint point : this.points) {

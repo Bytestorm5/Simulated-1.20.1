@@ -16,7 +16,7 @@ import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.lang.FontHelper;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
+import foundry.veil.backport.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -106,7 +106,7 @@ public class LinkedTypewriterItemBindHandler {
         if (key != GLFW.GLFW_KEY_ESCAPE) {
             final InteractionHand hand = getHand();
             if (hand != null) {
-                VeilPacketManager.server().sendPacket(new TypewriterSaveKeyToItemPacket(hand, new LinkedTypewriterEntries.KeyboardEntry(frequency.getFirst(), frequency.getSecond(), key, BlockPos.ZERO)));
+                VeilPacketManager.server().sendPacket(new TypewriterSaveKeyToItemPacket(hand, new LinkedTypewriterEntries.KeyboardEntry(frequency.get(0), frequency.getSecond(), key, BlockPos.ZERO)));
                 LinkedTypewriterInteractionHandler.preventPress(key, scanCode);
 
                 SimLang.builder()

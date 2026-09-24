@@ -63,7 +63,7 @@ public class NewPonderTooltipManager {
 		}
 
 		try {
-			final String data = result.getOrThrow().toString();
+			final String data = result.getOrThrow(false, error -> { }).toString();
 			Files.writeString(filePath(), data, StandardCharsets.UTF_8);
 		} catch (final IOException ignored) {
 

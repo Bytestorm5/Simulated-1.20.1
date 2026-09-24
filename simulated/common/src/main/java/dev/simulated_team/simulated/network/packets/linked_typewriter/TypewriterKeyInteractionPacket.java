@@ -6,18 +6,19 @@ import dev.simulated_team.simulated.index.SimStats;
 import foundry.veil.api.network.handler.ServerPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.lwjgl.glfw.GLFW;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record TypewriterKeyInteractionPacket(BlockPos interactionPos, int key, int scanCode, int action /*If it's being pressed etc*/) implements CustomPacketPayload {
     public static final Type<TypewriterKeyInteractionPacket> TYPE = new Type<>(Simulated.path("key_interaction"));
 
     public static final StreamCodec<ByteBuf, TypewriterKeyInteractionPacket> CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC, TypewriterKeyInteractionPacket::interactionPos,
+            VanillaStreamCodecs.BLOCK_POS, TypewriterKeyInteractionPacket::interactionPos,
             ByteBufCodecs.INT, TypewriterKeyInteractionPacket::key,
             ByteBufCodecs.INT, TypewriterKeyInteractionPacket::scanCode,
             ByteBufCodecs.INT, TypewriterKeyInteractionPacket::action,

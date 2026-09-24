@@ -16,11 +16,10 @@ public class AeroSoundDistUtil {
         final SoundManager soundManager = Minecraft.getInstance().getSoundManager();
         boolean needsNewSounds = false;
 
-        if (soundInstance instanceof PropellerBearingSoundHolder(
-                final PropellerBearingSoundInstance small, final PropellerBearingSoundInstance large
-        ) && (small.isStopped() || large.isStopped())) {
-            soundManager.stop(small);
-            soundManager.stop(large);
+        if (soundInstance instanceof final PropellerBearingSoundHolder holder
+                && (holder.small().isStopped() || holder.large().isStopped())) {
+            soundManager.stop(holder.small());
+            soundManager.stop(holder.large());
             needsNewSounds = true;
         }
 

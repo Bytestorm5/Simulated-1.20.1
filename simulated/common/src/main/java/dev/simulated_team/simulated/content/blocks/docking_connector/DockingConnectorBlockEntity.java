@@ -24,7 +24,6 @@ import dev.simulated_team.simulated.util.SimMovementContext;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -436,7 +435,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
         tag.putBoolean("IsPowered", this.powered);
         tag.putFloat("Extension", this.extension.getValue());
         tag.putFloat("Target", this.extension.getChaseTarget());
@@ -450,14 +449,14 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
             tag.putUUID("OtherConnectorSubLevelId", this.otherConnectorSubLevelId);
         }
 
-        tag.put("Inventory", this.inventory.write(registries));
+        tag.put("Inventory", this.inventory.write());
         tag.put("Tank", this.tank.write());
         tag.put("Battery", this.battery.write());
-        super.write(tag, registries, clientPacket);
+        super.write(tag, clientPacket);
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
         this.powered = tag.getBoolean("IsPowered");
         this.extension.setValue(tag.getFloat("Extension"));
         this.extension.updateChaseTarget(tag.getFloat("Target"));
@@ -477,10 +476,10 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
             this.otherConnectorSubLevelId = tag.getUUID("OtherConnectorSubLevelId");
         }
 
-        this.inventory.read(registries, tag.getCompound("Inventory"));
+        this.inventory.read(tag.getCompound("Inventory"));
         this.tank.read(tag.getCompound("Tank"));
         this.battery.read(tag.getCompound("Battery"));
-        super.read(tag, registries, clientPacket);
+        super.read(tag, clientPacket);
     }
 
     @Override

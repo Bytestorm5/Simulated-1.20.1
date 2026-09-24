@@ -13,13 +13,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.registries.DeferredRegister;
 
 @Mod(Simulated.MOD_ID)
 public final class SimulatedNeoForge {
@@ -34,7 +34,7 @@ public final class SimulatedNeoForge {
         tabRegister.register("main_tab", () -> TAB);
         tabRegister.register(modEventBus);
 
-        NeoForge.EVENT_BUS.register(SimNeoForgeCommonEvents.class);
+        MinecraftForge.EVENT_BUS.register(SimNeoForgeCommonEvents.class);
         modEventBus.register(SimNeoForgeCommonEvents.ModBusEvents.class);
 
         SimParticleTypesImpl.register(modEventBus);

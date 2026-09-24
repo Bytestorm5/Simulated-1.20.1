@@ -18,8 +18,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.common.data.BlockTagsProvider;
+import net.minecraftforge.registries.DeferredRegister;
 
 public class AeroPonderTags {
 

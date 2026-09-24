@@ -1,7 +1,7 @@
 package dev.eriksonn.aeronautics.mixin.levitite;
 
 import net.minecraft.client.renderer.RenderType;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.ChunkRenderTypeSet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;

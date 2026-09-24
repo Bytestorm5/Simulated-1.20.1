@@ -81,7 +81,7 @@ public class SimulatedAdvancement {
             return true;
         final AdvancementHolder advancement = sp.getServer()
                 .getAdvancements()
-                .get(ResourceLocation.fromNamespaceAndPath(this.modid, this.id));
+                .get(new ResourceLocation(this.modid, this.id));
         if (advancement == null)
             return true;
         return sp.getAdvancements()
@@ -125,7 +125,7 @@ public class SimulatedAdvancement {
         if (this.parent != null)
             this.builder.parent(this.parent.datagenResult);
 
-        this.datagenResult = this.builder.save(t, ResourceLocation.fromNamespaceAndPath(this.modid, this.id)
+        this.datagenResult = this.builder.save(t, new ResourceLocation(this.modid, this.id)
                 .toString());
     }
 

@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.rope.rope_connector;
 
-import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.contraption.BlockMovementChecks;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.impl.contraption.BlockMovementChecksImpl;
@@ -16,7 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -29,8 +28,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import net.minecraft.world.InteractionResult;
 public class RopeConnectorBlock extends AbstractDirectionalAxisBlock implements IBE<RopeConnectorBlockEntity>, RopeHolderBlock<RopeConnectorBlockEntity>, BlockSubLevelAssemblyListener, BlockSubLevelCollisionShape {
-    public static final MapCodec<RopeConnectorBlock> CODEC = simpleCodec(RopeConnectorBlock::new);
     private static final DirectionalAxisShaper SHAPE = DirectionalAxisShaper.make(SimBlockShapes.ROPE_CONNECTOR);
     private static final DirectionalAxisShaper PHYSICS_COLLIDER = DirectionalAxisShaper.make(SimBlockShapes.ROPE_CONNECTOR_COLLIDER);
 
@@ -54,10 +53,6 @@ public class RopeConnectorBlock extends AbstractDirectionalAxisBlock implements 
         super(properties);
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     public VoxelShape getSubLevelCollisionShape(final BlockGetter blockGetter, final BlockState state) {
@@ -96,7 +91,12 @@ public class RopeConnectorBlock extends AbstractDirectionalAxisBlock implements 
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(final ItemStack stack, final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+    public ItemInteractionResult useItemOn(final ItemStack stack, final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
         if (!level.isClientSide() && stack.is(SimTags.Items.DESTROYS_ROPE)) {
             return RopeHolderBlock.shearRope(this, level, pos, (ServerPlayer) player);
         }

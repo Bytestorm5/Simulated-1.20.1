@@ -2,13 +2,13 @@ package dev.simulated_team.simulated.neoforge.service;
 
 import dev.simulated_team.simulated.service.SimEntityDataSerialization;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class NeoForgeSimEntityDataSerialization implements SimEntityDataSerialization {
 
-    private static final DeferredRegister<EntityDataSerializer<?>> REGISTER = DeferredRegister.create(NeoForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, "simulated");
+    private static final DeferredRegister<EntityDataSerializer<?>> REGISTER = DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, "simulated");
 
     public static void register(final IEventBus modEventBus) {
         REGISTER.register(modEventBus);

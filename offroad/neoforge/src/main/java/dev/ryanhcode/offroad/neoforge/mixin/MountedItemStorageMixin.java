@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import dev.ryanhcode.offroad.content.contraptions.borehead_contraption.BoreheadBearingContraption;
 import dev.ryanhcode.offroad.neoforge.mixin_helpers.WrappedWrappedMountedItemStorage;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.lang.ref.WeakReference;

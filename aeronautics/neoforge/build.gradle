@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.neoforged.moddev'
+    id 'net.neoforged.moddev.legacyforge'
 }
 
 evaluationDependsOn(':simulated:neoforge')
@@ -8,8 +8,8 @@ evaluationDependsOn(':simulated:neoforge')
 def generatedResources = project(":aeronautics:common").file("src/generated/resources")
 def commonResources = project(":aeronautics:common").file("src/main/resources")
 
-neoForge {
-    version = neoforge_version
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
 
     def at = project(':aeronautics:common').file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -24,8 +24,8 @@ neoForge {
 
     runs {
         configureEach {
-            systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
-            ideName = "Aero NeoForge ${it.name.capitalize()} (${project.path})"
+            systemProperty('forge.enabledGameTestNamespaces', mod_id)
+            ideName = "Aero Forge ${it.name.capitalize()} (${project.path})"
         }
 
         data {
@@ -52,4 +52,17 @@ neoForge {
 
 sourceSets.main.resources {
     srcDir generatedResources.absolutePath
+}
+
+// Forge 1.20.1 runs on SRG names, so every mixin config needs a refmap. The common sources are compiled in this
+// project, so one refmap covers both configs.
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "aeronautics.mixins.json"
+    config "aeronautics.neoforge.mixins.json"
+}
+
+// Forge 1.20.1 only loads mixin configs listed in the jar manifest
+tasks.named('jar', Jar) {
+    manifest.attributes('MixinConfigs': "aeronautics.mixins.json,aeronautics.neoforge.mixins.json")
 }

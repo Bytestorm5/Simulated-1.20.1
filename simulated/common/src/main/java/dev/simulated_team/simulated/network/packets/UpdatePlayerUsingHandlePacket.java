@@ -6,20 +6,21 @@ import dev.simulated_team.simulated.content.blocks.handle.ServerHandleHoldingHan
 import dev.simulated_team.simulated.data.advancements.SimAdvancements;
 import foundry.veil.api.network.handler.ServerPacketContext;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record UpdatePlayerUsingHandlePacket(float desiredRange, boolean remove, BlockPos interactionPos) implements CustomPacketPayload {
 
     public static StreamCodec<RegistryFriendlyByteBuf, UpdatePlayerUsingHandlePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT, UpdatePlayerUsingHandlePacket::desiredRange,
             ByteBufCodecs.BOOL, UpdatePlayerUsingHandlePacket::remove,
-            BlockPos.STREAM_CODEC, UpdatePlayerUsingHandlePacket::interactionPos,
+            VanillaStreamCodecs.BLOCK_POS, UpdatePlayerUsingHandlePacket::interactionPos,
             UpdatePlayerUsingHandlePacket::new);
 
     public static Type<UpdatePlayerUsingHandlePacket> TYPE = new Type<>(Simulated.path("update_player_handle"));

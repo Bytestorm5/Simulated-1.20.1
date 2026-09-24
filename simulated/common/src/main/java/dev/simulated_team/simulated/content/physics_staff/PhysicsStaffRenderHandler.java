@@ -17,7 +17,7 @@ import foundry.veil.api.client.render.MatrixStack;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
+import foundry.veil.backport.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -88,7 +88,7 @@ public class PhysicsStaffRenderHandler {
      */
     private static void updateHoverPos(final Minecraft minecraft, final LocalPlayer player) {
         final ClientLevel level = minecraft.level;
-        final float partialTicks = minecraft.getTimer().getGameTimeDeltaPartialTick(false);
+        final float partialTicks = minecraft.getFrameTime();
 
         hoverBlockPos = null;
 

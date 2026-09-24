@@ -130,18 +130,18 @@ public class RedstoneInductorBlockEntity extends SmartBlockEntity implements IHa
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
         this.outputSignal = tag.getInt("OutputSignal");
         this.delayTicks = tag.getInt("DelayTicks");
         this.lerpedState.chase(this.outputSignal, 0.4, LerpedFloat.Chaser.EXP);
-        super.read(tag, registries, clientPacket);
+        super.read(tag, clientPacket);
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
         tag.putInt("OutputSignal", this.outputSignal);
         tag.putInt("DelayTicks", this.delayTicks);
-        super.write(tag, registries, clientPacket);
+        super.write(tag, clientPacket);
     }
 
     @Override

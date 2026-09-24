@@ -24,6 +24,7 @@ import org.joml.*;
 
 import java.lang.Math;
 
+import foundry.veil.backport.client.DeltaTracker;
 public class DiagramStickyNote extends DiagramButton {
 
     private static final SimGUITextures NOTE_TEXTURE = SimGUITextures.DIAGRAM_STICKY_NOTE;
@@ -224,7 +225,7 @@ public class DiagramStickyNote extends DiagramButton {
         if (this.renderTime >= 20.0f / DiagramScreen.FPS) {
             this.renderTime = 0.0f;
         } else {
-            this.renderTime += Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
+            this.renderTime += DeltaTracker.current().getRealtimeDeltaTicks();
             return;
         }
 

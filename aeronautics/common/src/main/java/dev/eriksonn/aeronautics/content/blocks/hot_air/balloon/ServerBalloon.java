@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.util.Mth;
 public class ServerBalloon extends Balloon {
     private final Map<LiftingGasType, LiftingGasData> gasAmounts = new Object2ObjectOpenHashMap<>();
 
@@ -335,7 +336,7 @@ public class ServerBalloon extends Balloon {
     @Override
     public boolean shouldSpawnGust(final BlockPos pos) {
         final float percentHeight = (pos.getY() + 0.5f - this.bounds.minY) / this.getHeight();
-        return percentHeight > 1.0 - Math.clamp(this.totalFilledVolume / this.getCapacity(), 0, 1);
+        return percentHeight > 1.0 - Mth.clamp(this.totalFilledVolume / this.getCapacity(), 0, 1);
     }
 
     @Override

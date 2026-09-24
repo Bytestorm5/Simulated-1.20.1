@@ -17,7 +17,7 @@ import java.util.UUID;
 public class RecoveryCompassNavigationTarget implements NavigationTarget {
     @Override
     public @Nullable Vec3 getTarget(final NavTableBlockEntity navBE, final ItemStack self) {
-        final UUID lastPlayer = self.get(SimDataComponents.COMPASS_PLACER_UUID);
+        final UUID lastPlayer = SimDataComponents.COMPASS_PLACER_UUID.get(self);
         if (lastPlayer != null) {
             GlobalPos lastDeathLocation;
 
@@ -25,14 +25,14 @@ public class RecoveryCompassNavigationTarget implements NavigationTarget {
             if (player != null) {
                 Optional<GlobalPos> lastDeathLocationOptional = player.getLastDeathLocation();
                 if (lastDeathLocationOptional.isEmpty()) {
-                    self.remove(SimDataComponents.LAST_PLAYER_DEATH_LOCATION);
+                    SimDataComponents.LAST_PLAYER_DEATH_LOCATION.remove(self);
                     return null;
                 }
 
                 lastDeathLocation = lastDeathLocationOptional.get();
-                self.set(SimDataComponents.LAST_PLAYER_DEATH_LOCATION, lastDeathLocation);
+                SimDataComponents.LAST_PLAYER_DEATH_LOCATION.set(self, lastDeathLocation);
             } else {
-                lastDeathLocation = self.get(SimDataComponents.LAST_PLAYER_DEATH_LOCATION);
+                lastDeathLocation = SimDataComponents.LAST_PLAYER_DEATH_LOCATION.get(self);
             }
 
             if (lastDeathLocation == null) {
@@ -53,15 +53,15 @@ public class RecoveryCompassNavigationTarget implements NavigationTarget {
     @Override
     public void onInsert(final ItemStack itemStack, final NavTableBlockEntity be, @Nullable final Player player) {
         if (player != null) {
-            DataComponentMap.Builder builder = DataComponentMap.builder().set(SimDataComponents.COMPASS_PLACER_UUID, player.getUUID());
-            player.getLastDeathLocation().ifPresent(globalPos -> builder.set(SimDataComponents.LAST_PLAYER_DEATH_LOCATION, globalPos));
+            DataComponentMap.Builder builder = SimDataComponents.COMPASS_PLACER_UUID.set(DataComponentMap.builder(), player.getUUID());
+            player.getLastDeathLocation().ifPresent(globalPos -> SimDataComponents.LAST_PLAYER_DEATH_LOCATION.set(builder, globalPos));
             itemStack.applyComponents(builder.build());
         }
     }
 
     @Override
     public void onExtract(final ItemStack itemStack, final NavTableBlockEntity be, @Nullable final Player player) {
-        itemStack.remove(SimDataComponents.COMPASS_PLACER_UUID);
-        itemStack.remove(SimDataComponents.LAST_PLAYER_DEATH_LOCATION);
+        SimDataComponents.COMPASS_PLACER_UUID.remove(itemStack);
+        SimDataComponents.LAST_PLAYER_DEATH_LOCATION.remove(itemStack);
     }
 }

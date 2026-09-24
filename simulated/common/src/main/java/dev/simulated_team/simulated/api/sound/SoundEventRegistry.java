@@ -41,7 +41,7 @@ public class SoundEventRegistry {
 	}
 
 	private ResourceLocation path(final String path) {
-		return ResourceLocation.fromNamespaceAndPath(this.modId, path);
+		return new ResourceLocation(this.modId, path);
 	}
 
 	public void provideLang(final BiConsumer<String, String> consumer) {

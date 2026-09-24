@@ -46,7 +46,7 @@ public class SimulatedSectionManager {
 				final DataResult<SimulatedSection> result = SimulatedSection.CODEC.parse(JsonOps.INSTANCE, entry.getValue());
 
 				if(result.isSuccess()) {
-					final SimulatedSection tab = result.getOrThrow();
+					final SimulatedSection tab = result.getOrThrow(false, error -> { });
 					SECTIONS.put(entry.getKey(), tab);
 					BY_SECTION.put(tab, entry.getKey());
 				}

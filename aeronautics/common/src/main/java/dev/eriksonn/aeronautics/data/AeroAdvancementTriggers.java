@@ -13,7 +13,7 @@ public class AeroAdvancementTriggers {
 	private static final List<SimulatedCriterionTriggerBase<?>> TRIGGERS = new LinkedList<>();
 
 	public static SimpleSimulatedTrigger addSimple(final String modid, final String id) {
-		return add(new SimpleSimulatedTrigger(ResourceLocation.fromNamespaceAndPath(modid,id)));
+		return add(new SimpleSimulatedTrigger(new ResourceLocation(modid,id)));
 	}
 
 	private static <T extends SimulatedCriterionTriggerBase<?>> T add(final T instance) {

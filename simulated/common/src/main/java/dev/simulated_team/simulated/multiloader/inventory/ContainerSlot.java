@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.multiloader.inventory;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -143,23 +142,23 @@ public class ContainerSlot implements NBTSerializable {
     }
 
     @Override
-    public CompoundTag write(final HolderLookup.Provider provider) {
+    public CompoundTag write() {
         final CompoundTag slotTag = new CompoundTag();
 
         slotTag.putInt("index", this.getIndex());
         if (!this.getStack().isEmpty()) {
-            slotTag.put("item", this.getStack().save(provider));
+            slotTag.put("item", this.getStack().save());
         }
 
         return slotTag;
     }
 
     @Override
-    public void read(final HolderLookup.Provider provider, final CompoundTag nbt) {
+    public void read(final CompoundTag nbt) {
         this.stack = ItemStack.EMPTY;
 
         if (nbt.contains("item")) {
-            this.stack = ItemStack.parseOptional(provider, nbt.getCompound("item"));
+            this.stack = ItemStack.parseOptional(nbt.getCompound("item"));
         }
 
         this.type = this.stack.getItem();

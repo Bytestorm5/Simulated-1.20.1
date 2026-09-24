@@ -10,9 +10,9 @@ import dev.simulated_team.simulated.index.SimSoundEvents;
 import foundry.veil.api.network.handler.PacketContext;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -59,7 +59,7 @@ public record HoneyGlueSpawnPacket(BlockPos from, BlockPos to) implements Custom
         final AABB newBounds = AABB.encapsulatingFullBlocks(this.from, this.to);
         final Pair<Boolean, String> pair = HoneyGlueMaxSizing.checkBounds(newBounds);
 
-        if (pair.getFirst()) {
+        if (pair.get(0)) {
             final ServerLevel level = (ServerLevel) context.level();
             assert level != null;
 

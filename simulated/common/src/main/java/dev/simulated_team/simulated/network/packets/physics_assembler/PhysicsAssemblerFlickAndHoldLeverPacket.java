@@ -5,17 +5,18 @@ import dev.simulated_team.simulated.content.blocks.physics_assembler.PhysicsAsse
 import foundry.veil.api.network.handler.ClientPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record PhysicsAssemblerFlickAndHoldLeverPacket(BlockPos pos, boolean flicked) implements CustomPacketPayload {
 
     public static Type<PhysicsAssemblerFlickAndHoldLeverPacket> TYPE = new Type<>(Simulated.path("flick_assembler_lever"));
     public static StreamCodec<ByteBuf, PhysicsAssemblerFlickAndHoldLeverPacket> CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC,
+            VanillaStreamCodecs.BLOCK_POS,
             PhysicsAssemblerFlickAndHoldLeverPacket::pos,
             ByteBufCodecs.BOOL,
             PhysicsAssemblerFlickAndHoldLeverPacket::flicked,

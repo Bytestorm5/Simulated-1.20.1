@@ -25,8 +25,8 @@ public abstract class CompassItemPropertyFunctionMixin {
 
 	@WrapMethod(method = "getCompassRotation")
     private float simulated$prioritizeID(final ItemStack stack, final ClientLevel level, final int seed, final Entity entity, final Operation<Float> original) {
-        if (stack.has(SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER)) {
-	        final UUID trackerID = stack.get(SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER);
+        if (SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER.has(stack)) {
+	        final UUID trackerID = SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER.get(stack);
 	        final ClientLodestonePositions positions = ClientLodestonePositions.clientPositions.get(level);
 
 	        final Vector3d pos = positions.CLIENT_LODESTONE_MAP.get(trackerID);

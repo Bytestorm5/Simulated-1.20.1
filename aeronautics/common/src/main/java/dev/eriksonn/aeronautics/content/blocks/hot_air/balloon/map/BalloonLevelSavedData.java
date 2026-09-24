@@ -23,14 +23,14 @@ public class BalloonLevelSavedData extends SavedData {
 
     private Level level;
 
-    private static BalloonLevelSavedData create(final ServerLevel level, final CompoundTag tag, final HolderLookup.Provider registries) {
+    private static BalloonLevelSavedData create(final ServerLevel level, final CompoundTag tag) {
         final BalloonLevelSavedData sd = new BalloonLevelSavedData();
 
         if (tag.contains(ID)) {
             final DataResult<Pair<List<SavedBalloon>, Tag>> result = CODEC.decode(NbtOps.INSTANCE, tag.getList(ID, Tag.TAG_COMPOUND));
 
             final BalloonMap map = BalloonMap.MAP.get(level);
-            result.ifSuccess(x -> map.getUnloadedBalloons().addAll(x.getFirst()));
+            result.ifSuccess(x -> map.getUnloadedBalloons().addAll(x.get(0)));
         }
         return sd;
     }

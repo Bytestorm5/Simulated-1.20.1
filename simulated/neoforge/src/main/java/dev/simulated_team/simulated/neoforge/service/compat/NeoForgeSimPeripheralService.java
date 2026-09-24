@@ -7,7 +7,7 @@ import dan200.computercraft.api.peripheral.PeripheralCapability;
 import dev.simulated_team.simulated.service.compat.SimPeripheralService;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.bus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 import java.util.ArrayList;

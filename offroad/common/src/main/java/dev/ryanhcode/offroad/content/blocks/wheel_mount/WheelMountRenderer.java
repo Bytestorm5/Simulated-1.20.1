@@ -114,7 +114,7 @@ public class WheelMountRenderer extends KineticBlockEntityRenderer<WheelMountBlo
         ms.mulPose(Axis.ZP.rotation((float) signMultiplier));
 
         final ItemStack itemStack = be.getHeldItem();
-        final TireLike tireLike = itemStack.get(OffroadDataComponents.TIRE);
+        final TireLike tireLike = OffroadDataComponents.TIRE.get(itemStack);
         if (tireLike != null) {
             final Vec3 rotation = tireLike.rotation();
             ms.mulPose(Axis.XP.rotation((float) Math.toRadians(rotation.x)));

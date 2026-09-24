@@ -62,11 +62,11 @@ public abstract class AbstractLaserRenderer<T extends AbstractLaserBlockEntity> 
                 hitPos = laser.getVirtualHitPos();
             }
 
-            laserRange = (float) Math.sqrt(Sable.HELPER.distanceSquaredWithSubLevels(SableDistUtil.getClientLevel(), positions.getFirst(), hitPos)) - 0.1f;
+            laserRange = (float) Math.sqrt(Sable.HELPER.distanceSquaredWithSubLevels(SableDistUtil.getClientLevel(), positions.get(0), hitPos)) - 0.1f;
         } else if (laser.getVirtualHitPos() != Vec3.ZERO) {
             final Vec3 hitPos = laser.getVirtualHitPos();
 
-            laserRange = (float) Math.sqrt(Sable.HELPER.distanceSquaredWithSubLevels(SableDistUtil.getClientLevel(), positions.getFirst(), hitPos)) - 0.1f;
+            laserRange = (float) Math.sqrt(Sable.HELPER.distanceSquaredWithSubLevels(SableDistUtil.getClientLevel(), positions.get(0), hitPos)) - 0.1f;
         }
 
         return laserRange;

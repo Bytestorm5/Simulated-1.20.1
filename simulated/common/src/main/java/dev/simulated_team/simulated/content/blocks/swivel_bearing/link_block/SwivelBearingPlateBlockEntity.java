@@ -11,7 +11,6 @@ import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.simulated_team.simulated.content.blocks.swivel_bearing.SwivelBearingBlockEntity;
 import dev.simulated_team.simulated.index.SimBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -88,8 +87,8 @@ public class SwivelBearingPlateBlockEntity extends KineticBlockEntity implements
     }
 
     @Override
-    protected void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    protected void write(final CompoundTag compound, final boolean clientPacket) {
+        super.write(compound, clientPacket);
 
         if (this.parent != null) {
             compound.put("ParentPos", NbtUtils.writeBlockPos(this.parent));
@@ -101,8 +100,8 @@ public class SwivelBearingPlateBlockEntity extends KineticBlockEntity implements
     }
 
     @Override
-    protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
+    protected void read(final CompoundTag compound, final boolean clientPacket) {
+        super.read(compound, clientPacket);
 
         if (compound.contains("parent")) {
             this.parent = NbtUtils.readBlockPos(compound, "parent").get();

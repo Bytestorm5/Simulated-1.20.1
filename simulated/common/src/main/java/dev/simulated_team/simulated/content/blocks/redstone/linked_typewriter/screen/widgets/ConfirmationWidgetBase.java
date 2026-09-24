@@ -32,7 +32,7 @@ public class ConfirmationWidgetBase extends IconButton {
     }
 
     public void renderHoveredText(final GuiGraphics graphics, final int mouseX, final int mouseY) {
-        graphics.renderComponentTooltip(Minecraft.getInstance().font, List.of(this.message.withColor(0xff0000)), mouseX, mouseY);
+        graphics.renderComponentTooltip(Minecraft.getInstance().font, List.of(this.message.withStyle(componentStyle -> componentStyle.withColor(0xff0000))), mouseX, mouseY);
     }
 
     @Override

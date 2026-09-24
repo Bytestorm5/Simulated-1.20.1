@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.multiloader.inventory;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -30,12 +29,12 @@ public abstract class InventoryLoaderWrapper implements AbstractContainer {
     public void setChanged() {}
 
     @Override
-    public CompoundTag write(final HolderLookup.Provider provider) {
+    public CompoundTag write() {
         return new CompoundTag();
     }
 
     @Override
-    public void read(final HolderLookup.Provider provider, final CompoundTag nbt) {
+    public void read(final CompoundTag nbt) {
 
     }
 

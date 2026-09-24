@@ -3,11 +3,11 @@ package dev.ryanhcode.offroad.neoforge;
 import dev.ryanhcode.offroad.Offroad;
 import dev.ryanhcode.offroad.OffroadClient;
 import net.createmod.catnip.config.ui.BaseConfigScreen;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.ConfigScreenHandler;
 
 @Mod(value = Offroad.MOD_ID, dist = Dist.CLIENT)
 public class OffroadNeoForgeClient {

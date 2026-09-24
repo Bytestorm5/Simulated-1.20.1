@@ -231,11 +231,11 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(tag, registries, clientPacket);
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
+        super.write(tag, clientPacket);
 
         tag.putString("typedEntry", this.typedEntry);
-        tag.put("Keys", this.entryMap.saveKeys(registries));
+        tag.put("Keys", this.entryMap.saveKeys());
 
         if (this.currentUser != null) {
             tag.putUUID("CurrentUser", this.currentUser);
@@ -243,11 +243,11 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(tag, registries, clientPacket);
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
+        super.read(tag, clientPacket);
 
         this.typedEntry = tag.getString("typedEntry");
-        this.entryMap = LinkedTypewriterEntries.readKeys(registries, tag.getList("Keys", 10), this.getBlockPos());
+        this.entryMap = LinkedTypewriterEntries.readKeys(tag.getList("Keys", 10), this.getBlockPos());
         if (tag.contains("CurrentUser")) {
             this.currentUser = tag.getUUID("CurrentUser");
         } else {
@@ -294,7 +294,7 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
 
     @Override
     public boolean writeToClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Direction side) {
-        tag.put("Keys", this.entryMap.saveKeys(registries));
+        tag.put("Keys", this.entryMap.saveKeys());
         return true;
     }
 
@@ -303,7 +303,7 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
         if (simulate) {
             return true;
         }
-        this.entryMap = LinkedTypewriterEntries.readKeys(registries, tag.getList("Keys", 10), this.getBlockPos());
+        this.entryMap = LinkedTypewriterEntries.readKeys(tag.getList("Keys", 10), this.getBlockPos());
         return true;
     }
 

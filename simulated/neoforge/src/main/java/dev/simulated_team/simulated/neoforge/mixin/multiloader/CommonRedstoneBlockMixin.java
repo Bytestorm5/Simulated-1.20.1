@@ -6,12 +6,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.extensions.IBlockExtension;
+import net.minecraftforge.common.extensions.IForgeBlock;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(CommonRedstoneBlock.class)
-public interface CommonRedstoneBlockMixin extends CommonRedstoneBlock, IBlockExtension {
+public interface CommonRedstoneBlockMixin extends CommonRedstoneBlock, IForgeBlock {
 
     @Override
     default boolean shouldCheckWeakPower(final BlockState state, final SignalGetter level, final BlockPos pos, final Direction side) {

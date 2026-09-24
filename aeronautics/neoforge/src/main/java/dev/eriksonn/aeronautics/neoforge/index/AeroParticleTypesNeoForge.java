@@ -5,9 +5,9 @@ import dev.eriksonn.aeronautics.index.AeroParticleTypes;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.registries.DeferredRegister;
 
 public class AeroParticleTypesNeoForge {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =

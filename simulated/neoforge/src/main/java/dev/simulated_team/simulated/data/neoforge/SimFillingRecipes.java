@@ -6,7 +6,7 @@ import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraftforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 

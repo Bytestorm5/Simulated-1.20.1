@@ -12,11 +12,11 @@ public class LaserSensorDisplaySource extends NumericSingleLineDisplaySource {
     @Override
     protected MutableComponent provideLine(final DisplayLinkContext context, final DisplayTargetStats displayTargetStats) {
         if (!(context.getSourceBlockEntity() instanceof final LaserSensorBlockEntity be)) {
-            return EMPTY.getFirst();
+            return EMPTY.get(0);
         }
 
         return (be.closestHitDistance == Double.MAX_VALUE) ?
-                EMPTY.getFirst() :
+                EMPTY.get(0) :
                 SimLang.number(be.closestHitDistance)
                         .space()
                         .text("block" + (be.closestHitDistance != 1 ? "s" : ""))

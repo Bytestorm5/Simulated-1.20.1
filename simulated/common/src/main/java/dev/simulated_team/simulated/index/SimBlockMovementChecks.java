@@ -62,206 +62,185 @@ public class SimBlockMovementChecks {
         final BlockState relativeState = world.getBlockState(pos.relative(direction));
         final Block relativeBlock = relativeState.getBlock();
 
-        //cool new java switch statements
-        return switch (block) {
-            case final SymmetricSailBlock ignored when relativeBlock instanceof SailBlock ->
-                    BlockMovementChecks.CheckResult.FAIL;
+        if (block instanceof SymmetricSailBlock && relativeBlock instanceof SailBlock) {
+            return BlockMovementChecks.CheckResult.FAIL;
+        }
 
-            case final SailBlock ignored when relativeBlock instanceof SymmetricSailBlock ->
-                    BlockMovementChecks.CheckResult.FAIL;
+        if (block instanceof SailBlock && relativeBlock instanceof SymmetricSailBlock) {
+            return BlockMovementChecks.CheckResult.FAIL;
+        }
 
-            case final SymmetricSailBlock ignored ->
-                    direction.getAxis() == state.getValue(SymmetricSailBlock.AXIS) ? BlockMovementChecks.CheckResult.FAIL : BlockMovementChecks.CheckResult.SUCCESS;
+        if (block instanceof SymmetricSailBlock) {
+            return direction.getAxis() == state.getValue(SymmetricSailBlock.AXIS) ? BlockMovementChecks.CheckResult.FAIL : BlockMovementChecks.CheckResult.SUCCESS;
+        }
 
-            case final SpringBlock ignored ->
-                    direction.getOpposite() == state.getValue(SpringBlock.FACING) ? BlockMovementChecks.CheckResult.SUCCESS : BlockMovementChecks.CheckResult.FAIL;
+        if (block instanceof SpringBlock) {
+            return direction.getOpposite() == state.getValue(SpringBlock.FACING) ? BlockMovementChecks.CheckResult.SUCCESS : BlockMovementChecks.CheckResult.FAIL;
+        }
 
-            default -> BlockMovementChecks.CheckResult.PASS;
-        };
+        return BlockMovementChecks.CheckResult.PASS;
     }
 
     private synchronized static Iterable<BlockPos> registerDefaultAdditionalBlocks(final BlockState state, final Level level, final BlockPos pos, final Set<BlockPos> visited) {
         TEMP_DEFAULT_POSITIONS.clear();
 
         final Block block = state.getBlock();
-        switch (block) {
-            case final BeltBlock ignored -> {
-                final BlockPos nextPos = BeltBlock.nextSegmentPosition(state, pos, true);
-                if (nextPos != null && !visited.contains(nextPos)) {
-                    TEMP_DEFAULT_POSITIONS.add(nextPos);
-                }
-
-                final BlockPos prevPos = BeltBlock.nextSegmentPosition(state, pos, false);
-                if (prevPos != null && !visited.contains(prevPos)) {
-                    TEMP_DEFAULT_POSITIONS.add(prevPos);
-                }
+        if (block instanceof BeltBlock) {
+            final BlockPos nextPos = BeltBlock.nextSegmentPosition(state, pos, true);
+            if (nextPos != null && !visited.contains(nextPos)) {
+                TEMP_DEFAULT_POSITIONS.add(nextPos);
             }
 
-            case final PulleyBlock ignored -> {
-                int limit = AllConfigs.server().kinetics.maxRopeLength.get();
-                BlockPos ropePos = pos;
-                while (limit-- >= 0) {
-                    ropePos = ropePos.below();
-                    if (!level.isLoaded(ropePos)) {
-                        break;
-                    }
+            final BlockPos prevPos = BeltBlock.nextSegmentPosition(state, pos, false);
+            if (prevPos != null && !visited.contains(prevPos)) {
+                TEMP_DEFAULT_POSITIONS.add(prevPos);
+            }
+        } else if (block instanceof PulleyBlock) {
+            int limit = AllConfigs.server().kinetics.maxRopeLength.get();
+            BlockPos ropePos = pos;
+            while (limit-- >= 0) {
+                ropePos = ropePos.below();
+                if (!level.isLoaded(ropePos)) {
+                    break;
+                }
 
-                    final BlockState ropeState = level.getBlockState(ropePos);
-                    final Block ropeBlock = ropeState.getBlock();
-                    if (!(ropeBlock instanceof PulleyBlock.RopeBlock) && !(ropeBlock instanceof PulleyBlock.MagnetBlock)) {
-                        if (!visited.contains(ropePos)) {
-                            TEMP_DEFAULT_POSITIONS.add(ropePos);
-                        }
-
-                        break;
-                    }
-
+                final BlockState ropeState = level.getBlockState(ropePos);
+                final Block ropeBlock = ropeState.getBlock();
+                if (!(ropeBlock instanceof PulleyBlock.RopeBlock) && !(ropeBlock instanceof PulleyBlock.MagnetBlock)) {
                     if (!visited.contains(ropePos)) {
                         TEMP_DEFAULT_POSITIONS.add(ropePos);
                     }
+
+                    break;
+                }
+
+                if (!visited.contains(ropePos)) {
+                    TEMP_DEFAULT_POSITIONS.add(ropePos);
                 }
             }
 
             //make sure windmills specifically are disassembled before moving
-            case final WindmillBearingBlock ignored -> {
-                if (level.getBlockEntity(pos) instanceof final WindmillBearingBlockEntity wwbe) {
-                    wwbe.disassembleForMovement();
-                }
-
-                final BlockPos relative = pos.relative(state.getValue(BearingBlock.FACING));
-                if (!visited.contains(relative)) {
-                    TEMP_DEFAULT_POSITIONS.add(relative);
-                }
+        } else if (block instanceof WindmillBearingBlock) {
+            if (level.getBlockEntity(pos) instanceof final WindmillBearingBlockEntity wwbe) {
+                wwbe.disassembleForMovement();
             }
 
-            case final BearingBlock ignored -> {
-                final BlockPos relative = pos.relative(state.getValue(BearingBlock.FACING));
-                if (!visited.contains(relative)) {
-                    TEMP_DEFAULT_POSITIONS.add(relative);
-                }
+            final BlockPos relative = pos.relative(state.getValue(BearingBlock.FACING));
+            if (!visited.contains(relative)) {
+                TEMP_DEFAULT_POSITIONS.add(relative);
             }
+        } else if (block instanceof BearingBlock) {
+            final BlockPos relative = pos.relative(state.getValue(BearingBlock.FACING));
+            if (!visited.contains(relative)) {
+                TEMP_DEFAULT_POSITIONS.add(relative);
+            }
+        } else if (block instanceof MechanicalPistonBlock) {
+            final MechanicalPistonBlock.PistonState s = state.getValue(MechanicalPistonBlock.STATE);
 
-            case final MechanicalPistonBlock ignored -> {
-                final MechanicalPistonBlock.PistonState s = state.getValue(MechanicalPistonBlock.STATE);
+            if (s != MechanicalPistonBlock.PistonState.MOVING) {
+                final Direction dir = state.getValue(MechanicalPistonBlock.FACING);
+                BlockPos reverseOffset = pos.relative(dir.getOpposite());
 
-                if (s != MechanicalPistonBlock.PistonState.MOVING) {
-                    final Direction dir = state.getValue(MechanicalPistonBlock.FACING);
-                    BlockPos reverseOffset = pos.relative(dir.getOpposite());
+                if (!visited.contains(reverseOffset)) {
+                    final BlockState poleState = level.getBlockState(reverseOffset);
+                    if (poleState.getBlock() instanceof PistonExtensionPoleBlock && poleState.getValue(PistonExtensionPoleBlock.FACING).getAxis() == dir.getAxis()) {
+                        TEMP_DEFAULT_POSITIONS.add(reverseOffset);
+                    }
+                }
 
+                if (s == MechanicalPistonBlock.PistonState.EXTENDED || MechanicalPistonBlock.isStickyPiston(state)) {
+                    reverseOffset = pos.relative(dir);
                     if (!visited.contains(reverseOffset)) {
-                        final BlockState poleState = level.getBlockState(reverseOffset);
-                        if (poleState.getBlock() instanceof PistonExtensionPoleBlock && poleState.getValue(PistonExtensionPoleBlock.FACING).getAxis() == dir.getAxis()) {
-                            TEMP_DEFAULT_POSITIONS.add(reverseOffset);
-                        }
-                    }
-
-                    if (s == MechanicalPistonBlock.PistonState.EXTENDED || MechanicalPistonBlock.isStickyPiston(state)) {
-                        reverseOffset = pos.relative(dir);
-                        if (!visited.contains(reverseOffset)) {
-                            TEMP_DEFAULT_POSITIONS.add(reverseOffset);
-                        }
+                        TEMP_DEFAULT_POSITIONS.add(reverseOffset);
                     }
                 }
             }
-
-            case final PistonExtensionPoleBlock ignored -> {
-                for (final Direction d : Iterate.directionsInAxis(state.getValue(PistonExtensionPoleBlock.FACING)
-                        .getAxis())) {
-                    final BlockPos offset = pos.relative(d);
-                    if (!visited.contains(offset)) {
-                        final BlockState blockState = level.getBlockState(offset);
-                        if (isExtensionPole(blockState) && blockState.getValue(PistonExtensionPoleBlock.FACING)
-                                .getAxis() == d.getAxis()) {
-                            TEMP_DEFAULT_POSITIONS.add(offset);
-                        }
-
-                        if (isPistonHead(blockState) && blockState.getValue(MechanicalPistonHeadBlock.FACING)
-                                .getAxis() == d.getAxis()) {
-                            TEMP_DEFAULT_POSITIONS.add(offset);
-                        }
-
-                        if (blockState.getBlock() instanceof MechanicalPistonBlock) {
-                            final Direction pistonFacing = blockState.getValue(MechanicalPistonBlock.FACING);
-                            if (pistonFacing == d || pistonFacing == d.getOpposite()
-                                    && blockState.getValue(MechanicalPistonBlock.STATE) == MechanicalPistonBlock.PistonState.EXTENDED) {
-                                TEMP_DEFAULT_POSITIONS.add(offset);
-                            }
-                        }
-                    }
-                }
-            }
-
-            case final MechanicalPistonHeadBlock ignore -> {
-                final Direction direction = state.getValue(MechanicalPistonHeadBlock.FACING);
-                final BlockPos offset = pos.relative(direction.getOpposite());
+        } else if (block instanceof PistonExtensionPoleBlock) {
+            for (final Direction d : Iterate.directionsInAxis(state.getValue(PistonExtensionPoleBlock.FACING)
+                    .getAxis())) {
+                final BlockPos offset = pos.relative(d);
                 if (!visited.contains(offset)) {
                     final BlockState blockState = level.getBlockState(offset);
                     if (isExtensionPole(blockState) && blockState.getValue(PistonExtensionPoleBlock.FACING)
-                            .getAxis() == direction.getAxis()) {
+                            .getAxis() == d.getAxis()) {
+                        TEMP_DEFAULT_POSITIONS.add(offset);
+                    }
+
+                    if (isPistonHead(blockState) && blockState.getValue(MechanicalPistonHeadBlock.FACING)
+                            .getAxis() == d.getAxis()) {
                         TEMP_DEFAULT_POSITIONS.add(offset);
                     }
 
                     if (blockState.getBlock() instanceof MechanicalPistonBlock) {
                         final Direction pistonFacing = blockState.getValue(MechanicalPistonBlock.FACING);
-                        if (pistonFacing == direction
+                        if (pistonFacing == d || pistonFacing == d.getOpposite()
                                 && blockState.getValue(MechanicalPistonBlock.STATE) == MechanicalPistonBlock.PistonState.EXTENDED) {
                             TEMP_DEFAULT_POSITIONS.add(offset);
                         }
                     }
                 }
-
-                if (state.getValue(MechanicalPistonHeadBlock.TYPE) == PistonType.STICKY) {
-                    final BlockPos attached = pos.relative(direction);
-                    if (!visited.contains(attached)) {
-                        TEMP_DEFAULT_POSITIONS.add(attached);
-                    }
-                }
             }
-
-            case final GantryCarriageBlock ignored -> {
-                BlockPos offset = pos.relative(state.getValue(GantryCarriageBlock.FACING));
-                if (!visited.contains(offset)) {
+        } else if (block instanceof MechanicalPistonHeadBlock) {
+            final Direction direction = state.getValue(MechanicalPistonHeadBlock.FACING);
+            final BlockPos offset = pos.relative(direction.getOpposite());
+            if (!visited.contains(offset)) {
+                final BlockState blockState = level.getBlockState(offset);
+                if (isExtensionPole(blockState) && blockState.getValue(PistonExtensionPoleBlock.FACING)
+                        .getAxis() == direction.getAxis()) {
                     TEMP_DEFAULT_POSITIONS.add(offset);
                 }
 
-                final Direction.Axis rotationAxis = ((IRotate) state.getBlock()).getRotationAxis(state);
-                for (final Direction d : Iterate.directionsInAxis(rotationAxis)) {
-                    offset = pos.relative(d);
-                    final BlockState offsetState = level.getBlockState(offset);
-                    if (AllBlocks.GANTRY_SHAFT.has(offsetState) && offsetState.getValue(GantryShaftBlock.FACING).getAxis() == d.getAxis()) {
-                        if (!visited.contains(offset)) {
-                            TEMP_DEFAULT_POSITIONS.add(offset);
-                        }
+                if (blockState.getBlock() instanceof MechanicalPistonBlock) {
+                    final Direction pistonFacing = blockState.getValue(MechanicalPistonBlock.FACING);
+                    if (pistonFacing == direction
+                            && blockState.getValue(MechanicalPistonBlock.STATE) == MechanicalPistonBlock.PistonState.EXTENDED) {
+                        TEMP_DEFAULT_POSITIONS.add(offset);
                     }
                 }
             }
 
-            case final GantryShaftBlock ignored -> {
-                for (final Direction d : Iterate.directions) {
-                    final BlockPos offset = pos.relative(d);
+            if (state.getValue(MechanicalPistonHeadBlock.TYPE) == PistonType.STICKY) {
+                final BlockPos attached = pos.relative(direction);
+                if (!visited.contains(attached)) {
+                    TEMP_DEFAULT_POSITIONS.add(attached);
+                }
+            }
+        } else if (block instanceof GantryCarriageBlock) {
+            BlockPos offset = pos.relative(state.getValue(GantryCarriageBlock.FACING));
+            if (!visited.contains(offset)) {
+                TEMP_DEFAULT_POSITIONS.add(offset);
+            }
+
+            final Direction.Axis rotationAxis = ((IRotate) state.getBlock()).getRotationAxis(state);
+            for (final Direction d : Iterate.directionsInAxis(rotationAxis)) {
+                offset = pos.relative(d);
+                final BlockState offsetState = level.getBlockState(offset);
+                if (AllBlocks.GANTRY_SHAFT.has(offsetState) && offsetState.getValue(GantryShaftBlock.FACING).getAxis() == d.getAxis()) {
                     if (!visited.contains(offset)) {
-                        final BlockState offsetState = level.getBlockState(offset);
-                        final Direction facing = state.getValue(GantryShaftBlock.FACING);
-                        if (d.getAxis() == facing.getAxis() && AllBlocks.GANTRY_SHAFT.has(offsetState) && offsetState.getValue(GantryShaftBlock.FACING) == facing) {
-                            TEMP_DEFAULT_POSITIONS.add(offset);
-                        } else if (AllBlocks.GANTRY_CARRIAGE.has(offsetState) && offsetState.getValue(GantryCarriageBlock.FACING) == d) {
-                            TEMP_DEFAULT_POSITIONS.add(offset);
-                        }
+                        TEMP_DEFAULT_POSITIONS.add(offset);
                     }
                 }
             }
-
-            case final StickerBlock ignored -> {
-                if (state.getValue(StickerBlock.EXTENDED)) {
-                    final Direction offset = state.getValue(StickerBlock.FACING);
-                    final BlockPos attached = pos.relative(offset);
-                    if (!visited.contains(attached) && !BlockMovementChecks.isNotSupportive(level.getBlockState(attached), offset.getOpposite())) {
-                        TEMP_DEFAULT_POSITIONS.add(attached);
+        } else if (block instanceof GantryShaftBlock) {
+            for (final Direction d : Iterate.directions) {
+                final BlockPos offset = pos.relative(d);
+                if (!visited.contains(offset)) {
+                    final BlockState offsetState = level.getBlockState(offset);
+                    final Direction facing = state.getValue(GantryShaftBlock.FACING);
+                    if (d.getAxis() == facing.getAxis() && AllBlocks.GANTRY_SHAFT.has(offsetState) && offsetState.getValue(GantryShaftBlock.FACING) == facing) {
+                        TEMP_DEFAULT_POSITIONS.add(offset);
+                    } else if (AllBlocks.GANTRY_CARRIAGE.has(offsetState) && offsetState.getValue(GantryCarriageBlock.FACING) == d) {
+                        TEMP_DEFAULT_POSITIONS.add(offset);
                     }
                 }
             }
-
-            default -> {
+        } else if (block instanceof StickerBlock) {
+            if (state.getValue(StickerBlock.EXTENDED)) {
+                final Direction offset = state.getValue(StickerBlock.FACING);
+                final BlockPos attached = pos.relative(offset);
+                if (!visited.contains(attached) && !BlockMovementChecks.isNotSupportive(level.getBlockState(attached), offset.getOpposite())) {
+                    TEMP_DEFAULT_POSITIONS.add(attached);
+                }
             }
         }
 

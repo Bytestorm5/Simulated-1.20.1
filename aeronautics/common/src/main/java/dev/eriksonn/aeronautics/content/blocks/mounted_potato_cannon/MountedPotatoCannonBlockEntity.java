@@ -24,7 +24,6 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -286,10 +285,10 @@ public class MountedPotatoCannonBlockEntity extends KineticBlockEntity implement
 	}
 
 	@Override
-	protected void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-		super.write(compound, registries, clientPacket);
+	protected void write(final CompoundTag compound, final boolean clientPacket) {
+		super.write(compound, clientPacket);
 
-		compound.put("inventory", this.inventory.write(registries));
+		compound.put("inventory", this.inventory.write());
 		compound.putInt("ItemRotationID", this.itemRotationId);
 		compound.putInt("ItemTimer", this.itemTimer);
 		compound.putFloat("ChargeTimer", this.chargeTimer);
@@ -303,11 +302,11 @@ public class MountedPotatoCannonBlockEntity extends KineticBlockEntity implement
 	}
 
 	@Override
-	protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-		super.read(compound, registries, clientPacket);
+	protected void read(final CompoundTag compound, final boolean clientPacket) {
+		super.read(compound, clientPacket);
 
-		this.inventory.read(registries, compound.getCompound("inventory"));
-		this.inventory.updateCachedType(registries, this.inventory.slot.getStack());
+		this.inventory.read(compound.getCompound("inventory"));
+		this.inventory.updateCachedType(this.inventory.slot.getStack());
 		if (clientPacket && compound.getBoolean("NeedsUpdate")) {
 			this.resetAndUpdate();
 		}

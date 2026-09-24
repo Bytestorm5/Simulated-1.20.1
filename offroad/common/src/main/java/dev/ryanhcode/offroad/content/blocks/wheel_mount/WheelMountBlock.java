@@ -15,7 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import net.minecraft.world.InteractionResult;
 public class WheelMountBlock extends HorizontalKineticBlock implements IBE<WheelMountBlockEntity>, SpecialBlockItemRequirement {
 
     public WheelMountBlock(final Properties properties) {
@@ -91,7 +92,12 @@ public class WheelMountBlock extends HorizontalKineticBlock implements IBE<Wheel
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(final ItemStack heldItem, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+    public ItemInteractionResult useItemOn(final ItemStack heldItem, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
         final Direction hitDirection = blockHitResult.getDirection();
 
         if(!hitDirection.equals(blockState.getValue(HORIZONTAL_FACING)) && hitDirection != Direction.DOWN) {
@@ -101,9 +107,9 @@ public class WheelMountBlock extends HorizontalKineticBlock implements IBE<Wheel
         if (level.isClientSide()) {
             return this.onBlockEntityUseItemOn(level, blockPos, mount -> {
                 final ItemStack potentialTire = mount.getHeldItem();
-                if ((heldItem.isEmpty() && potentialTire.has(OffroadDataComponents.TIRE))
-                        || (heldItem.has(OffroadDataComponents.TIRE) && potentialTire.has(OffroadDataComponents.TIRE))
-                        || (heldItem.has(OffroadDataComponents.TIRE) && potentialTire.isEmpty())
+                if ((heldItem.isEmpty() && OffroadDataComponents.TIRE.has(potentialTire))
+                        || (OffroadDataComponents.TIRE.has(heldItem) && OffroadDataComponents.TIRE.has(potentialTire))
+                        || (OffroadDataComponents.TIRE.has(heldItem) && potentialTire.isEmpty())
                 ) {
                     return ItemInteractionResult.SUCCESS;
                 }
@@ -123,7 +129,7 @@ public class WheelMountBlock extends HorizontalKineticBlock implements IBE<Wheel
         final boolean[] passed = { false };
 
         final ItemStack heldItem = player.getItemInHand(hand);
-        final TireLike tireLike = heldItem.get(OffroadDataComponents.TIRE);
+        final TireLike tireLike = OffroadDataComponents.TIRE.get(heldItem);
 
         if (heldItem.isEmpty() || tireLike != null) {
             this.withBlockEntityDo(level, pos, mount -> {
@@ -132,7 +138,7 @@ public class WheelMountBlock extends HorizontalKineticBlock implements IBE<Wheel
                 final ItemStack oldSlotItem = save.copy();
 
                 slot.setStack(heldItem.copyWithCount(1));
-                if (!player.hasInfiniteMaterials()) {
+                if (!player.getAbilities().instabuild) {
                     heldItem.shrink(1);
                 }
                 player.getInventory().placeItemBackInInventory(save);

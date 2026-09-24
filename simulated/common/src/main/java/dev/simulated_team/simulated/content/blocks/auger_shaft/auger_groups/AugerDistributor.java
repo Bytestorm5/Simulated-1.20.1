@@ -63,7 +63,7 @@ public record AugerDistributor(List<ItemReciever> receivers, List<BlockHarvester
      * Flood-fills a given *plane*, gathering and associating all harvesters in the area with this distributor
      */
     public void gatherAndAssociateHarvesters(final Direction[] surrounding, final BlockPos startingPos, final Level level /*Need this for block entities*/, final LevelAccelerator accelerator) {
-//	    if (this.receivers.isEmpty() || this.receivers.getFirst() != caller) { //make sure only the first receiver can refresh the list
+//	    if (this.receivers.isEmpty() || this.receivers.get(0) != caller) { //make sure only the first receiver can refresh the list
 //			return;
 //	    }
 

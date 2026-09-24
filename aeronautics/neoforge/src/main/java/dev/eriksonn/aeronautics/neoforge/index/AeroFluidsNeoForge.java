@@ -10,15 +10,15 @@ import dev.eriksonn.aeronautics.neoforge.content.fluids.levitite.LevititeBlendFl
 import dev.eriksonn.aeronautics.neoforge.content.fluids.levitite.LevititeBlendNeoForge;
 import dev.eriksonn.aeronautics.util.AeroColors;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.fluids.BaseFlowingFluid;
-import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.SoundActions;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fluids.FluidInteractionRegistry;
 
 public class AeroFluidsNeoForge {
 	public static final SimulatedRegistrate REGISTRATE = Aeronautics.getRegistrate();
 
-	public static final FluidEntry<BaseFlowingFluid.Flowing> LEVITITE_BLEND = REGISTRATE
+	public static final FluidEntry<ForgeFlowingFluid.Flowing> LEVITITE_BLEND = REGISTRATE
 			.standardFluid("levitite_blend", AeroFluidType.create(AeroColors.LEVIBLEND_THE_FOG_IS_COMING,
 					() -> 1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF(),
 					LevititeBlendFluidType::new))
@@ -42,7 +42,7 @@ public class AeroFluidsNeoForge {
 		FluidInteractionRegistry.InteractionInformation interaction = new FluidInteractionRegistry.InteractionInformation(LEVITITE_BLEND.getType(), (fluidState) ->
 				fluidState.isSource() ? Blocks.OBSIDIAN.defaultBlockState() : Blocks.CALCITE.defaultBlockState());
 
-		FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), interaction);
+		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.value(), interaction);
 	}
 
 	public static void init() {

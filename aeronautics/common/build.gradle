@@ -1,10 +1,11 @@
 plugins {
     id 'multiloader-common'
-    id 'net.neoforged.moddev'
+    id 'net.neoforged.moddev.legacyforge'
 }
 
-neoForge {
-    neoFormVersion = neo_form_version
+legacyForge {
+    // Common code has always used loader classes, so it compiles against Forge rather than vanilla MCP
+    version = "${minecraft_version}-${forge_version}"
 
     // Automatically enable AccessTransformers if the file exists
     def at = file('src/main/resources/META-INF/accesstransformer.cfg')

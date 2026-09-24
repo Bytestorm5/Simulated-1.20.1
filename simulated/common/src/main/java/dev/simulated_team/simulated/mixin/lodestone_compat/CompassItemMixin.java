@@ -30,8 +30,8 @@ public abstract class CompassItemMixin extends Item {
 	@Inject(method = "inventoryTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
 	private void simulated$checkID(final ItemStack stack, final Level level, final Entity entity, final int itemSlot, final boolean isSelected, final CallbackInfo ci) {
 		if (!level.isClientSide) {
-			if (stack.has(SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER)) {
-				final UUID trackerID = stack.get(SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER);
+			if (SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER.has(stack)) {
+				final UUID trackerID = SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER.get(stack);
 				final LodestoneTrackingMap map = LodestoneTrackingMap.getOrLoad(level);
 				if (map != null && entity instanceof final ServerPlayer sp) {
 					map.sendUpdateForPlayer(trackerID, sp);
@@ -47,7 +47,7 @@ public abstract class CompassItemMixin extends Item {
 		if (map != null) {
 			final UUID uuid = map.addOrGetLodestoneTrackingPoint(pos);
 			if (uuid != null) {
-				instance.set(SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER, uuid);
+				SimDataComponents.LODESTONE_COMPASS_SUBLEVEL_TRACKER.set(instance, uuid);
 			}
 		}
 

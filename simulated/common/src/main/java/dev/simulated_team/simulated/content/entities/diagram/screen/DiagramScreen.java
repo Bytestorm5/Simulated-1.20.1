@@ -343,7 +343,7 @@ public class DiagramScreen extends AbstractSimiScreen {
             if (slices.isEmpty()) {
                 continue;
             }
-            final Greeble.TextureSlice slice = slices.removeFirst();
+            final Greeble.TextureSlice slice = slices.remove(0);
 
             final int x = random.nextInt(padding, DIAGRAM_TEXTURE.width - slice.width() - padding);
             final int y = random.nextInt(padding, DIAGRAM_TEXTURE.height - slice.height() - padding);

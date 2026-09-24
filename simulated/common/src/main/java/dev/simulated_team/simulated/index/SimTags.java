@@ -46,7 +46,7 @@ public class SimTags {
             return TagKey.create(Registries.BLOCK, Simulated.path(path));
         }
         private static TagKey<Block> create(final String namespace, final String path) {
-            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(namespace, path));
+            return TagKey.create(Registries.BLOCK, new ResourceLocation(namespace, path));
         }
         protected static void addGenerators() {
             Simulated.getRegistrate().addDataGenerator(ProviderType.BLOCK_TAGS, Blocks::genBlockTags);
@@ -85,7 +85,7 @@ public class SimTags {
         }
 
         public static TagKey<Item> dyesTag(DyeColor dyeColor) {
-            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "dyes/" + dyeColor.getName()));
+            return TagKey.create(Registries.ITEM, new ResourceLocation("c", "dyes/" + dyeColor.getName()));
         }
 
         public static void addGenerators() {
@@ -96,9 +96,9 @@ public class SimTags {
             final TagGen.CreateTagsProvider<Item> prov = new TagGen.CreateTagsProvider<>(provIn, Item::builtInRegistryHolder);
             prov.tag(ROTATE_WITH_NAV_ARROW)
                     .add(COMPASS, RECOVERY_COMPASS)
-                    .addOptional(ResourceLocation.fromNamespaceAndPath("naturescompass", "naturescompass"));
+                    .addOptional(new ResourceLocation("naturescompass", "naturescompass"));
             prov.tag(ROTATE_WITH_NAV_ARROW)
-                    .addOptional(ResourceLocation.fromNamespaceAndPath("explorerscompass", "explorerscompass"));
+                    .addOptional(new ResourceLocation("explorerscompass", "explorerscompass"));
             prov.tag(DESTROYS_ROPE)
                     .add(SHEARS)
                     .add(AllItems.WRENCH.asItem());

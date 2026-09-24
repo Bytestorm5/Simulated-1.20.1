@@ -4,9 +4,9 @@ import dev.eriksonn.aeronautics.api.levitite_blend_crystallization.LevititeBlend
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-public class LevititeBlendNeoForge extends BaseFlowingFluid implements LevititeBlendDummyInterface {
+public class LevititeBlendNeoForge extends ForgeFlowingFluid implements LevititeBlendDummyInterface {
 	public LevititeBlendNeoForge(Properties properties) {
 		super(properties);
 	}

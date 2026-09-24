@@ -84,7 +84,7 @@ public class EndSeaPhysicsData {
                         Simulated.LOGGER.error(String.valueOf(dataResult.error().get()));
                     }
 
-                    final EndSeaPhysics physics = dataResult.getOrThrow();
+                    final EndSeaPhysics physics = dataResult.getOrThrow(false, error -> { });
                     final ResourceKey<Level> dimension = ResourceKey.create(Registries.DIMENSION, physics.dimension());
 
                     EndSeaPhysicsData.addKeyWithPriority(dimension, physics);

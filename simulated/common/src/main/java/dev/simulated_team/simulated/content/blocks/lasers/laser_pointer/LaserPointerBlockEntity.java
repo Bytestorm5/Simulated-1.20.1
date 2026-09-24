@@ -99,23 +99,23 @@ public class LaserPointerBlockEntity extends AbstractLaserBlockEntity implements
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
         this.laserColor = tag.contains("LaserColor", Tag.TAG_ANY_NUMERIC) ? tag.getInt("LaserColor") : SimColors.MEDIA_OURPLE;
         this.bestPower = tag.getInt("BestPower");
         this.rainbow = tag.getBoolean("Rainbow");
 
         this.currentHitPos = this.readHitPos(tag);
-        super.read(tag, registries, clientPacket);
+        super.read(tag, clientPacket);
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
         tag.putInt("LaserColor", this.laserColor);
         tag.putInt("BestPower", this.bestPower);
         tag.putBoolean("Rainbow", this.isRainbow());
 
         this.writeHitPos(tag);
-        super.write(tag, registries, clientPacket);
+        super.write(tag, clientPacket);
     }
 
     private void writeHitPos(final CompoundTag tag) {

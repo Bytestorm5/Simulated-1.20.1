@@ -31,7 +31,6 @@ import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -231,7 +230,7 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
             }
 
             //we only call this on the server
-            double baseMiningSpeed = Math.clamp((Math.abs(this.getRotationSpeed() * multiplier)) / 100d, 0.01d, 16d);
+            double baseMiningSpeed = Mth.clamp((Math.abs(this.getRotationSpeed() * multiplier)) / 100d, 0.01d, 16d);
 
             final float blockAmount = this.visitedPositions.size() / 50f;
             if (blockAmount != 0) {
@@ -552,8 +551,8 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
     }
 
     @Override
-    public void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    public void write(final CompoundTag compound, final boolean clientPacket) {
+        super.write(compound, clientPacket);
         compound.putFloat("RotationSpeed", this.getRotationSpeed());
         if (clientPacket) {
             compound.putInt("BlockBreakingAmount", this.visitedPositions.size());
@@ -591,8 +590,8 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
     }
 
     @Override
-    protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
+    protected void read(final CompoundTag compound, final boolean clientPacket) {
+        super.read(compound, clientPacket);
         this.setRotationSpeed(compound.getFloat("RotationSpeed"));
 
         this.disassemblySlowdown = compound.getBoolean("DisassemblySlowdown");

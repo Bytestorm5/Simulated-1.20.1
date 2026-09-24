@@ -31,7 +31,7 @@ public class SteeringWheelHandler extends BlockHoldInteraction {
     public void startHold(final Level level, final Player player, final BlockPos blockPos) {
         super.startHold(level, player, blockPos);
         blockEntity = level.getBlockEntity(blockPos, SimBlockEntityTypes.STEERING_WHEEL.get()).orElseThrow();
-        rawAngle = blockEntity.getInteractionAngle(Minecraft.getInstance().getTimer().getGameTimeDeltaTicks());
+        rawAngle = blockEntity.getInteractionAngle(Minecraft.getInstance().getDeltaFrameTime());
         angleSgn = (int) blockEntity.directionConvert(1);
         updated = true;
         angleLimit = blockEntity.angleInput.getValue();

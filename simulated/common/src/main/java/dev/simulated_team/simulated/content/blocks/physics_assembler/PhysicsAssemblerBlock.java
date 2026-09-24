@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.physics_assembler;
 
-import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.deployer.DeployerFakePlayer;
 import com.simibubi.create.foundation.block.IBE;
@@ -27,8 +26,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import net.minecraft.world.InteractionHand;
 public class PhysicsAssemblerBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<PhysicsAssemblerBlockEntity>, IWrenchable, BlockSubLevelAssemblyListener {
-    public static final MapCodec<PhysicsAssemblerBlock> CODEC = simpleCodec(PhysicsAssemblerBlock::new);
 
     public PhysicsAssemblerBlock(final Properties properties) {
         super(properties);
@@ -44,10 +43,6 @@ public class PhysicsAssemblerBlock extends FaceAttachedHorizontalDirectionalBloc
         return !reader.getBlockState(blockpos).getBlockSupportShape(reader, pos).getFaceShape(direction.getOpposite()).isEmpty();
     }
 
-    @Override
-    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     public Class<PhysicsAssemblerBlockEntity> getBlockEntityClass() {
@@ -83,7 +78,11 @@ public class PhysicsAssemblerBlock extends FaceAttachedHorizontalDirectionalBloc
     }
 
     @Override
-    protected InteractionResult useWithoutItem(final BlockState state, final Level level, final BlockPos pos, final Player player, final BlockHitResult hitResult) {
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return this.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    public InteractionResult useWithoutItem(final BlockState state, final Level level, final BlockPos pos, final Player player, final BlockHitResult hitResult) {
         // Deployer interaction
         if (player instanceof DeployerFakePlayer) {
             if (!level.isClientSide) {

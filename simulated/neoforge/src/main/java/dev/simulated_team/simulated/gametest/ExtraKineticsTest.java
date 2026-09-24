@@ -13,7 +13,7 @@ import dev.simulated_team.simulated.content.blocks.torsion_spring.TorsionSpringB
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.*;
 import net.minecraft.world.level.block.LeverBlock;
-import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.minecraftforge.gametest.GameTestHolder;
 import org.joml.Vector3d;
 
 import java.util.Objects;

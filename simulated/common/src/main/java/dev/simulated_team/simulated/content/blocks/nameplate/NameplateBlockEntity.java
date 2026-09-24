@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
+import net.minecraft.util.Mth;
 public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardCloneable {
     protected boolean glowing;
     protected boolean waxed;
@@ -187,7 +188,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
         }
         final Vec3 v = B.subtract(A);
         final Vec3 u = A.subtract(point);
-        final double t = Math.clamp(-v.dot(u) / v.dot(v), 0, 1);
+        final double t = Mth.clamp(-v.dot(u) / v.dot(v), 0, 1);
         final Vec3 closest = A.add(v.scale(t));
         return point.distanceTo(closest);
     }
@@ -313,8 +314,8 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
     }
 
     @Override
-    protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(tag, registries, clientPacket);
+    protected void write(final CompoundTag tag, final boolean clientPacket) {
+        super.write(tag, clientPacket);
 
         tag.putInt("TextColor", this.textColor.getId());
         tag.putBoolean("Glow", this.glowing);
@@ -331,8 +332,8 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(tag, registries, clientPacket);
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
+        super.read(tag, clientPacket);
 
         this.textColor = DyeColor.byId(tag.getInt("TextColor"));
         this.glowing = tag.getBoolean("Glow");

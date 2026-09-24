@@ -27,7 +27,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "getDefaultGravity", at = @At("HEAD"), cancellable = true)
     private void aeronautics$levitatingGravity(final CallbackInfoReturnable<Double> cir) {
-        final Levitating component = this.getItem().get(AeroDataComponents.LEVITATING);
+        final Levitating component = AeroDataComponents.LEVITATING.get(this.getItem());
         if (component != null) {
             cir.setReturnValue(0d);
         }
@@ -35,9 +35,9 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V"))
     private void aeronautics$levitatingDragAndSparkles(final CallbackInfo ci) {
-        final Levitating component = this.getItem().get(AeroDataComponents.LEVITATING);
+        final Levitating component = AeroDataComponents.LEVITATING.get(this.getItem());
         if (component != null) {
-            final float dragFraction = Math.clamp(component.dragFraction(), 0, 1);
+            final float dragFraction = Mth.clamp(component.dragFraction(), 0, 1);
             this.setDeltaMovement(this.getDeltaMovement().scale(dragFraction));
 
             if (this.level().isClientSide && component.particle().isPresent()) {

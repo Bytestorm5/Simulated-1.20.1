@@ -6,15 +6,16 @@ import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.Li
 import dev.simulated_team.simulated.data.advancements.SimAdvancements;
 import foundry.veil.api.network.handler.ServerPacketContext;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record TypewriterKeySavePacket(Map<Integer, LinkedTypewriterEntries.KeyboardEntry> changedKeys, BlockPos pos,
                                       boolean clearAll) implements CustomPacketPayload {
 
@@ -22,7 +23,7 @@ public record TypewriterKeySavePacket(Map<Integer, LinkedTypewriterEntries.Keybo
 
     public static final StreamCodec<RegistryFriendlyByteBuf, TypewriterKeySavePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ByteBufCodecs.INT, LinkedTypewriterEntries.KeyboardEntry.STREAM_CODEC), TypewriterKeySavePacket::changedKeys,
-            BlockPos.STREAM_CODEC, TypewriterKeySavePacket::pos,
+            VanillaStreamCodecs.BLOCK_POS, TypewriterKeySavePacket::pos,
             ByteBufCodecs.BOOL, TypewriterKeySavePacket::clearAll,
             TypewriterKeySavePacket::new);
 

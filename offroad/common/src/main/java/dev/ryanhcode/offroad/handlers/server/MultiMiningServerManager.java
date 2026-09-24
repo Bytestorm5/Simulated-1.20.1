@@ -173,7 +173,7 @@ public class MultiMiningServerManager {
                 return MultiminingDataTickResult.STOP;
             }
 
-            this.lastKnownSupplierPosition = this.suppliers.getFirst().getLocation();
+            this.lastKnownSupplierPosition = this.suppliers.get(0).getLocation();
 
             final BlockState state = level.getBlockState(this.getBreakingPos());
             final float hardness = state.getDestroySpeed(level, this.getBreakingPos());

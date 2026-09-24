@@ -25,6 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
+import net.minecraft.util.Mth;
 public class ClientHandleHandler extends BlockHoldInteraction {
 
     private float desiredRange = -1;
@@ -184,7 +185,7 @@ public class ClientHandleHandler extends BlockHoldInteraction {
     }
 
     public void deltaRange(final Player player, final float delta) {
-        this.desiredRange = (float) Math.clamp(this.desiredRange + delta, 1, Math.min(player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue(), HandleBlockEntity.MAX_HANDLE_RANGE));
+        this.desiredRange = (float) Mth.clamp(this.desiredRange + delta, 1, Math.min(player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue(), HandleBlockEntity.MAX_HANDLE_RANGE));
     }
 
     @Override

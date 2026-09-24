@@ -10,7 +10,7 @@ import net.minecraft.util.StringRepresentable;
 import java.util.Locale;
 
 public record SoundFile(ResourceLocation name, float volume, float pitch, int weight, boolean stream, int attenuationDistance, boolean preload, Type type) {
-	public static final SoundFile DEFAULT = new SoundFile(ResourceLocation.withDefaultNamespace("default"), 1.0f, 1.0f, 1, false, 16, false, Type.FILE);
+	public static final SoundFile DEFAULT = new SoundFile(new ResourceLocation("default"), 1.0f, 1.0f, 1, false, 16, false, Type.FILE);
 
 	public static final Codec<SoundFile> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourceLocation.CODEC.fieldOf("name").forGetter(SoundFile::name),

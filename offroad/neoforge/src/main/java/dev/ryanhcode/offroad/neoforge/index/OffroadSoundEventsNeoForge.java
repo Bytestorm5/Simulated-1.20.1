@@ -3,7 +3,7 @@ package dev.ryanhcode.offroad.neoforge.index;
 import dev.ryanhcode.offroad.index.OffroadSoundEvents;
 import com.simibubi.create.AllSoundEvents;
 import net.minecraft.sounds.SoundEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 public class OffroadSoundEventsNeoForge {
 

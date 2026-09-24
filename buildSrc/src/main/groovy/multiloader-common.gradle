@@ -8,8 +8,17 @@ base {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+    // Compiled by a newer JDK (some compile-only dependencies ship Java 21 class files), targeting the Java version
+    // that Minecraft 1.20.1 runs on. See the release flag below.
+    toolchain.languageVersion = JavaLanguageVersion.of(java_toolchain_version)
+    disableAutoTargetJvm()
     withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = java_version as int
+    options.encoding = 'UTF-8'
+    options.compilerArgs.addAll(['-Xmaxerrs', '100000'])
 }
 
 repositories {
@@ -45,39 +54,37 @@ repositories {
     }
 }
 
-if (project.path.endsWith(":common")) {
+// Common and loader modules both compile against Forge 1.20.1 (the common code has always used loader classes).
+// Mod jars are published with SRG names, so they go through ModDevGradle's remapping configurations.
+pluginManager.withPlugin('net.neoforged.moddev.legacyforge') {
     dependencies {
-        compileOnly "net.neoforged:neoforge:$neoforge_version"
-        compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+        compileOnly "org.spongepowered:mixin:$mixin_version"
+        compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:$mixinextras_version"))
 
-        compileOnly("dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:${project.sable_companion_version}")
+        modImplementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+        modImplementation("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
+        modImplementation("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+        modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
-        // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
-        compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.4.1'
-        annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+        modImplementation("foundry.veil:veil-forge-${minecraft_version}:${veil_version}")
+        // Bundled inside the Veil jar, but not declared in its metadata
+        compileOnly "io.github.ocelot:glsl-processor:0.2.3"
+        compileOnly "gg.moonflower:molang-compiler:3.1.1.19"
+        compileOnly "io.github.spair:imgui-java-binding:1.92.0"
 
-        compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-
-        implementation ("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}") {
-            exclude group: "foundry.veil"
-        }
-
-        compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
-        compileOnly("net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}")
-        compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
-        implementation("com.tterrag.registrate:Registrate:${registrate_version}")
-
-        implementation("foundry.veil:veil-common-${minecraft_version}:${project.veil_version}") {
-            exclude group: "maven.modrinth"
-            exclude group: "com.tterrag.registrate"
-        }
+        modImplementation("dev.ryanhcode.sable:sable-forge-${minecraft_version}:${sable_version}")
+        modImplementation("dev.ryanhcode.sable-companion:sable-companion-${minecraft_version}:${sable_companion_version}")
 
         // Mod compat
-        compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-common-api:$computercraft_tweaked_version")
-        compileOnly("maven.modrinth:natures-compass:$minecraft_version-$natures_compass_version-neoforge")
-        compileOnly("maven.modrinth:explorers-compass:$minecraft_version-$explorers_compass_version-neoforge")
-        compileOnly("maven.modrinth:sodium:$sodium_version")
-        compileOnly("maven.modrinth:iris:$iris_version")
+        modCompileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+        modCompileOnly("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+        modCompileOnly("top.theillusivec4.curios:curios-forge:${curios_version}+${minecraft_version}:api")
+        modCompileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$computercraft_tweaked_version")
+        modCompileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$computercraft_tweaked_version")
+        modCompileOnly("maven.modrinth:natures-compass:$minecraft_version-$natures_compass_version-forge")
+        modCompileOnly("maven.modrinth:explorers-compass:$minecraft_version-$explorers_compass_version-forge")
+        modCompileOnly("maven.modrinth:embeddium:$embeddium_version")
+        modCompileOnly("maven.modrinth:oculus:$oculus_version") { transitive = false }
     }
 }
 
@@ -118,15 +125,14 @@ processResources {
             'group'                        : project.group, //Else we target the task's group.
             'minecraft_version'            : minecraft_version,
             'minecraft_version_range'      : minecraft_version_range,
-            'fabric_version'               : fabric_version,
-            'fabric_loader_version'        : fabric_loader_version,
             'mod_name'                     : mod_name,
             'mod_author'                   : mod_author,
             'mod_id'                       : mod_id,
             'license'                      : license,
             'description'                  : project.description,
-            'neoforge_version'             : neoforge_version,
-            'neoforge_loader_version_range': neoforge_loader_version_range,
+            'forge_version'                : forge_version,
+            'forge_version_range'          : forge_version_range,
+            'forge_loader_version_range'   : forge_loader_version_range,
             'sable_mod_version_range'            : sable_mod_version_range,
             'create_mod_version'           : create_mod_version,
             'flywheel_mod_version'         : flywheel_mod_version,
@@ -150,6 +156,7 @@ publishing {
         }
     }
     repositories {
+        mavenLocal()
         maven {
             url = System.getenv('local_maven_url')
 

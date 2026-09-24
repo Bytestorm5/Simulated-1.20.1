@@ -11,18 +11,18 @@ import foundry.veil.forge.event.ForgeVeilRegisterBlockLayersEvent;
 import foundry.veil.forge.event.ForgeVeilRegisterFixedBuffersEvent;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = Aeronautics.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Aeronautics.MOD_ID, value = Dist.CLIENT)
 public class AeroNeoForgeClientEvents {
 
     @SubscribeEvent
@@ -36,7 +36,7 @@ public class AeroNeoForgeClientEvents {
     }
 
 
-    @EventBusSubscriber(modid = Aeronautics.MOD_ID, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = Aeronautics.MOD_ID, value = Dist.CLIENT)
     public static class ModBusEvents {
 
         @SubscribeEvent

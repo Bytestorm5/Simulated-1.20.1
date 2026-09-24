@@ -14,19 +14,19 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.server.ServerStoppedEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = Aeronautics.MOD_ID)
+@Mod.EventBusSubscriber(modid = Aeronautics.MOD_ID)
 public class AeroNeoForgeCommonEvents {
 
 	@SubscribeEvent
@@ -42,7 +42,7 @@ public class AeroNeoForgeCommonEvents {
 		}
 	}
 
-	@EventBusSubscriber(modid = Aeronautics.MOD_ID)
+	@Mod.EventBusSubscriber(modid = Aeronautics.MOD_ID)
 	public static class ModBusEvents {
 
 		@SubscribeEvent

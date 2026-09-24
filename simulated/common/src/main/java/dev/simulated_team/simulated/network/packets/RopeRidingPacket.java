@@ -3,20 +3,20 @@ package dev.simulated_team.simulated.network.packets;
 import com.simibubi.create.content.kinetics.chainConveyor.ServerChainConveyorHandler;
 import dev.simulated_team.simulated.Simulated;
 import foundry.veil.api.network.handler.ServerPacketContext;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record RopeRidingPacket(UUID uuid, boolean stop) implements CustomPacketPayload {
     public static Type<RopeRidingPacket> TYPE = new Type<>(Simulated.path("ride_rope"));
 
     public static StreamCodec<RegistryFriendlyByteBuf, RopeRidingPacket> CODEC = StreamCodec.composite(
-            UUIDUtil.STREAM_CODEC, RopeRidingPacket::uuid,
+            VanillaStreamCodecs.UUID, RopeRidingPacket::uuid,
             ByteBufCodecs.BOOL, RopeRidingPacket::stop,
             RopeRidingPacket::new
     );

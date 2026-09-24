@@ -4,7 +4,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import dev.ryanhcode.offroad.content.blocks.borehead_bearing.BoreheadAttachedStorage;
 import dev.ryanhcode.offroad.content.contraptions.borehead_contraption.BoreheadBearingContraption;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.lang.ref.WeakReference;
 

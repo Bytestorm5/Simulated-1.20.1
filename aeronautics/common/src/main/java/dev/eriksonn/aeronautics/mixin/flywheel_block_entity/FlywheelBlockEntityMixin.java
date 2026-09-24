@@ -5,7 +5,6 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.simibubi.create.content.kinetics.flywheel.FlywheelBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +19,7 @@ public abstract class FlywheelBlockEntityMixin extends SmartBlockEntity {
         super(type, pos, state);
     }
     @Inject(method = "read",at = @At("HEAD"))
-    public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket, CallbackInfo ci, @Local(argsOnly = true) LocalBooleanRef localClientPacket)
+    public void read(CompoundTag compound, boolean clientPacket, CallbackInfo ci, @Local(argsOnly = true) LocalBooleanRef localClientPacket)
     {
         localClientPacket.set(localClientPacket.get() || isVirtual());
     }

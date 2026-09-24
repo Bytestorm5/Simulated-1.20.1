@@ -2,13 +2,13 @@ package dev.simulated_team.simulated.neoforge.mixin.self_mixins;
 
 import dev.simulated_team.simulated.content.entities.honey_glue.HoneyGlueEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(HoneyGlueEntity.class)
-public abstract class HoneyGlueEntityMixin implements IEntityWithComplexSpawn {
+public abstract class HoneyGlueEntityMixin implements IEntityAdditionalSpawnData {
 
     @Shadow
     public abstract void addAdditionalSaveData(CompoundTag tag);

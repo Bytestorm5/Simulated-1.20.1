@@ -1,5 +1,5 @@
 plugins {
-    id 'net.neoforged.moddev'
+    id 'net.neoforged.moddev.legacyforge'
 }
 
 def neoforgeProjects = rootProject.subprojects.findAll { it.path.endsWith(":neoforge") }
@@ -8,8 +8,8 @@ neoforgeProjects.each { neoforgeProject ->
     evaluationDependsOn(neoforgeProject.path)
 }
 
-neoForge {
-    version = neoforge_version
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
 
     neoforgeProjects.forEach { neoforgeProject ->
         def parentName = neoforgeProject.parent.name
@@ -28,7 +28,7 @@ neoForge {
 
     runs {
         configureEach {
-            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+            ideName = "Forge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
         }
 
         client {
@@ -36,10 +36,11 @@ neoForge {
             gameDirectory = project.file('runs/client')
         }
 
-        clientAuth {
-            client()
-            gameDirectory = project.file('runs/client')
-            devLogin = true
+        client {
+            // Run with -PquickPlay=<world> to load straight into a singleplayer world
+            if (project.hasProperty('quickPlay')) {
+                programArguments.addAll('--quickPlaySingleplayer', project.property('quickPlay').toString())
+            }
         }
 
         server {

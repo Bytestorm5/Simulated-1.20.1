@@ -2,7 +2,7 @@ package dev.simulated_team.simulated.content.physics_staff;
 
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.codec.StreamCodec;
 
 /**
  * An action the player can complete using the physics staff

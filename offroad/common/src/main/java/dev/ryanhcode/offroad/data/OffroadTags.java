@@ -27,7 +27,7 @@ public class OffroadTags {
         }
 
         private static TagKey<Block> create(final String namespace, final String path) {
-            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(namespace, path));
+            return TagKey.create(Registries.BLOCK, new ResourceLocation(namespace, path));
         }
 
         protected static void addGenerators() {

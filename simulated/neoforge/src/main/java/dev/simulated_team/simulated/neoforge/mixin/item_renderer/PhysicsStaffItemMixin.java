@@ -4,9 +4,9 @@ import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import dev.simulated_team.simulated.content.physics_staff.PhysicsStaffItem;
 import dev.simulated_team.simulated.content.physics_staff.PhysicsStaffItemRenderer;
 import net.minecraft.world.item.Item;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.function.Consumer;

@@ -6,16 +6,17 @@ import dev.simulated_team.simulated.index.SimStats;
 import foundry.veil.api.network.handler.ServerPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record AssemblePacket(BlockPos pos) implements CustomPacketPayload {
     public static final Type<AssemblePacket> TYPE = new Type<>(Simulated.path("assemble"));
 
     public static final StreamCodec<ByteBuf, AssemblePacket> CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC, packet -> packet.pos,
+            VanillaStreamCodecs.BLOCK_POS, packet -> packet.pos,
             AssemblePacket::new);
 
     @Override

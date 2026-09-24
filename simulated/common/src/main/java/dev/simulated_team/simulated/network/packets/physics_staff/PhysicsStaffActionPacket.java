@@ -8,12 +8,11 @@ import dev.simulated_team.simulated.index.SimItems;
 import dev.simulated_team.simulated.util.SimCodecUtil;
 import foundry.veil.api.network.handler.PacketContext;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import foundry.veil.backport.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -23,13 +22,14 @@ import org.joml.Vector3dc;
 
 import java.util.UUID;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public class PhysicsStaffActionPacket implements CustomPacketPayload {
 
     public static CustomPacketPayload.Type<PhysicsStaffActionPacket> TYPE = new CustomPacketPayload.Type<>(Simulated.path("physics_staff_action"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PhysicsStaffActionPacket> CODEC = StreamCodec.composite(
             PhysicsStaffAction.STREAM_CODEC, packet -> packet.action,
-            UUIDUtil.STREAM_CODEC, packet -> packet.subLevel,
+            VanillaStreamCodecs.UUID, packet -> packet.subLevel,
             SimCodecUtil.STREAM_VECTOR3D, packet -> packet.location,
             PhysicsStaffActionPacket::new
     );

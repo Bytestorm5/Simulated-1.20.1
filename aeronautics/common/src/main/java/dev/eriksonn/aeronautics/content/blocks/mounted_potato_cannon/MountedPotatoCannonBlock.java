@@ -9,7 +9,7 @@ import dev.simulated_team.simulated.multiloader.inventory.ItemInfoWrapper;
 import dev.simulated_team.simulated.util.DirectionalAxisShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -25,6 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import net.minecraft.world.InteractionResult;
 public class MountedPotatoCannonBlock extends DirectionalAxisKineticBlock implements IBE<MountedPotatoCannonBlockEntity> {
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty BLOCKED = BooleanProperty.create("blocked");
@@ -44,8 +45,13 @@ public class MountedPotatoCannonBlock extends DirectionalAxisKineticBlock implem
 		return AeroBlockEntityTypes.MOUNTED_POTATO_CANNON.get();
 	}
 
-	@Override
-	protected ItemInteractionResult useItemOn(final ItemStack heldItem, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
+    @Override
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+	public ItemInteractionResult useItemOn(final ItemStack heldItem, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
 		if (level.getBlockEntity(blockPos) instanceof final MountedPotatoCannonBlockEntity be) {
 			final ContainerSlot slot = be.getInventory().slot;
 			if (heldItem.isEmpty() && slot.isEmpty()) {
@@ -61,7 +67,7 @@ public class MountedPotatoCannonBlock extends DirectionalAxisKineticBlock implem
 						slot.insertStack(info, Math.min(heldItem.getCount(), 16), false);
 					}
 
-					if (!player.hasInfiniteMaterials()) {
+					if (!player.getAbilities().instabuild) {
 						heldItem.shrink((int) inserted);
 					}
 					return ItemInteractionResult.sidedSuccess(level.isClientSide());

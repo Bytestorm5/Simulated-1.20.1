@@ -11,10 +11,10 @@ import dev.simulated_team.simulated.service.SimConfigService;
 import foundry.veil.api.network.handler.ServerPacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record PlaceMergingGluePacket(BlockPos parentPos, BlockPos childPos, Direction parentFacing, Direction childFacing,
                                      InteractionHand hand) implements CustomPacketPayload {
 
@@ -30,10 +31,10 @@ public record PlaceMergingGluePacket(BlockPos parentPos, BlockPos childPos, Dire
 
     public static StreamCodec<RegistryFriendlyByteBuf, PlaceMergingGluePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, (packet) -> packet.hand().ordinal(),
-            BlockPos.STREAM_CODEC, PlaceMergingGluePacket::parentPos,
-            BlockPos.STREAM_CODEC, PlaceMergingGluePacket::childPos,
-            Direction.STREAM_CODEC, PlaceMergingGluePacket::parentFacing,
-            Direction.STREAM_CODEC, PlaceMergingGluePacket::childFacing,
+            VanillaStreamCodecs.BLOCK_POS, PlaceMergingGluePacket::parentPos,
+            VanillaStreamCodecs.BLOCK_POS, PlaceMergingGluePacket::childPos,
+            VanillaStreamCodecs.DIRECTION, PlaceMergingGluePacket::parentFacing,
+            VanillaStreamCodecs.DIRECTION, PlaceMergingGluePacket::childFacing,
             (hand, parentPos, childPos, parentFacing, childFacing) -> new PlaceMergingGluePacket(parentPos, childPos, parentFacing, childFacing, hand == 0 ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND)
     );
 

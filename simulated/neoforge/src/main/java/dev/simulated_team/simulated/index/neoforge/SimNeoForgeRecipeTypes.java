@@ -10,9 +10,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.crafting.*;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,9 +26,9 @@ public enum SimNeoForgeRecipeTypes implements IRecipeTypeInfo, StringRepresentab
     public static final Codec<SimNeoForgeRecipeTypes> CODEC = StringRepresentable.fromEnum(SimNeoForgeRecipeTypes::values);
     public final ResourceLocation id;
     public final Supplier<RecipeSerializer<?>> serializerSupplier;
-    private final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> serializerObject;
+    private final RegistryObject<RecipeSerializer<?>> serializerObject;
     @Nullable
-    private final DeferredHolder<RecipeType<?>, RecipeType<?>> typeObject;
+    private final RegistryObject<RecipeType<?>> typeObject;
     private final Supplier<RecipeType<?>> type;
 
     SimNeoForgeRecipeTypes(final Supplier<RecipeSerializer<?>> serializerSupplier, final Supplier<RecipeType<?>> typeSupplier, final boolean registerType) {

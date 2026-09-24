@@ -662,13 +662,13 @@ public class PhysicsAssemblerScenes {
             configValue = null;
         }
 
-        final String configText = switch (configValue) {
+        final String configText = configValue == null ? "property_tooltip_how" : switch (configValue) {
             case ALWAYS -> "property_tooltip_always";
             case SHIFT -> "property_tooltip_shift";
             case GOGGLES -> "property_tooltip_goggles";
             case SHIFT_GOGGLES -> "property_tooltip_shift_goggles";
             case NEVER -> "property_tooltip_never";
-            case null, default -> "property_tooltip_how";
+            default -> "property_tooltip_how";
         };
 
         if (configValue == BlockPropertiesTooltip.Condition.GOGGLES || configValue == BlockPropertiesTooltip.Condition.SHIFT_GOGGLES) {

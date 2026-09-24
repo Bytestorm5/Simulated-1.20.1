@@ -19,7 +19,7 @@ import foundry.veil.api.client.render.post.PostProcessingManager;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
+import foundry.veil.backport.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;

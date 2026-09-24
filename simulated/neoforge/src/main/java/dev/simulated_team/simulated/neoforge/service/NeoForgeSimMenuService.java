@@ -4,7 +4,7 @@ import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.Li
 import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.screen.LinkedTypewriterMenuCommon;
 import dev.simulated_team.simulated.content.linked_typewriter.LinkedTypewriterMenuImpl;
 import dev.simulated_team.simulated.service.SimMenuService;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;

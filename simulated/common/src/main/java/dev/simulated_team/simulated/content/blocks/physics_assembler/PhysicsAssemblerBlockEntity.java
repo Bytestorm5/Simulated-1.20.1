@@ -33,7 +33,6 @@ import dev.simulated_team.simulated.util.assembly.SimAssemblyException;
 import foundry.veil.api.network.VeilPacketManager;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -372,18 +371,18 @@ public class PhysicsAssemblerBlockEntity extends SmartBlockEntity implements IDi
     }
 
     @Override
-    public void write(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    public void write(final CompoundTag compound, final boolean clientPacket) {
+        super.write(compound, clientPacket);
 
-        AssemblyException.write(compound, registries, this.lastException);
+        AssemblyException.write(compound, this.lastException);
         compound.putBoolean("IsPrimary", this.primaryAssembler);
     }
 
     @Override
-    protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        super.read(tag, registries, clientPacket);
+    protected void read(final CompoundTag tag, final boolean clientPacket) {
+        super.read(tag, clientPacket);
 
-        this.lastException = AssemblyException.read(tag, registries);
+        this.lastException = AssemblyException.read(tag);
         this.primaryAssembler = tag.getBoolean("IsPrimary");
     }
 

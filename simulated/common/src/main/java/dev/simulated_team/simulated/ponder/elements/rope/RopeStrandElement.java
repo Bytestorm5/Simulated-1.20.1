@@ -152,8 +152,8 @@ public class RopeStrandElement extends AnimatedSceneElementBase implements Anima
         final ObjectArrayList<RopeStrandRenderer.RopeRenderPoint> ropeRenderPoints = new ObjectArrayList<>();
         final ObjectArrayList<Vector3d> points = new ObjectArrayList<>(inputPoints);
 
-        while (points.size() >= 2 && points.getFirst().distanceSquared(points.get(1)) < 1e-6) {
-            points.removeFirst();
+        while (points.size() >= 2 && points.get(0).distanceSquared(points.get(1)) < 1e-6) {
+            points.remove(0);
         }
 
         if (points.size() <= 1) {

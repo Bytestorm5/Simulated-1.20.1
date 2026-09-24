@@ -4,7 +4,7 @@
   "package": "dev.eriksonn.aeronautics.mixin",
   "refmap": "${mod_id}.refmap.json",
   "plugin": "dev.eriksonn.aeronautics.plugin.AeroMixinPlugin",
-  "compatibilityLevel": "JAVA_18",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "balloon.SimAssemblyHelperMixin",
     "balloon.SubLevelAssemblyHelperMixin",

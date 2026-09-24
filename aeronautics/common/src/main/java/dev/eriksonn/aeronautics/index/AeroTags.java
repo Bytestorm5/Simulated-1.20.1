@@ -14,7 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraftforge.common.Tags;
 
 import static net.minecraft.tags.BlockTags.DAMPENS_VIBRATIONS;
 
@@ -68,7 +68,7 @@ public class AeroTags {
 	public static class ItemTags {
 		public static final TagKey<Item> LEATHERS = AllTags.commonItemTag("leathers");
 		public static final TagKey<Item> ARMORS = AllTags.commonItemTag("armors");
-		public static final TagKey<Item> HEAD_ARMOR = TagKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace("head_armor"));
+		public static final TagKey<Item> HEAD_ARMOR = TagKey.create(Registries.ITEM, new ResourceLocation("head_armor"));
 		public static final TagKey<Item> IRON_SHEET = AllTags.commonItemTag("plates/iron");
 		public static final TagKey<Item> GOLD_SHEET = AllTags.commonItemTag("plates/gold");
 		public static final TagKey<Item> MUSIC_DISCS = AllTags.commonItemTag("music_discs");

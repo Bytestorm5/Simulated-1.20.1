@@ -6,7 +6,7 @@ import dev.simulated_team.simulated.index.SimMenuTypes;
 import dev.simulated_team.simulated.service.SimMenuService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;

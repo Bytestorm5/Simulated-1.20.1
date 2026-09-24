@@ -20,6 +20,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.util.Mth;
 public class KeyEditorScreen {
 
     private static final SimGUITextures KEY_MENU = SimGUITextures.LINKED_TYPEWRITER_KEYS_MENU;
@@ -165,7 +166,7 @@ public class KeyEditorScreen {
         final int maxScroll = Math.max(0,
                 (this.parentScreen.getNewEntries().getSize() - 4) * (SimGUITextures.LINKED_TYPEWRITER_KEY_ENTRY.height + ENTRY_HEIGHT_PADDING_PIXELS)
         );
-        this.scroll = Math.clamp(this.scroll, 0, maxScroll);
+        this.scroll = Mth.clamp(this.scroll, 0, maxScroll);
     }
 
     /**

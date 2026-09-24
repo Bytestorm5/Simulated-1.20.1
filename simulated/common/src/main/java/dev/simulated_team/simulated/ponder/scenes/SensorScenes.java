@@ -1211,7 +1211,7 @@ public class SensorScenes {
         scene.world().modifyBlockEntityNBT(selection, VelocitySensorBlockEntity.class, tag -> {
             tag.putFloat("AdjustedVelocity", velocity);
             tag.putInt("ScrollValue", config);
-            tag.putInt("SignedRedstoneStrength", (int) Math.clamp(15 * velocity / config, 0, 15));
+            tag.putInt("SignedRedstoneStrength", (int) Mth.clamp(15 * velocity / config, 0, 15));
         });
     }
 

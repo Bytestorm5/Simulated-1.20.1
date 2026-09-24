@@ -5,17 +5,18 @@ import dev.simulated_team.simulated.content.blocks.altitude_sensor.AltitudeSenso
 import dev.simulated_team.simulated.network.packets.helpers.SimBlockEntityConfigurationPacket;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
+import foundry.veil.backport.network.codec.StreamCodec;
+import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
+import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public class ConfigureAltitudeSensorPacket extends SimBlockEntityConfigurationPacket<AltitudeSensorBlockEntity> {
     public static final Type<ConfigureAltitudeSensorPacket> TYPE = new Type<>(Simulated.path("configure_altitude_sensor"));
     public static final StreamCodec<ByteBuf, ConfigureAltitudeSensorPacket> CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC, SimBlockEntityConfigurationPacket::getPos,
+            VanillaStreamCodecs.BLOCK_POS, SimBlockEntityConfigurationPacket::getPos,
             ByteBufCodecs.FLOAT, ConfigureAltitudeSensorPacket::highSignal,
             ByteBufCodecs.FLOAT, ConfigureAltitudeSensorPacket::lowSignal,
             ConfigureAltitudeSensorPacket::new
