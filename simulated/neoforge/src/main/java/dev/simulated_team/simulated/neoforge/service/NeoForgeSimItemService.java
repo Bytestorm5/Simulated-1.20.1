@@ -4,6 +4,7 @@ import com.simibubi.create.AllTags;
 import dev.simulated_team.simulated.service.SimItemService;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.common.ForgeHooks;
 
 public class NeoForgeSimItemService implements SimItemService {
 
@@ -12,7 +13,8 @@ public class NeoForgeSimItemService implements SimItemService {
     private static final int SPECIAL_FUEL_BURN_TIME = 3200;
 
     public int getBurnTime(final ItemStack stack) {
-        return stack.getBurnTime(RecipeType.SMELTING);
+        // 1.20.1: ItemStack#getBurnTime only returns the item's own override (-1 = use vanilla); ForgeHooks resolves it
+        return ForgeHooks.getBurnTime(stack, RecipeType.SMELTING);
     }
 
     @Override
