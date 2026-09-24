@@ -22,7 +22,6 @@ public class SimParticleTypesImpl {
             });
         }
 
-        modEventBus.addListener(SimParticleTypesImpl::registerParticleProviders);
         PARTICLE_TYPES.register(modEventBus);
     }
 

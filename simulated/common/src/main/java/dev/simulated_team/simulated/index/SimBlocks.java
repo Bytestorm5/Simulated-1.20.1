@@ -68,6 +68,7 @@ import dev.simulated_team.simulated.registrate.simulated_tab.CreativeTabItemTran
 import dev.simulated_team.simulated.service.SimBlockStateService;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -936,9 +937,18 @@ public class SimBlocks {
     }
 
     public static void register() {
-        RadialWrenchMenu.registerBlacklistedBlock(SWIVEL_BEARING.getId());
-        RadialWrenchMenu.registerBlacklistedBlock(SWIVEL_BEARING_LINK_BLOCK.getId());
-        RadialWrenchMenu.registerBlacklistedBlock(PAIRED_DOCKING_CONNECTOR.getId());
+        // 1.20.1: Forge strips client-only classes such as RadialWrenchMenu on dedicated servers
+        if (FMLEnvironment.dist.isClient()) {
+            ClientOnly.blacklistRadialWrenchBlocks();
+        }
+    }
+
+    private static final class ClientOnly {
+        private static void blacklistRadialWrenchBlocks() {
+            RadialWrenchMenu.registerBlacklistedBlock(SWIVEL_BEARING.getId());
+            RadialWrenchMenu.registerBlacklistedBlock(SWIVEL_BEARING_LINK_BLOCK.getId());
+            RadialWrenchMenu.registerBlacklistedBlock(PAIRED_DOCKING_CONNECTOR.getId());
+        }
     }
 
 }
