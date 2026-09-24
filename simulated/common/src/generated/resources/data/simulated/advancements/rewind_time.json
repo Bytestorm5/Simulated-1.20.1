@@ -1,0 +1,31 @@
+{
+  "parent": "simulated:what_goes_down",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "simulated:rewind_time_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.simulated.rewind_time.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "simulated:torsion_spring"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.simulated.rewind_time"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

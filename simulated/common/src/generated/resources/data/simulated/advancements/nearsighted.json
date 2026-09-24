@@ -1,0 +1,38 @@
+{
+  "parent": "simulated:big_beam",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "location": [
+          {
+            "block": "simulated:optical_sensor",
+            "condition": "minecraft:block_state_property"
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.simulated.nearsighted.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "simulated:optical_sensor"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.simulated.nearsighted"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

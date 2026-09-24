@@ -1,0 +1,31 @@
+{
+  "parent": "aeronautics:head_in_the_clouds",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "aeronautics:unidentified_floating_object_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.aeronautics.unidentified_floating_object.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "aeronautics:levitite"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.aeronautics.unidentified_floating_object"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

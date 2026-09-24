@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:crushing_wheel"
+    },
+    "G": {
+      "item": "create:industrial_iron_block"
+    },
+    "S": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "pattern": [
+    "C",
+    "G",
+    "S"
+  ],
+  "result": {
+    "item": "offroad:rockcutting_wheel"
+  },
+  "show_notification": true
+}

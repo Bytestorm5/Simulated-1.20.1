@@ -1,0 +1,31 @@
+{
+  "parent": "simulated:no_pressure",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "simulated:big_beam_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.simulated.big_beam.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "simulated:laser_pointer"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.simulated.big_beam"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "B": {
+      "item": "create:brass_casing"
+    },
+    "G": {
+      "item": "simulated:gyroscopic_mechanism"
+    }
+  },
+  "pattern": [
+    " A ",
+    " G ",
+    " B "
+  ],
+  "result": {
+    "item": "aeronautics:gyroscopic_propeller_bearing"
+  },
+  "show_notification": true
+}

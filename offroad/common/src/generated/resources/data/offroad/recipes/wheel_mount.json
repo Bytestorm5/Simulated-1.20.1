@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:andesite_casing"
+    },
+    "P": {
+      "tag": "forge:plates/iron"
+    },
+    "S": {
+      "item": "simulated:spring"
+    }
+  },
+  "pattern": [
+    "C",
+    "S",
+    "P"
+  ],
+  "result": {
+    "item": "offroad:wheel_mount"
+  },
+  "show_notification": true
+}

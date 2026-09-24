@@ -77,9 +77,9 @@ processResources {
 }
 
 dependencies {
-    jarJar(project(path: ":simulated:neoforge", configuration: "runtimeElements"))
-    jarJar(project(path: ":aeronautics:neoforge", configuration: "runtimeElements"))
-    jarJar(project(path: ":offroad:neoforge", configuration: "runtimeElements"))
+    jarJar(project(":simulated:neoforge"))
+    jarJar(project(":aeronautics:neoforge"))
+    jarJar(project(":offroad:neoforge"))
 }
 
 test {

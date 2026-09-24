@@ -1,0 +1,39 @@
+{
+  "parent": "aeronautics:head_in_the_clouds",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aeronautics:music_disc_cloud_skipper"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.aeronautics.song_of_the_sky.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "aeronautics:music_disc_cloud_skipper"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.aeronautics.song_of_the_sky"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

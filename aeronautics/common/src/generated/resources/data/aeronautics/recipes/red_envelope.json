@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "aeronautics:envelope",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "W": {
+      "item": "minecraft:red_wool"
+    }
+  },
+  "pattern": [
+    "WS",
+    "SW"
+  ],
+  "result": {
+    "count": 4,
+    "item": "aeronautics:red_envelope"
+  },
+  "show_notification": true
+}

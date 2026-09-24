@@ -1,0 +1,29 @@
+{
+  "type": "create:mechanical_crafting",
+  "acceptMirrored": true,
+  "key": {
+    "C": {
+      "item": "create:cogwheel"
+    },
+    "K": {
+      "item": "minecraft:dried_kelp_block"
+    },
+    "P": {
+      "item": "create:fluid_pipe"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "S": {
+      "tag": "forge:plates/copper"
+    }
+  },
+  "pattern": [
+    "SR  ",
+    "KCPP",
+    "SR  "
+  ],
+  "result": {
+    "item": "aeronautics:mounted_potato_cannon"
+  }
+}

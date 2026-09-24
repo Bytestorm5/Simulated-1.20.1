@@ -24,6 +24,11 @@ legacyForge {
 
     runs {
         configureEach {
+            // Dev runs load mods from class folders without a jar manifest, so name the mixin configs here
+            programArgument("-mixin.config=aeronautics.mixins.json")
+            programArgument("-mixin.config=aeronautics.neoforge.mixins.json")
+            programArgument("-mixin.config=simulated.mixins.json")
+            programArgument("-mixin.config=simulated-neoforge.mixins.json")
             systemProperty('forge.enabledGameTestNamespaces', mod_id)
             ideName = "Aero Forge ${it.name.capitalize()} (${project.path})"
         }

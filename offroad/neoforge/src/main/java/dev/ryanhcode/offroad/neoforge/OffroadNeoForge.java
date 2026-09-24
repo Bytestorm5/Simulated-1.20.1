@@ -30,10 +30,6 @@ public class OffroadNeoForge {
 
         Offroad.init();
 
-        // 1.20.1: there is no trigger type registry, criterion triggers are registered directly
-        OffroadAdvancements.init();
-        OffroadAdvancementTriggers.register();
-
         NeoForgeOffroadConfigService.register(ModLoadingContext.get());
 
         // 1.20.1: Forge has no client-only @Mod entrypoints, so the client entrypoint is called from here
@@ -70,5 +66,12 @@ public class OffroadNeoForge {
     private static void init(final FMLCommonSetupEvent event) {
         // 1.20.1: replaces ModifyDefaultComponentsEvent
         OffroadCommonEvents.registerDefaultComponents();
+
+        // 1.20.1: there is no trigger type registry, criterion triggers are registered directly. The advancements
+        // build their icons from registered items, so this has to wait until registration is done.
+        event.enqueueWork(() -> {
+            OffroadAdvancements.init();
+            OffroadAdvancementTriggers.register();
+        });
     }
 }

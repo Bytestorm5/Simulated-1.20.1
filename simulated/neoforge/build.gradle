@@ -22,6 +22,9 @@ legacyForge {
 
     runs {
         configureEach {
+            // Dev runs load mods from class folders without a jar manifest, so name the mixin configs here
+            programArgument("-mixin.config=simulated.mixins.json")
+            programArgument("-mixin.config=simulated-neoforge.mixins.json")
             systemProperty('forge.enabledGameTestNamespaces', mod_id)
             ideName = "Simulated Forge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
         }

@@ -1,0 +1,31 @@
+{
+  "parent": "simulated:applied_kinematics",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "simulated:learning_the_ropes_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.simulated.learning_the_ropes.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "simulated:rope_coupling"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.simulated.learning_the_ropes"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

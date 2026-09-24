@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_envelope": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "aeronautics:envelope"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "simulated:crafting/green_envelope_from_other_envelope"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_envelope",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "simulated:crafting/green_envelope_from_other_envelope"
+    ]
+  },
+  "sends_telemetry_event": false
+}

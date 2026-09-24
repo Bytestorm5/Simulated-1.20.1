@@ -1,0 +1,38 @@
+{
+  "parent": "simulated:no_pressure",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "location": [
+          {
+            "block": "simulated:velocity_sensor",
+            "condition": "minecraft:block_state_property"
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.simulated.speed_is_key.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "simulated:velocity_sensor"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.simulated.speed_is_key"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

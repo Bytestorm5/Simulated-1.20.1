@@ -1,0 +1,31 @@
+{
+  "parent": "aeronautics:for_every_action",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "aeronautics:in_thrust_we_trust_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.aeronautics.in_thrust_we_trust.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "aeronautics:propeller_bearing"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.aeronautics.in_thrust_we_trust"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

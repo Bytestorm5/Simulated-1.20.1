@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "minecraft:magenta_wool"
+    },
+    {
+      "item": "minecraft:stick"
+    }
+  ],
+  "results": [
+    {
+      "count": 3,
+      "item": "aeronautics:magenta_envelope"
+    }
+  ]
+}

@@ -107,7 +107,7 @@
     "sounds": [
       {
         "type": "event",
-        "name": "minecraft:entity.wind_charge.wind_burst",
+        "name": "minecraft:entity.phantom.flap",
         "pitch": 0.3,
         "volume": 0.5
       }
@@ -187,9 +187,8 @@
       "minecraft:music/game/floating_dream",
       "minecraft:music/game/infinite_amethyst",
       "minecraft:music/game/echo_in_the_wind",
-      "minecraft:music/game/clark",
-      "minecraft:music/game/subwoofer_lullaby",
-      "minecraft:music/game/watcher"
+      "minecraft:music/game/calm2",
+      "minecraft:music/game/hal1"
     ]
   },
   "music.glide": {

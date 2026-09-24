@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "simualted:nameplate_dyeing",
+  "ingredients": [
+    {
+      "tag": "forge:dyes/light_gray"
+    },
+    {
+      "tag": "simulated:nameplate_items"
+    }
+  ],
+  "result": {
+    "item": "simulated:light_gray_nameplate"
+  }
+}

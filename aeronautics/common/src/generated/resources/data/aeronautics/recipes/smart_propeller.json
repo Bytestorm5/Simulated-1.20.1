@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "create:brass_casing"
+    },
+    "G": {
+      "item": "simulated:gyroscopic_mechanism"
+    },
+    "P": {
+      "item": "create:propeller"
+    }
+  },
+  "pattern": [
+    "P",
+    "G",
+    "B"
+  ],
+  "result": {
+    "count": 2,
+    "item": "aeronautics:smart_propeller"
+  },
+  "show_notification": true
+}

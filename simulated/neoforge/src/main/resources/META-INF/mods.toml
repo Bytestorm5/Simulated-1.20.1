@@ -41,7 +41,7 @@ side = "CLIENT"
 modId = "sable"
 mandatory = true
 versionRange = "${sable_mod_version_range}"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "jei"

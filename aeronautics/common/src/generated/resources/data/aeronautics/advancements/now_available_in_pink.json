@@ -1,0 +1,31 @@
+{
+  "parent": "aeronautics:unidentified_floating_object",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "aeronautics:now_available_in_pink_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#FFDBA213",
+      "translate": "advancement.aeronautics.now_available_in_pink.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "aeronautics:pearlescent_levitite"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.aeronautics.now_available_in_pink"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
