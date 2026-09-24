@@ -16,8 +16,8 @@ public class SimStandardRecipeGen extends BaseRecipeProvider {
 
     GeneratedRecipe PORTABLE_ENGINE_DYEING = this.createSpecial(PortableEngineDyeingRecipe::new, "crafting", "portable_engine_dyeing");
 
-    public SimStandardRecipeGen(final PackOutput output, final CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, Simulated.MOD_ID);
+    public SimStandardRecipeGen(final PackOutput output) {
+        super(output, Simulated.MOD_ID);
     }
 
     @Override

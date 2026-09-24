@@ -16,8 +16,8 @@ public class SimFillingRecipes extends FillingRecipeGen {
                   .require(CommonMetal.IRON.plates)
                   .output(SimItems.HONEY_GLUE));
 
-    public SimFillingRecipes(final PackOutput output, final CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(output, lookupProvider, Simulated.MOD_ID);
+    public SimFillingRecipes(final PackOutput output) {
+        super(output, Simulated.MOD_ID);
     }
 
     @Override

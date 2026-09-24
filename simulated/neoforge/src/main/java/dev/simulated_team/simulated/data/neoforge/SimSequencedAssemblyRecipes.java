@@ -44,8 +44,8 @@ public class SimSequencedAssemblyRecipes extends SequencedAssemblyRecipeGen {
             .addOutput(Items.IRON_HELMET, 1)
     );
 
-    public SimSequencedAssemblyRecipes(final PackOutput output, final CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, Simulated.MOD_ID);
+    public SimSequencedAssemblyRecipes(final PackOutput output) {
+        super(output, Simulated.MOD_ID);
     }
 
     @Override

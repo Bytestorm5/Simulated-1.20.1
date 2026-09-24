@@ -59,8 +59,8 @@ public class SimMechanicalCraftingRecipes extends MechanicalCraftingRecipeGen {
             );
 
 
-    public SimMechanicalCraftingRecipes(final PackOutput output, final CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, Simulated.MOD_ID);
+    public SimMechanicalCraftingRecipes(final PackOutput output) {
+        super(output, Simulated.MOD_ID);
     }
 
 

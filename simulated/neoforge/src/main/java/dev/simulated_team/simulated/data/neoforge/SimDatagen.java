@@ -22,6 +22,6 @@ public class SimDatagen {
         final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
         generator.addProvider(event.includeServer(), new SimAdvancements(output, lookupProvider));
-        generator.addProvider(event.includeServer(), SimProcessingRecipeGen.registerAll(output, lookupProvider));
+        generator.addProvider(event.includeServer(), SimProcessingRecipeGen.registerAll(output));
     }
 }

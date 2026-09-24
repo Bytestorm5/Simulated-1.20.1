@@ -158,7 +158,7 @@ public class SimNeoForgeCommonEvents {
 
 			generator.addProvider(event.includeClient(), SimSoundEvents.REGISTRY.getProvider(output));
 			generator.addProvider(event.includeServer(), new SimAdvancements(output, lookupProvider));
-			generator.addProvider(event.includeServer(), SimProcessingRecipeGen.registerAll(output, lookupProvider));
+			generator.addProvider(event.includeServer(), SimProcessingRecipeGen.registerAll(output));
 		}
 
 		@SubscribeEvent

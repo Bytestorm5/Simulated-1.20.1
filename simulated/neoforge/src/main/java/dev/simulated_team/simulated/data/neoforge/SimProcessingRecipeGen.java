@@ -13,11 +13,11 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class SimProcessingRecipeGen extends BaseRecipeProvider {
     protected static final List<BaseRecipeProvider> GENERATORS = new ArrayList<>();
-    public static DataProvider registerAll(final PackOutput output, final CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        GENERATORS.add(new SimFillingRecipes(output, lookupProvider));
-        GENERATORS.add(new SimMechanicalCraftingRecipes(output, lookupProvider));
-        GENERATORS.add(new SimSequencedAssemblyRecipes(output, lookupProvider));
-        GENERATORS.add(new SimStandardRecipeGen(output, lookupProvider));
+    public static DataProvider registerAll(final PackOutput output) {
+        GENERATORS.add(new SimFillingRecipes(output));
+        GENERATORS.add(new SimMechanicalCraftingRecipes(output));
+        GENERATORS.add(new SimSequencedAssemblyRecipes(output));
+        GENERATORS.add(new SimStandardRecipeGen(output));
         return new DataProvider() {
             @Override
             public CompletableFuture<?> run(final CachedOutput arg) {
@@ -32,7 +32,7 @@ public abstract class SimProcessingRecipeGen extends BaseRecipeProvider {
             }
         };
     }
-    public SimProcessingRecipeGen(final PackOutput output, final CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, Simulated.MOD_ID);
+    public SimProcessingRecipeGen(final PackOutput output) {
+        super(output, Simulated.MOD_ID);
     }
 }
