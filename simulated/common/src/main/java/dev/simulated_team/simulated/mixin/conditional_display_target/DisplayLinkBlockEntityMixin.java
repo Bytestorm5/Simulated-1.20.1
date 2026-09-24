@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(DisplayLinkBlockEntity.class)
+@Mixin(value = DisplayLinkBlockEntity.class, remap = false)
 public class DisplayLinkBlockEntityMixin {
     @Shadow public DisplayTarget activeTarget;
 

@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(EncasedCogwheelBlock.class)
+@Mixin(value = EncasedCogwheelBlock.class, remap = false)
 public class EncasedCogwheelBlockMixin {
     @WrapOperation(method = "handleEncasing", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/base/IRotate;hasShaftTowards(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;)Z"))
     private boolean simulated$handleEncasingExtraKinetics(final IRotate instance, final LevelReader level, final BlockPos pos, final BlockState state, final Direction direction, final Operation<Boolean> original) {

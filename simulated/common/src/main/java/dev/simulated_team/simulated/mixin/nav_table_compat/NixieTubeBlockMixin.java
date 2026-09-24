@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 // todo: wait on create to fix this
-@Mixin(NixieTubeBlock.class)
+@Mixin(value = NixieTubeBlock.class, remap = false)
 public class NixieTubeBlockMixin {
     @WrapOperation(method = "getPower", at = @At(value = "FIELD", ordinal = 1, target = "Lnet/createmod/catnip/data/Iterate;directions:[Lnet/minecraft/core/Direction;"))
     private static Direction[] fixReadPower(final Operation<Direction[]> original) {

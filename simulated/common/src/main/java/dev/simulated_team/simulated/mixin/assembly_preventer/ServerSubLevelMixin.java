@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(ServerSubLevel.class)
+@Mixin(value = ServerSubLevel.class, remap = false)
 public class ServerSubLevelMixin implements PrimaryAssemblerExtension {
 
     @Unique

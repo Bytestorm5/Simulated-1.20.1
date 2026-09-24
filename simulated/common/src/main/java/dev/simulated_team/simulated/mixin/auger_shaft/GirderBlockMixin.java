@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(GirderBlock.class)
+@Mixin(value = GirderBlock.class, remap = false)
 public class GirderBlockMixin {
     @Inject(method = "isConnected", at = @At("TAIL"), cancellable = true)
     private static void connectToAugers(final BlockAndTintGetter world, final BlockPos pos, final BlockState state, final Direction side,

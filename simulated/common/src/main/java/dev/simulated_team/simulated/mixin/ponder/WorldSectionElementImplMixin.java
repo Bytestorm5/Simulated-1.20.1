@@ -9,7 +9,7 @@ import net.createmod.ponder.foundation.element.WorldSectionElementImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(WorldSectionElementImpl.class)
+@Mixin(value = WorldSectionElementImpl.class, remap = false)
 public class WorldSectionElementImplMixin {
 
     @WrapOperation(method = "transformMS", at = @At(value = "INVOKE", target = "Ldev/engine_room/flywheel/lib/transform/PoseTransformStack;rotateYDegrees(F)Ldev/engine_room/flywheel/lib/transform/Rotate;", ordinal = 0))

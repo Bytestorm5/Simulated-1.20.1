@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(KineticBlockEntity.class)
+@Mixin(value = KineticBlockEntity.class, remap = false)
 public class KineticBlockEntityMixin {
 
     @Inject(method = "addToGoggleTooltip", at = @At("RETURN"), cancellable = true)

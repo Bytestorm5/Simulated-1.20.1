@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(AirCurrent.class)
+@Mixin(value = AirCurrent.class, remap = false)
 public class AirCurrentMixin {
 
 

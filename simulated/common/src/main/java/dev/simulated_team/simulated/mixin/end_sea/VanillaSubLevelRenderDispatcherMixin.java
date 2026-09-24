@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(VanillaSubLevelRenderDispatcher.class)
+@Mixin(value = VanillaSubLevelRenderDispatcher.class, remap = false)
 public class VanillaSubLevelRenderDispatcherMixin {
 
     @Inject(method = "setupDynamicEffects", at = @At("TAIL"))

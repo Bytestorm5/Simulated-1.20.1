@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(DisplayLinkScreen.class)
+@Mixin(value = DisplayLinkScreen.class, remap = false)
 public class DisplayLinkScreenMixin {
     @Shadow private DisplayLinkBlockEntity blockEntity;
 

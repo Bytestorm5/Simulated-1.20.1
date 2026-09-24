@@ -7,7 +7,7 @@
 		"mecanum_wheel": "simulated:block/mecanum_wheel",
 		"particle": "create:block/dark_metal_block"
 	},
-	"loader": "neoforge:obj",
+	"loader": "forge:obj",
 	"flip_v": true,
 	"model": "simulated:models/block/mecanum_wheel/item.obj",
 	"display": {

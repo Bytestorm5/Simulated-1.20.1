@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(PonderUI.class)
+@Mixin(value = PonderUI.class, remap = false)
 public class PonderUIMixin {
     @Shadow @Final private List<PonderScene> scenes;
     @Shadow private int index;

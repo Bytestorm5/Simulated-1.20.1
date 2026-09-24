@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 // todo: wait on create to fix this
-@Mixin(RedstoneLinkBlock.class)
+@Mixin(value = RedstoneLinkBlock.class, remap = false)
 public class RedstoneLinkBlockMixin {
 
     @WrapOperation(method = "getPower", at = @At(value = "FIELD", ordinal = 1, target = "Lnet/createmod/catnip/data/Iterate;directions:[Lnet/minecraft/core/Direction;"))

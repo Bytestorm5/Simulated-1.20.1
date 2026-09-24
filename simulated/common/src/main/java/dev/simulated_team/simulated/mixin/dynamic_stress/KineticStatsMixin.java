@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(KineticStats.class)
+@Mixin(value = KineticStats.class, remap = false)
 public class KineticStatsMixin {
 
 	@WrapOperation(method = "getKineticStats", at = @At(value = "INVOKE", target = "Lnet/createmod/catnip/lang/LangBuilder;add(Lnet/createmod/catnip/lang/LangBuilder;)Lnet/createmod/catnip/lang/LangBuilder;", ordinal = 0), remap = false)

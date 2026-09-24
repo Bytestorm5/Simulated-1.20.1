@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(PonderTooltipHandler.class)
+@Mixin(value = PonderTooltipHandler.class, remap = false)
 public class PonderTooltipHandlerMixin {
 	@WrapOperation(method = "makeProgressBar", at = @At(value = "INVOKE", target = "Lnet/createmod/catnip/lang/LangBuilder;component()Lnet/minecraft/network/chat/MutableComponent;"))
 	private static MutableComponent simulated$addToTooltip(final LangBuilder instance, final Operation<MutableComponent> original) {

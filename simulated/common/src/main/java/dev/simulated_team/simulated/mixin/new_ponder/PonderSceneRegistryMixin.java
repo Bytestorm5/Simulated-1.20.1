@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(PonderSceneRegistry.class)
+@Mixin(value = PonderSceneRegistry.class, remap = false)
 public class PonderSceneRegistryMixin {
 	@Inject(method = "compile(Lnet/minecraft/resources/ResourceLocation;)Ljava/util/List;", at = @At("RETURN"))
 	private void simulated$compile(final ResourceLocation id, final CallbackInfoReturnable<List<PonderScene>> cir) {

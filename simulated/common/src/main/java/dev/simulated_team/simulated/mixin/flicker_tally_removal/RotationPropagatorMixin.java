@@ -7,7 +7,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = RotationPropagator.class, priority = 100000)
+@Mixin(value = RotationPropagator.class, priority = 100000, remap = false)
 public class RotationPropagatorMixin {
 
     // TODO: REPLACE WITH MORE SOPHISTICATED FLICKER SYSTEM

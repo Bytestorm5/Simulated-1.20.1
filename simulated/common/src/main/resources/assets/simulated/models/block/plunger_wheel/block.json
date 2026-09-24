@@ -7,7 +7,7 @@
 		"plunger_wheel": "simulated:block/plunger_wheel",
 		"particle": "simulated:block/plunger_wheel"
 	},
-	"loader": "neoforge:obj",
+	"loader": "forge:obj",
 	"flip_v": true,
 	"model": "simulated:models/block/plunger_wheel/block.obj",
 	"display": {

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.ShaderInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(VanillaSubLevelRenderDispatcher.class)
+@Mixin(value = VanillaSubLevelRenderDispatcher.class, remap = false)
 public class VanillaSubLevelRenderDispatcherMixin {
 
     @WrapOperation(method = "renderSectionLayer", at = @At(value = "INVOKE", target = "Ldev/ryanhcode/sable/sublevel/render/dispatcher/VanillaSubLevelRenderDispatcher;setupDynamicEffects(Lnet/minecraft/client/renderer/ShaderInstance;ZZ)V", ordinal = 0))

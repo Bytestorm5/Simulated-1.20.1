@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 // advancements are written to use the traditional datagen entrypoint, and only need to be ran on one side
 public class SimDatagen {
     public static void gatherDataHighPriority(final GatherDataEvent event) {
-        if (event.getMods().contains(Simulated.MOD_ID))
+        if (event.getModContainer().getModId().equals(Simulated.MOD_ID))
             SimTags.addGenerators();
     }
     public static void gatherData(final GatherDataEvent event) {
