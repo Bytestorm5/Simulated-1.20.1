@@ -35,7 +35,7 @@ public class SimulatedAdvancement {
     private SimpleSimulatedTrigger builtinTrigger;
     private SimulatedAdvancement parent;
 
-    AdvancementHolder datagenResult;
+    Advancement datagenResult;
 
     private final ResourceLocation background;
     private final String lang;
@@ -57,7 +57,7 @@ public class SimulatedAdvancement {
 
         if(!t.externalTrigger) {
             this.builtinTrigger = triggerHandler.apply(modid,id + "_builtin");
-            this.builder.addCriterion("0", this.builtinTrigger.createCriterion(this.builtinTrigger.instance()));
+            this.builder.addCriterion("0", this.builtinTrigger.instance());
         }
 
         this.builder.display(t.icon, Component.translatable(this.titleKey()),
@@ -79,9 +79,9 @@ public class SimulatedAdvancement {
     public boolean isAlreadyAwardedTo(final Player player) {
         if (!(player instanceof final ServerPlayer sp))
             return true;
-        final AdvancementHolder advancement = sp.getServer()
+        final Advancement advancement = sp.getServer()
                 .getAdvancements()
-                .get(new ResourceLocation(this.modid, this.id));
+                .getAdvancement(new ResourceLocation(this.modid, this.id));
         if (advancement == null)
             return true;
         return sp.getAdvancements()
@@ -121,7 +121,7 @@ public class SimulatedAdvancement {
         }
     }
 
-    public void save(final Consumer<AdvancementHolder> t) {
+    public void save(final Consumer<Advancement> t) {
         if (this.parent != null)
             this.builder.parent(this.parent.datagenResult);
 
@@ -143,20 +143,20 @@ public class SimulatedAdvancement {
      */
     public enum TaskType {
 
-        SILENT(AdvancementType.TASK, false, false, false),
-        NORMAL(AdvancementType.TASK, true, false, false),
-        NOISY(AdvancementType.TASK, true, true, false),
-        EXPERT(AdvancementType.GOAL, true, true, false),
-        SECRET(AdvancementType.GOAL, true, true, true),
+        SILENT(FrameType.TASK, false, false, false),
+        NORMAL(FrameType.TASK, true, false, false),
+        NOISY(FrameType.TASK, true, true, false),
+        EXPERT(FrameType.GOAL, true, true, false),
+        SECRET(FrameType.GOAL, true, true, true),
 
         ;
 
-        private final AdvancementType advancementType;
+        private final FrameType advancementType;
         private final boolean toast;
         private final boolean announce;
         private final boolean hide;
 
-        TaskType(final AdvancementType advancementType, final boolean toast, final boolean announce, final boolean hide) {
+        TaskType(final FrameType advancementType, final boolean toast, final boolean announce, final boolean hide) {
             this.advancementType = advancementType;
             this.toast = toast;
             this.announce = announce;
@@ -180,7 +180,7 @@ public class SimulatedAdvancement {
             return this;
         }
 
-        public Builder icon(final ItemProviderEntry<?, ?> item) {
+        public Builder icon(final ItemProviderEntry<?> item) {
             return this.icon(item.asStack());
         }
 
@@ -218,7 +218,7 @@ public class SimulatedAdvancement {
             return this.whenIconCollected();
         }
 
-        public Builder whenItemCollected(final ItemProviderEntry<?, ?> item) {
+        public Builder whenItemCollected(final ItemProviderEntry<?> item) {
             return this.whenItemCollected(item.asStack()
                     .getItem());
         }
@@ -236,7 +236,7 @@ public class SimulatedAdvancement {
             return this.externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(new ItemLike[] {}));
         }
 
-        public Builder externalTrigger(final Criterion<? extends CriterionTriggerInstance> trigger) {
+        public Builder externalTrigger(final CriterionTriggerInstance trigger) {
             SimulatedAdvancement.this.builder.addCriterion(String.valueOf(this.keyIndex), trigger);
             this.externalTrigger = true;
             this.keyIndex++;

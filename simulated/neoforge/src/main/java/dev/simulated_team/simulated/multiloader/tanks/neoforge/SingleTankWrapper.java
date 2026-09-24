@@ -19,7 +19,7 @@ public class SingleTankWrapper extends FluidTank {
     }
 
     public static CFluidType toCType(final FluidStack stack) {
-        return new CFluidType(stack.getFluid(), stack.getTag());
+        return new CFluidType(stack.getFluid(), stack.hasTag() ? stack.getTag().copy() : null);
     }
 
     @Override

@@ -13,50 +13,43 @@ import dev.simulated_team.simulated.index.SimArmInteractions;
 import dev.simulated_team.simulated.index.SimSoundEvents;
 import dev.simulated_team.simulated.index.SimTags;
 import dev.simulated_team.simulated.index.neoforge.NeoForgeSimStats;
-import dev.simulated_team.simulated.multiloader.energy.SingleBattery;
-import dev.simulated_team.simulated.multiloader.energy.SingleBatteryWrapper;
-import dev.simulated_team.simulated.multiloader.inventory.AbstractContainer;
-import dev.simulated_team.simulated.multiloader.inventory.neoforge.ContainerWrapper;
-import dev.simulated_team.simulated.multiloader.tanks.SingleTank;
-import dev.simulated_team.simulated.multiloader.tanks.neoforge.SingleTankWrapper;
+import dev.simulated_team.simulated.neoforge.capability.SimBlockEntityCapabilities;
 import dev.simulated_team.simulated.neoforge.service.NeoForgeSimConfigService;
-import dev.simulated_team.simulated.neoforge.service.NeoForgeSimInventoryService;
-import dev.simulated_team.simulated.util.hold_interaction.HoldInteractionManager;
 import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
-import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.ModifyDefaultComponentsEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = Simulated.MOD_ID)
+/**
+ * Registered on the Forge event bus by {@link dev.simulated_team.simulated.neoforge.SimulatedNeoForge}.
+ */
 public class SimNeoForgeCommonEvents {
 
 	@SubscribeEvent
@@ -81,7 +74,11 @@ public class SimNeoForgeCommonEvents {
 	}
 
 	@SubscribeEvent
-	public static void postServerTick(final ServerTickEvent.Post event) {
+	public static void postServerTick(final TickEvent.ServerTickEvent event) {
+		if (event.phase != TickEvent.Phase.END) {
+			return;
+		}
+
 		final MinecraftServer server = event.getServer();
 		for (final ServerLevel level : server.getAllLevels()) {
 			SimulatedCommonEvents.onServerTickEnd(level);
@@ -90,35 +87,13 @@ public class SimNeoForgeCommonEvents {
 
 	@SubscribeEvent
 	public static void syncDataPack(final OnDatapackSyncEvent event) {
-		EndSeaPhysicsData.syncDataPacket(packet -> event.getRelevantPlayers().forEach(player -> player.connection.send(packet)));
+		final List<ServerPlayer> players = event.getPlayer() != null ? List.of(event.getPlayer()) : event.getPlayerList().getPlayers();
+		EndSeaPhysicsData.syncDataPacket(packet -> players.forEach(player -> player.connection.send(packet)));
 	}
 
 	@SubscribeEvent
 	public static void addReloadListeners(final AddReloadListenerEvent event) {
 		event.addListener(EndSeaPhysicsData.ReloadListener.INSTANCE);
-	}
-
-	@SubscribeEvent
-	public static void keyInput(final InputEvent.InteractionKeyMappingTriggered event) {
-		if (event.isUseItem()) {
-			if (SimulatedCommonClientEvents.useItemMappingTriggered()) {
-				event.setCanceled(true);
-				event.setSwingHand(false);
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void useItemOnBlock(final UseItemOnBlockEvent event) {
-		if (event.getLevel().isClientSide()) {
-			if (event.getPlayer() != null && event.getUsePhase() == UseItemOnBlockEvent.UsePhase.ITEM_AFTER_BLOCK) {
-				if (SimulatedCommonClientEvents.useItemOnBlockEvent(event.getLevel(), event.getPlayer(), event.getItemStack(), event.getHand())) {
-					event.cancelWithResult(ItemInteractionResult.CONSUME);
-				}
-			}
-
-			useItemOnBlockClient(event);
-		}
 	}
 
 	@SubscribeEvent
@@ -138,34 +113,39 @@ public class SimNeoForgeCommonEvents {
 		}
 	}
 
-
-	private static void useItemOnBlockClient(final UseItemOnBlockEvent event) {
-		if (event.getPlayer().isLocalPlayer() && HoldInteractionManager.isActive()) {
-			event.setCanceled(true);
-		}
+	@SubscribeEvent
+	public static void modifyItemAttributes(final ItemAttributeModifierEvent event) {
+		SimulatedCommonEvents.modifyItemAttributes(event.getItemStack(), event.getSlotType(), event::addModifier);
 	}
 
-	@Mod.EventBusSubscriber(modid = Simulated.MOD_ID)
-	public static class ModBusEvents {
+	@SubscribeEvent
+	public static void attachBlockEntityCapabilities(final AttachCapabilitiesEvent<BlockEntity> event) {
+		SimBlockEntityCapabilities.attach(event);
+	}
 
-		@SubscribeEvent
-		public static void modifyDefaultComponents(final ModifyDefaultComponentsEvent event) {
-			SimulatedCommonEvents.modifyDefaultComponents(event::modify);
-		}
+	/**
+	 * Registered on the mod event bus by {@link dev.simulated_team.simulated.neoforge.SimulatedNeoForge}.
+	 */
+	public static class ModBusEvents {
 
 		@SubscribeEvent
 		public static void register(final RegisterEvent event) {
 			SimArmInteractions.init();
+		}
 
-			if (event.getRegistry() == BuiltInRegistries.TRIGGER_TYPES) {
+		@SubscribeEvent
+		public static void commonSetup(final FMLCommonSetupEvent event) {
+			// 1.20.1: criterion triggers have no registry, they're registered into CriteriaTriggers once registration
+			// has finished (like Create does)
+			event.enqueueWork(() -> {
 				SimAdvancements.register();
 				SimAdvancementTriggers.register();
-			}
+			});
 		}
 
 		@SubscribeEvent(priority = EventPriority.HIGHEST)
 		public static void gatherDataHighPriority(final GatherDataEvent event) {
-			if (event.getMods().contains(Simulated.MOD_ID))
+			if (event.getModContainer().getModId().equals(Simulated.MOD_ID))
 				SimTags.addGenerators();
 		}
 
@@ -176,48 +156,9 @@ public class SimNeoForgeCommonEvents {
 			final PackOutput output = generator.getPackOutput();
 			final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-			if (event.includeClient()) {
-				event.addProvider(SimSoundEvents.REGISTRY.getProvider(output));
-			}
-
+			generator.addProvider(event.includeClient(), SimSoundEvents.REGISTRY.getProvider(output));
 			generator.addProvider(event.includeServer(), new SimAdvancements(output, lookupProvider));
 			generator.addProvider(event.includeServer(), SimProcessingRecipeGen.registerAll(output, lookupProvider));
-		}
-
-		@SubscribeEvent
-		public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-			for (final NeoForgeSimInventoryService.InventoryGetterHolder<? extends BlockEntity> getter : NeoForgeSimInventoryService.inventoryGetters) {
-				event.registerBlockEntity(ForgeCapabilities.ItemHandler.BLOCK, getter.type(), (be, dir) -> {
-					final AbstractContainer container = getter.castBlockEntityAndGetInv(be, dir);
-					if (container == null) {
-						return null;
-					}
-
-					return new ContainerWrapper<>(container);
-				});
-			}
-
-			for (final NeoForgeSimInventoryService.TankGetterHolder<? extends BlockEntity> getter : NeoForgeSimInventoryService.fluidTankGetters) {
-				event.registerBlockEntity(ForgeCapabilities.FluidHandler.BLOCK, getter.type(), (be, dir) -> {
-					final SingleTank container = getter.castBlockEntityAndGetInv(be, dir);
-					if (container == null) {
-						return null;
-					}
-
-					return new SingleTankWrapper(container);
-				});
-			}
-
-			for (final NeoForgeSimInventoryService.EnergyGetterHolder<? extends BlockEntity> getter : NeoForgeSimInventoryService.energyGetters) {
-				event.registerBlockEntity(ForgeCapabilities.EnergyStorage.BLOCK, getter.type(), (be, dir) -> {
-					final SingleBattery battery = getter.castBlockEntityAndGetInv(be, dir);
-					if (battery == null) {
-						return null;
-					}
-
-					return new SingleBatteryWrapper(battery);
-				});
-			}
 		}
 
 		@SubscribeEvent

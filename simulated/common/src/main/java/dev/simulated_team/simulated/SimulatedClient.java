@@ -10,7 +10,9 @@ import dev.simulated_team.simulated.content.physics_staff.PhysicsStaffClientHand
 import dev.simulated_team.simulated.events.SimulatedCommonClientEvents;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import dev.simulated_team.simulated.index.SimRenderTypes;
+import dev.simulated_team.simulated.api.SimpleResourceManager;
 import dev.simulated_team.simulated.index.SimResourceManagers;
+import dev.simulated_team.simulated.registrate.simulated_tab.SimGuiSprites;
 import dev.simulated_team.simulated.index.ponder.SimPonderPlugin;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
@@ -27,6 +29,8 @@ public class SimulatedClient {
         SimPartialModels.init();
         BlockPropertiesTooltip.init();
         SimResourceManagers.init();
+        // 1.20.1: there is no GUI sprite atlas, the creative tab banners are stitched into Simulated's own
+        SimpleResourceManager.registerReloadListener(SimGuiSprites.INSTANCE);
 
         PonderIndex.addPlugin(new SimPonderPlugin());
 

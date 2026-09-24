@@ -4,7 +4,7 @@
   "textures": {
     "wheel": "offroad:block/rockcutting_wheel"
   },
-  "loader": "neoforge:obj",
+  "loader": "forge:obj",
   "flip_v": true,
   "model": "offroad:models/block/rockcutting_wheel/rockcutting_wheel.obj"
 }

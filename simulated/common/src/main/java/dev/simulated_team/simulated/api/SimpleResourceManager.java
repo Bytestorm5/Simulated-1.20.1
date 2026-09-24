@@ -30,6 +30,13 @@ public class SimpleResourceManager<T> extends CodecReloadListener<T> {
 		return manager;
 	}
 
+	/**
+	 * Registers a client resource reload listener through the same loader service as the resource managers.
+	 */
+	public static void registerReloadListener(final PreparableReloadListener listener) {
+		REGISTRY.registerListener(listener);
+	}
+
 	private SimpleResourceManager(final Codec<T> codec, final String path) {
 		super(codec, FileToIdConverter.json(path));
 	}

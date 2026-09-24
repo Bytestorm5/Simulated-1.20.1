@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ComparatorBlock.class)
 public class ComparatorBlockMixin {
     @WrapOperation(method = "getInputSignal", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getAnalogOutputSignal(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)I"))
-    private int simulated$potentiallyDirectionalAnalogueSignal(final BlockState instance, final Level level, final BlockPos pos, final Operation<Integer> original, @Local(name = "direction") final Direction direction) {
+    private int simulated$potentiallyDirectionalAnalogueSignal(final BlockState instance, final Level level, final BlockPos pos, final Operation<Integer> original, @Local final Direction direction) {
         if (instance.getBlock() instanceof final IDirectionalAnalogOutput directionalAnalogOutput) {
             return directionalAnalogOutput.getAnalogOutputSignalFrom(instance, level, pos, direction);
         }

@@ -14,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class SimPonderScenes {
     public static void register(final PonderSceneRegistrationHelper<ResourceLocation> registry) {
-        final PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registry.withKeyFunction(DeferredHolder::getId);
+        final PonderSceneRegistrationHelper<ItemProviderEntry<?>> helper = registry.withKeyFunction(ItemProviderEntry::getId);
 
         //PHYSICS
         helper.forComponents(SimBlocks.PHYSICS_ASSEMBLER)

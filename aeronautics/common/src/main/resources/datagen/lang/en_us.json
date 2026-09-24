@@ -5,7 +5,7 @@
     "summary": "Augments your HUD with _miscellaneous information_ about placed components."
   },
 
-  "jukebox_song.aeronautics.cloud_skipper": "Starlotte - Cloud Skipper",
+  "item.aeronautics.music_disc_cloud_skipper.desc": "Starlotte - Cloud Skipper",
 
   "aeronautics": {
     "simulated_section.aeronautics": "Aeronautics",

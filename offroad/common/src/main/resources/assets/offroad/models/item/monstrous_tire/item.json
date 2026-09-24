@@ -8,7 +8,7 @@
 		"tire_1": "offroad:block/tire/tire_1",
 		"particle": "offroad:block/custom_break_particles/wheel"
 	},
-	"loader": "neoforge:obj",
+	"loader": "forge:obj",
 	"flip_v": true,
 	"model": "offroad:models/item/monstrous_tire/item.obj",
 	"display": {

@@ -40,11 +40,11 @@
     "quiet_use.MultiPlayerGameModeMixin",
     "rope.ClientSubLevelContainerMixin",
     "rope.LevelRendererMixin",
-    "search_alias.SessionSearchTreesMixin",
+    "search_alias.MinecraftMixin",
     "sounds.SoundEngineMixin",
     "sounds.SoundManagerMixin",
     "throttle_lever.GameRendererMixin",
-    "tooltip_flag.SessionSearchTreesMixin",
+    "tooltip_flag.MinecraftMixin",
     "world_presets.CreateWorldScreenMixin",
     "world_presets.WorldTabMixin"
   ],

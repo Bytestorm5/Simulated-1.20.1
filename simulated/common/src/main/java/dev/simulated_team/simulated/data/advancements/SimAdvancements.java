@@ -5,7 +5,6 @@ import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimBlocks;
 import dev.simulated_team.simulated.index.SimItems;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -272,17 +271,17 @@ public class SimAdvancements implements DataProvider {
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull final CachedOutput cachedOutput) {
         return this.registries.thenCompose(provider -> {
-            final PackOutput.PathProvider pathProvider = this.output.createPathProvider(PackOutput.Target.DATA_PACK, "advancement");
+            final PackOutput.PathProvider pathProvider = this.output.createPathProvider(PackOutput.Target.DATA_PACK, "advancements");
             final List<CompletableFuture<?>> futures = new ArrayList<>();
 
             final Set<ResourceLocation> set = Sets.newHashSet();
-            final Consumer<AdvancementHolder> consumer = (advancement) -> {
-                final ResourceLocation id = advancement.id();
+            final Consumer<Advancement> consumer = (advancement) -> {
+                final ResourceLocation id = advancement.getId();
                 if (!set.add(id)) {
                     throw new IllegalStateException("Duplicate advancement " + id);
                 }
                 final Path path = pathProvider.json(id);
-                futures.add(DataProvider.saveStable(cachedOutput, provider, Advancement.CODEC, advancement.value(), path));
+                futures.add(DataProvider.saveStable(cachedOutput, advancement.deconstruct().serializeToJson(), path));
             };
 
             for (final SimulatedAdvancement advancement : this.getAdvancementsArray()) {

@@ -4,7 +4,7 @@
 		"wheel": "offroad:block/rockcutting_wheel",
 		"base": "offroad:block/rockcutting_base"
 	},
-	"loader": "neoforge:obj",
+	"loader": "forge:obj",
 	"flip_v": true,
 	"model": "offroad:models/block/rockcutting_wheel/item.obj",
 	"display": {
