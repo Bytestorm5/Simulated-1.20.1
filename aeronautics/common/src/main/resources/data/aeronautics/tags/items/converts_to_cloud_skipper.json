@@ -1,6 +1,6 @@
 {
   "values": [
-    "#c:music_discs"
+    "#minecraft:music_discs"
   ],
   "remove": [
     "aeronautics:music_disc_cloud_skipper"
