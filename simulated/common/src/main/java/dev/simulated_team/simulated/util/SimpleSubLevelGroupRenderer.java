@@ -194,7 +194,8 @@ public class SimpleSubLevelGroupRenderer {
             }
 
             // Render normal block-entities
-            SubLevelRenderDispatcher.get().renderBlockEntities(subLevels, beRenderer, cameraPosition.x, cameraPosition.y, cameraPosition.z, partialTicks);
+            // 1.20.1: Sable takes the view pose for its block entities; the diagram's view is already on the model-view stack
+            SubLevelRenderDispatcher.get().renderBlockEntities(subLevels, beRenderer, new PoseStack().last(), cameraPosition.x, cameraPosition.y, cameraPosition.z, partialTicks);
 
             for (final ClientSubLevel entitySubLevel : subLevels) {
                 final List<Entity> entities = level.getEntitiesOfClass(Entity.class, entitySubLevel.getPlot().getBoundingBox().toAABB().inflate(16.0));
