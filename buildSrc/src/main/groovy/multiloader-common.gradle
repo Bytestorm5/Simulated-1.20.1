@@ -73,7 +73,7 @@ pluginManager.withPlugin('net.neoforged.moddev.legacyforge') {
         compileOnly "io.github.spair:imgui-java-binding:1.92.0"
 
         modImplementation("dev.ryanhcode.sable:sable-forge-${minecraft_version}:${sable_version}")
-        modImplementation("dev.ryanhcode.sable-companion:sable-companion-${minecraft_version}:${sable_companion_version}")
+        modImplementation("dev.ryanhcode.sable:sable-sable_companion-${minecraft_version}:${sable_companion_version}")
 
         // Mod compat
         modCompileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")

@@ -10,8 +10,12 @@ Sable 2.0.5 (`Bytestorm5/sable-1.20.1`), which keep their 4.x / 2.x APIs.
    ```
    scripts/install_local_deps.sh <veil-forge-1.20.1-4.3.2.jar> <sable-forge-1.20.1-2.0.5.jar>
    ```
-   This also installs the sable-companion jar that Sable jar-in-jars. Building Veil and Sable from source with
-   `./gradlew publishToMavenLocal` (Veil first) installs the same coordinates.
+   This also installs the sable-companion jar that Sable jar-in-jars. Alternatively, build them from source with
+   `./gradlew publishToMavenLocal`, Veil first:
+   - Veil: `veil-1-20-1-migration-aan416`, at or after `3b0b6fd`
+   - Sable: `claude/sable-1-20-1-migration-1vdzus`, at or after `af027cc`
+
+   Both routes install the same coordinates.
 2. Build:
    ```
    ./gradlew build
@@ -23,9 +27,16 @@ Sable 2.0.5 (`Bytestorm5/sable-1.20.1`), which keep their 4.x / 2.x APIs.
 3. Check the mixins statically:
    ```
    ./gradlew checkMixins
+   ./gradlew checkMixinsProduction -PforgeClientInstall=<dir>
    ```
-   This uses Sable's checker (`scripts/mixin-check`). It checks every mixin's targets, injector signatures, `@At` targets
-   and shadows against the 1.20.1 classes on the classpath.
+   Both use Sable's checker (`scripts/mixin-check`), which checks every mixin's targets, injector signatures, `@At`
+   targets and shadows.
+   - `checkMixins` checks them against the dev (Mojang-named) classes.
+   - `checkMixinsProduction` checks the reobfuscated jars and refmaps against SRG-named Minecraft and the original SRG mod
+     jars. It catches mixins that only resolve with dev names.
+
+   `<dir>` is a stock Forge client install: `java -jar forge-1.20.1-47.4.10-installer.jar --installClient <dir>`, with an
+   empty `launcher_profiles.json` in `<dir>`.
 
 The build uses a Java 21 toolchain that compiles with `--release 17`, because some compile-only dependencies ship Java
 21 class files. The output runs on Java 17.
@@ -118,9 +129,9 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
 
 ## Workarounds for Veil / Sable 1.20.1 behaviour
 
-- **Veil programs don't get `NormalMat` or `VeilBlockFaceBrightness`.** Veil only sets them when a vanilla
-  `ShaderInstance` is applied. On sub-levels this made levitite render black. Aeronautics sets both itself before its
-  sub-level levitite draw. This has been reported to the Veil port.
+- **Veil programs don't get `NormalMat` or `VeilBlockFaceBrightness`** in Veil builds before `3b0b6fd`. Veil only set
+  them when a vanilla `ShaderInstance` was applied, and on sub-levels this made levitite render black. Aeronautics sets
+  both itself before its sub-level levitite draw. With a fixed Veil this is redundant but harmless.
 - **`Uniform#set(Matrix3f)` is final in 1.20.1**, so it never reaches Veil programs. Aeronautics uses `setMat3x3`.
 - **Veil draws layered block layers (levitite) without `LevelRenderer#renderChunkLayer`.** The levitite world uniforms
   are therefore set when its render state binds the shader.
@@ -131,7 +142,11 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
 
 ## Verification
 
-- `./gradlew build checkMixins`: all modules compile. `checkMixins` reports no problems for 155 injectors.
+- `./gradlew build checkMixins checkMixinsProduction`: all modules compile. Both checks report no problems for 155
+  injectors.
+- **Production:** a stock Forge 1.20.1-47.4.10 dedicated server runs the release jar with Create 6.0.8 and Sable
+  `af027cc`. It boots and assembles regions of Simulated, Aeronautics and Offroad blocks into sub-levels. It then saves,
+  and reloads the sub-levels with no errors.
 - GameTest server: all 4 required tests pass.
 - Dedicated dev server with all three mods: boots and generates a world with no errors.
 - Dev client with all three mods (Mesa software GL):
@@ -146,7 +161,6 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
 - **Runtime coverage:** most gameplay features haven't been exercised in game, only compiled and statically checked.
   That includes the optional compat mods (JEI, Curios, CC: Tweaked, the compasses, Embeddium/Oculus) and Offroad
   vehicles.
-- **Sable config reload (Sable's bug):** `SableClientConfig.onUpdate` reloads shaders from Forge's config watcher thread.
-  When `sable-client.toml` is created or corrected, this logs a harmless "No GLCapabilities instance set" error. It has
-  been reported to the Sable port.
+- **Sable config reload:** Sable builds before `af027cc` reload shaders from Forge's config watcher thread. When
+  `sable-client.toml` is created or corrected, this logs a harmless "No GLCapabilities instance set" error.
 - **`simulated/neoforge/src/generated` is stale:** it's leftover upstream output that no build uses.
