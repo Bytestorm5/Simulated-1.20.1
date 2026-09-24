@@ -1,3 +1,5 @@
+> **Forge 1.20.1 port:** this branch targets Minecraft 1.20.1 / Forge 47. See [PORTING-1.20.1.md](PORTING-1.20.1.md) for build steps and what changed.
+
 ![banner](./images/banner.png)
 
 <div>
