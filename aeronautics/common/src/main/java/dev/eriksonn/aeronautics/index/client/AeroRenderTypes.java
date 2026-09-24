@@ -8,6 +8,7 @@ import dev.eriksonn.aeronautics.content.blocks.levitite.LevititeShaderManager;
 import foundry.veil.api.client.render.VeilRenderBridge;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 
 import static org.lwjgl.opengl.GL11C.glDisable;
@@ -98,6 +99,12 @@ public class AeroRenderTypes extends RenderType {
         public void setupRenderState() {
             if (LevititeShaderManager.isEnabled()) {
                 this.enabled.setupRenderState();
+
+                // 1.20.1: Veil binds and applies the shader for this layer itself, so the world uniforms are set here
+                final ShaderInstance shader = RenderSystem.getShader();
+                if (shader != null) {
+                    LevititeShaderManager.prepareBoundShaderForWorld(shader);
+                }
             } else {
                 this.disabled.setupRenderState();
             }

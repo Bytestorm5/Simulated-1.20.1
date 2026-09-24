@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics;
 
+import dev.eriksonn.aeronautics.content.blocks.levitite.LevititeShaderManager;
 import dev.eriksonn.aeronautics.content.blocks.hot_air.balloon.effect.ClientBalloonEffectRenderer;
 import dev.eriksonn.aeronautics.content.ponder.AeroPonderPlugin;
 import dev.eriksonn.aeronautics.index.AeroClickInteractions;
@@ -34,6 +35,11 @@ public class AeronauticsClient {
                                                            deltaTracker,
                                                            camera,
                                                            frustum) -> {
+            if (stage == VeilRenderLevelStageEvent.Stage.AFTER_SKY) {
+                // 1.20.1: Veil draws the levitite block layer without LevelRenderer#renderChunkLayer, so the shader is
+                // re-enabled here each frame (the Ponder UI disables it) instead of in LevelRendererMixin
+                LevititeShaderManager.enableShader();
+            }
             ClientBalloonEffectRenderer.onRenderLevelStage(stage, frustumMatrix, projectionMatrix, renderTick);
         });
 

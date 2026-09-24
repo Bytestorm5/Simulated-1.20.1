@@ -35,11 +35,14 @@ public class AeroNeoForgeClientEvents {
 
         @SubscribeEvent
         public static void clientSetup(final FMLClientSetupEvent event) {
-            final ChunkRenderTypeSet set = ChunkRenderTypeSet.of(RenderType.solid(), AeroRenderTypes.levitite(), AeroRenderTypes.levititeGhosts());
-            ItemBlockRenderTypes.setRenderLayer(AeroBlocks.LEVITITE.get(), set);
-            ItemBlockRenderTypes.setRenderLayer(AeroBlocks.PEARLESCENT_LEVITITE.get(), set);
+            // 1.20.1: client setup runs on worker threads, and the levitite render types touch the render system
+            event.enqueueWork(() -> {
+                final ChunkRenderTypeSet set = ChunkRenderTypeSet.of(RenderType.solid(), AeroRenderTypes.levitite(), AeroRenderTypes.levititeGhosts());
+                ItemBlockRenderTypes.setRenderLayer(AeroBlocks.LEVITITE.get(), set);
+                ItemBlockRenderTypes.setRenderLayer(AeroBlocks.PEARLESCENT_LEVITITE.get(), set);
 
-            fixChunkRenderTypeSet();
+                fixChunkRenderTypeSet();
+            });
         }
 
         /**

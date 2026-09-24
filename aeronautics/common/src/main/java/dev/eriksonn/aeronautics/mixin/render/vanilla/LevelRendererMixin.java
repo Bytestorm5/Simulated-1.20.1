@@ -40,6 +40,7 @@ public class LevelRendererMixin {
                 final float pt = Minecraft.getInstance().getFrameTime();
                 ticks = ticks % 100000;
                 time.set(ticks + pt);
+                time.upload();
             }
 
             LevititeShaderManager.prepareShaderForWorld(shaderinstance, x, y, z);
