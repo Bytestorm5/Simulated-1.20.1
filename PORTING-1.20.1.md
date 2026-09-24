@@ -129,10 +129,8 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
 
 ## Workarounds for Veil / Sable 1.20.1 behaviour
 
-- **Veil programs don't get `NormalMat` or `VeilBlockFaceBrightness`** in Veil builds before `3b0b6fd`. Veil only set
-  them when a vanilla `ShaderInstance` was applied, and on sub-levels this made levitite render black. Aeronautics sets
-  both itself before its sub-level levitite draw. With a fixed Veil this is redundant but harmless.
-- **`Uniform#set(Matrix3f)` is final in 1.20.1**, so it never reaches Veil programs. Aeronautics uses `setMat3x3`.
+- **Veil `3b0b6fd` or later is required.** Earlier Veil 1.20.1 builds don't set `NormalMat`, `VeilBlockFaceBrightness` or
+  `VeilRenderTime` for Veil's own shader programs. That makes levitite render black on sub-levels.
 - **Veil draws layered block layers (levitite) without `LevelRenderer#renderChunkLayer`.** The levitite world uniforms
   are therefore set when its render state binds the shader.
 - **Forge fires `FMLClientSetupEvent` on worker threads**, so Aeronautics' render-type setup is queued onto the main

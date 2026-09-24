@@ -29,12 +29,6 @@ public class VanillaChunkedSubLevelRenderDataMixin {
                                       final double camY,
                                       final double camZ,
                                       final Operation<Void> original) {
-        if (layer == AeroRenderTypes.levitite() || layer == AeroRenderTypes.levititeGhosts()) {
-            // 1.20.1: Veil only sets NormalMat and VeilBlockFaceBrightness when a vanilla ShaderInstance is applied, not
-            // for its own programs. Sub-levels shade faces with them, so without this every levitite face is black.
-            LevititeShaderManager.setVeilLightingUniforms(modelView);
-        }
-
         if (layer == AeroRenderTypes.levitite()) {
             final LevititeShaderManager manager = LevititeShaderManager.getInstance(this.subLevel);
             manager.prepareShaderForSublevel(this.subLevel, shader, camX, camY, camZ);
