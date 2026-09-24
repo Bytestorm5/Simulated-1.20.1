@@ -5,8 +5,9 @@ import dev.simulated_team.simulated.index.SimEntityTypes;
 import dev.simulated_team.simulated.service.SimEntityService;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class NeoForgeSimEntityService implements SimEntityService {
 
@@ -17,12 +18,12 @@ public class NeoForgeSimEntityService implements SimEntityService {
 
 	@Override
 	public double getPlayerReach(final Player player) {
-		return player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);
+		return player.getAttributeValue(ForgeMod.BLOCK_REACH.get());
 	}
 
 	@Override
 	public boolean isFake(final Player player) {
-		return player.isFakePlayer();
+		return player instanceof FakePlayer;
 	}
 
 	@Override

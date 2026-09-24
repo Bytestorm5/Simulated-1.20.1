@@ -1,7 +1,7 @@
 package dev.simulated_team.simulated.content.physics_staff;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
 import foundry.veil.backport.network.codec.StreamCodec;
 
 /**
@@ -12,5 +12,5 @@ public enum PhysicsStaffAction {
     LOCK,
     START_DRAG;
 
-    public static final StreamCodec<ByteBuf, PhysicsStaffAction> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(PhysicsStaffAction.class);
+    public static final StreamCodec<ByteBuf, PhysicsStaffAction> STREAM_CODEC = ByteBufCodecs.idMapper(i -> values()[i], PhysicsStaffAction::ordinal);
 }

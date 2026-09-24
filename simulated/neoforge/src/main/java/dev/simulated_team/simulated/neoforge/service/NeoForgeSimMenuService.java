@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.network.NetworkHooks;
 
 import java.util.function.Consumer;
 
@@ -25,6 +26,6 @@ public class NeoForgeSimMenuService implements SimMenuService {
 
 	@Override
 	public void openScreen(final ServerPlayer player, final MenuProvider factory, final Consumer<RegistryFriendlyByteBuf> extraDataWriter) {
-		player.openMenu(factory, extraDataWriter);
+		NetworkHooks.openScreen(player, factory, buf -> extraDataWriter.accept(new RegistryFriendlyByteBuf(buf, player.registryAccess())));
 	}
 }

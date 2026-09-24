@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.throttle_lever;
 
-import net.minecraftforge.common.ForgeMod;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
@@ -48,7 +47,7 @@ public class ThrottleLeverClientGripHandler {
             return true;
         }
 
-        final double reach = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() + 2.0;
+        final double reach = player.getBlockReach() + 2.0;
 
         final BlockPos blockPos = blockEntity.getBlockPos();
 

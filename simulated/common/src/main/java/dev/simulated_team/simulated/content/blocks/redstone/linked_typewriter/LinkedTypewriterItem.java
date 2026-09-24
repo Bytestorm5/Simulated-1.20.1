@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
-import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.content.redstone.link.RedstoneLinkBlockEntity;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -74,7 +73,7 @@ public class LinkedTypewriterItem extends BlockItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand usedHand) {
-        final BlockHitResult blockHitResult = RaycastHelper.rayTraceRange(level, player, player.getAttributeValue(ForgeMod.BLOCK_REACH.get()));
+        final BlockHitResult blockHitResult = RaycastHelper.rayTraceRange(level, player, player.getBlockReach());
         if (blockHitResult.getType() == HitResult.Type.MISS && level.isClientSide) {
             LinkedTypewriterItemBindHandler.reset();
         }

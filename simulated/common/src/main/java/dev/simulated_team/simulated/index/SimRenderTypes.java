@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.index;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
@@ -57,14 +58,14 @@ public final class SimRenderTypes extends RenderType {
                     .setShaderState(VeilRenderBridge.shaderState(Simulated.path("laser_pointer/lens")))
                     .createCompositeState(true));
 
-    private static final VertexFormat SPRING_FORMAT = VertexFormat.builder()
-            .add("Position", VertexFormatElement.POSITION)
-            .add("Stress", VertexFormatElement.COLOR)
-            .add("UV0", VertexFormatElement.UV0)
-            .add("UV2", VertexFormatElement.UV2)
-            .add("Normal", VertexFormatElement.NORMAL)
-            .padding(1)
-            .build();
+    private static final VertexFormat SPRING_FORMAT = new VertexFormat(ImmutableMap.<String, VertexFormatElement>builder()
+            .put("Position", DefaultVertexFormat.ELEMENT_POSITION)
+            .put("Stress", DefaultVertexFormat.ELEMENT_COLOR)
+            .put("UV0", DefaultVertexFormat.ELEMENT_UV0)
+            .put("UV2", DefaultVertexFormat.ELEMENT_UV2)
+            .put("Normal", DefaultVertexFormat.ELEMENT_NORMAL)
+            .put("Padding", DefaultVertexFormat.ELEMENT_PADDING)
+            .build());
 
     private static final RenderType LOCK = create(
             Simulated.MOD_ID + ":lock",

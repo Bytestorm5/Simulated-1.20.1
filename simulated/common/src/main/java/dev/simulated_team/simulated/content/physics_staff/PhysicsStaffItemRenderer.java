@@ -144,7 +144,7 @@ public class PhysicsStaffItemRenderer extends CustomRenderedItemModelRenderer {
             m.m30(0).m31(0).m32(0);
             m.invert();
             m.rotate(clientHandler.lastCubeOrientation);
-            ms.mulPose(m);
+            ms.mulPoseMatrix(m);
         }
 
         cubeScale = Mth.lerp(cubeScale, -0.05f, 1f);

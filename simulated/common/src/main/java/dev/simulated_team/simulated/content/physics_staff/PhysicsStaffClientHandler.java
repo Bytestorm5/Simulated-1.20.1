@@ -91,8 +91,8 @@ public class PhysicsStaffClientHandler {
             return savedPos;
         }
 
-        final Vec3 viewDirection = player.calculateViewVector(0.0f, player.getPreciseBodyRotation(pt));
-        final Vec3 handDirection = player.calculateViewVector(0.0f, player.getPreciseBodyRotation(pt) + 90.0f);
+        final Vec3 viewDirection = Vec3.directionFromRotation(0.0f, Mth.lerp(pt, player.yBodyRotO, player.yBodyRot));
+        final Vec3 handDirection = Vec3.directionFromRotation(0.0f, Mth.lerp(pt, player.yBodyRotO, player.yBodyRot) + 90.0f);
         return player.getPosition(pt).add(0.0, 1.28, 0.0).add(viewDirection.scale(1.275)).add(handDirection.scale(0.325 * (mainHand ? 1 : -1)));
     }
 
@@ -556,7 +556,7 @@ public class PhysicsStaffClientHandler {
                 assert handler.dragSession != null;
                 assert mc.player != null;
 
-                final Vec3 axis = mc.player.calculateViewVector(0.0f, mc.player.getYRot() - 90.0f);
+                final Vec3 axis = Vec3.directionFromRotation(0.0f, mc.player.getYRot() - 90.0f);
                 final Quaterniond orientation = handler.dragSession.dragOrientation();
 
                 final SimItemConfigs config = SimConfigService.INSTANCE.client().itemConfig;

@@ -3,10 +3,14 @@ package dev.simulated_team.simulated.neoforge.service;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import dev.simulated_team.simulated.multiloader.energy.SingleBattery;
+import dev.simulated_team.simulated.multiloader.energy.SingleBatteryWrapper;
 import dev.simulated_team.simulated.multiloader.inventory.AbstractContainer;
 import dev.simulated_team.simulated.multiloader.inventory.InventoryLoaderWrapper;
+import dev.simulated_team.simulated.multiloader.inventory.neoforge.ContainerWrapper;
 import dev.simulated_team.simulated.multiloader.inventory.neoforge.InventoryLoaderWrapperImpl;
 import dev.simulated_team.simulated.multiloader.tanks.SingleTank;
+import dev.simulated_team.simulated.multiloader.tanks.neoforge.SingleTankWrapper;
+import dev.simulated_team.simulated.neoforge.capability.SimBlockEntityCapabilities;
 import dev.simulated_team.simulated.service.SimInventoryService;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,39 +19,30 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class NeoForgeSimInventoryService implements SimInventoryService {
 
-    public static Set<InventoryGetterHolder<? extends BlockEntity>> inventoryGetters = new HashSet<>();
-    public static Set<TankGetterHolder<? extends BlockEntity>> fluidTankGetters = new HashSet<>();
-    public static Set<EnergyGetterHolder<? extends BlockEntity>> energyGetters = new HashSet<>();
-
-    public static HashMap<BlockEntityType<BlockEntity>, Function<BlockEntity, SingleTank>> tankGetters = new HashMap<>();
-
+    // 1.20.1: the capabilities are attached through AttachCapabilitiesEvent (see SimBlockEntityCapabilities)
     @Override
     public <T extends BlockEntity> NonNullConsumer<BlockEntityType<T>> registerInventory(final BiFunction<T, Direction, AbstractContainer> getter) {
-        return (type) -> inventoryGetters.add(new InventoryGetterHolder<>(getter, type));
+        return (type) -> SimBlockEntityCapabilities.register(() -> type, ForgeCapabilities.ITEM_HANDLER, getter, ContainerWrapper::new);
     }
 
     @Override
     public <T extends BlockEntity> NonNullConsumer<BlockEntityType<T>> registerTank(final BiFunction<T, Direction, SingleTank> getter) {
-        return (type) -> fluidTankGetters.add(new TankGetterHolder<>(getter, type));
+        return (type) -> SimBlockEntityCapabilities.register(() -> type, ForgeCapabilities.FLUID_HANDLER, getter, SingleTankWrapper::new);
     }
 
     @Override
     public <T extends BlockEntity> NonNullConsumer<BlockEntityType<T>> registerBattery(final BiFunction<T, Direction, SingleBattery> getter) {
-        return (type) -> energyGetters.add(new EnergyGetterHolder<>(getter, type));
+        return (type) -> SimBlockEntityCapabilities.register(() -> type, ForgeCapabilities.ENERGY, getter, SingleBatteryWrapper::new);
     }
 
     @Override
     public <T extends InventoryLoaderWrapper> T getInventory(@Nullable final BlockEntity be, @Nullable final Direction dir) {
         if (be != null) {
-            final IItemHandler handler = be.getLevel().getCapability(ForgeCapabilities.ItemHandler.BLOCK, be.getBlockPos(), dir);
+            final IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER, dir).orElse(null);
             if (handler != null) {
                 return (T) new InventoryLoaderWrapperImpl(handler);
             }
@@ -64,27 +59,5 @@ public class NeoForgeSimInventoryService implements SimInventoryService {
     @Override
     public <T extends InventoryLoaderWrapper> T getWrappedMountedItemsFromContraption(final MountedStorageManager manager) {
         return (T) new InventoryLoaderWrapperImpl(manager.getMountedItems());
-    }
-
-
-    public record InventoryGetterHolder<T extends BlockEntity>(BiFunction<T, Direction, AbstractContainer> getter, BlockEntityType<T> type) {
-        public AbstractContainer castBlockEntityAndGetInv(final BlockEntity be, final Direction dir) {
-            final T casted = (T) be;
-            return this.getter.apply(casted, dir);
-        }
-    }
-
-    public record TankGetterHolder<T extends BlockEntity>(BiFunction<T, Direction, SingleTank> getter, BlockEntityType<T> type) {
-        public SingleTank castBlockEntityAndGetInv(final BlockEntity be, final Direction dir) {
-            final T casted = (T) be;
-            return this.getter.apply(casted, dir);
-        }
-    }
-
-    public record EnergyGetterHolder<T extends BlockEntity>(BiFunction<T, Direction, SingleBattery> getter, BlockEntityType<T> type) {
-        public SingleBattery castBlockEntityAndGetInv(final BlockEntity be, final Direction dir) {
-            final T casted = (T) be;
-            return this.getter.apply(casted, dir);
-        }
     }
 }

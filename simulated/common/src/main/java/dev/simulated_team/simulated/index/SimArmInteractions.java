@@ -2,7 +2,6 @@ package dev.simulated_team.simulated.index;
 
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.kinetics.mechanicalArm.AllArmInteractionPointTypes;
-import com.simibubi.create.content.kinetics.mechanicalArm.ArmBlockEntity;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPoint;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPointType;
 import dev.simulated_team.simulated.Simulated;
@@ -43,7 +42,7 @@ public class SimArmInteractions {
         }
 
         @Override
-        public ItemStack insert(final ArmBlockEntity armBlockEntity, final ItemStack stack, final boolean simulate) {
+        public ItemStack insert(final ItemStack stack, final boolean simulate) {
             if (this.cachedState.hasBlockEntity()) {
                 final BlockEntity be = this.level.getBlockEntity(this.pos);
                 if (be instanceof final PortableEngineBlockEntity sbe) {
@@ -51,7 +50,7 @@ public class SimArmInteractions {
                 }
             }
 
-            return super.insert(armBlockEntity, stack, simulate);
+            return super.insert(stack, simulate);
         }
     }
 

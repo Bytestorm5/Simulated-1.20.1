@@ -6,7 +6,6 @@ import dev.simulated_team.simulated.config.client.SimClient;
 import dev.simulated_team.simulated.config.server.SimServer;
 import dev.simulated_team.simulated.service.SimConfigService;
 import net.createmod.catnip.config.ConfigBase;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -67,12 +66,12 @@ public class NeoForgeSimConfigService implements SimConfigService {
     }
 
 
-    public static void register(final ModLoadingContext context, final ModContainer container) {
+    public static void register(final ModLoadingContext context) {
         server = register(SimServer::new, ModConfig.Type.SERVER);
         client = register(SimClient::new, ModConfig.Type.CLIENT);
 
         for (final Map.Entry<ModConfig.Type, ConfigBase> typeConfigBaseEntry : CONFIGS.entrySet()) {
-            container.registerConfig(typeConfigBaseEntry.getKey(), typeConfigBaseEntry.getValue().specification);
+            context.registerConfig(typeConfigBaseEntry.getKey(), typeConfigBaseEntry.getValue().specification);
         }
 
         final CStress stress = SimConfigService.INSTANCE.server().kinetics.stressValues;

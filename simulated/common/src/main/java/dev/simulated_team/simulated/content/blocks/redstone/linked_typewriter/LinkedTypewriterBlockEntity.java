@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
-import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -82,7 +81,7 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
     }
 
     public static boolean playerInRange(final Player player, final Level world, final BlockPos pos) {
-        final double range = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue();
+        final double range = player.getBlockReach();
 
         // Make sure we take into account sub-levels! We are a sable addon after all!
         return Sable.HELPER.distanceSquaredWithSubLevels(world, player.getEyePosition(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < range * range;

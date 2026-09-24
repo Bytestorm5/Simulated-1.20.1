@@ -8,7 +8,6 @@ import dev.simulated_team.simulated.index.neoforge.SimParticleTypesImpl;
 import dev.simulated_team.simulated.neoforge.events.SimNeoForgeCommonEvents;
 import dev.simulated_team.simulated.neoforge.service.NeoForgeSimConfigService;
 import dev.simulated_team.simulated.neoforge.service.NeoForgeSimEntityDataSerialization;
-import dev.simulated_team.simulated.neoforge.service.compat.NeoForgeSimPeripheralService;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -16,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -48,10 +46,6 @@ public final class SimulatedNeoForge {
         Simulated.getRegistrate().registerEventListeners(modEventBus);
 
         NeoForgeSimStats.register(modEventBus);
-
-        if (ModList.get().isLoaded("computercraft")) {
-            modEventBus.register(NeoForgeSimPeripheralService.class);
-        }
 
         Simulated.init();
         NeoForgeSimConfigService.register(ModLoadingContext.get());

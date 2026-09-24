@@ -385,7 +385,7 @@ public class AeroBlocks {
             .tag(SableTags.ALWAYS_CHUNK_RENDERING)
             .item(BlockItem::new)
             .tag(AeroTags.ItemTags.LEVITITE)
-            .properties(p -> p.component(AeroDataComponents.LEVITATING, Levitating.LEVITITE))
+            .onRegister(item -> AeroDataComponents.setDefaultLevitating(item, Levitating.LEVITITE))
             .build()
             .register();
 
@@ -406,7 +406,7 @@ public class AeroBlocks {
                     .tag(SableTags.ALWAYS_CHUNK_RENDERING)
                     .item(BlockItem::new)
                     .tag(AeroTags.ItemTags.LEVITITE)
-                    .properties(p -> p.component(AeroDataComponents.LEVITATING, Levitating.PEARLESCENT_LEVITITE))
+                    .onRegister(item -> AeroDataComponents.setDefaultLevitating(item, Levitating.PEARLESCENT_LEVITITE))
                     .build()
                     .register();
 

@@ -31,13 +31,13 @@ public abstract class ItemEntityMixin extends Entity {
         if (noGravity) {
             return true;
         }
-        final Levitating component = AeroDataComponents.LEVITATING.get(this.getItem());
+        final Levitating component = AeroDataComponents.getLevitating(this.getItem());
         return component != null;
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V"))
     private void aeronautics$levitatingDragAndSparkles(final CallbackInfo ci) {
-        final Levitating component = AeroDataComponents.LEVITATING.get(this.getItem());
+        final Levitating component = AeroDataComponents.getLevitating(this.getItem());
         if (component != null) {
             final float dragFraction = Mth.clamp(component.dragFraction(), 0, 1);
             this.setDeltaMovement(this.getDeltaMovement().scale(dragFraction));

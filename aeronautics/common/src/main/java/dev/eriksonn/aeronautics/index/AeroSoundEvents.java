@@ -91,7 +91,8 @@ public class AeroSoundEvents {
 
         GUST = REGISTRY.create("entity.gust", definition -> definition
                 .subtitle("Balloon leaks")
-                .addEventVariant(SoundEvents.WIND_CHARGE_BURST.value(), sound -> sound
+                // 1.20.1: wind charges don't exist yet, the phantom flap is the closest whoosh
+                .addEventVariant(SoundEvents.PHANTOM_FLAP, sound -> sound
                         .setAttenuationDistance(16)
                         .setPitch(0.3f)
                         .setVolume(0.5f))),

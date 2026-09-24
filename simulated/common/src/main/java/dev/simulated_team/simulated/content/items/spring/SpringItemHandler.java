@@ -164,7 +164,7 @@ public class SpringItemHandler implements InteractCallback {
 
     @Override
     public void clientTick(final Level level, final LocalPlayer player) {
-        if (!player.getMainHandItem().is(SimItems.SPRING) && !player.getOffhandItem().is(SimItems.SPRING)) {
+        if (!SimItems.SPRING.isIn(player.getMainHandItem()) && !SimItems.SPRING.isIn(player.getOffhandItem())) {
             this.reset(true);
             return;
         }

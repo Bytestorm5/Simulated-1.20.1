@@ -157,9 +157,6 @@ EXPRESSIONS = [
     # Component helpers added in 1.20.3+
     (re.compile(r"\bComponent\.translationArg\(([^()]*(?:\([^()]*\))*[^()]*)\)"), r"Component.literal(String.valueOf(\1))"),
     (re.compile(r"(?<!componentStyle)\.withColor\((0x[0-9a-fA-F]+|\d+)\)"), r".withStyle(componentStyle -> componentStyle.withColor(\1))"),
-    # Java 21 SequencedCollection methods on lists
-    (re.compile(r"\.getFirst\(\)"), ".get(0)"),
-    (re.compile(r"\.removeFirst\(\)"), ".remove(0)"),
 ]
 
 IMPORT_RE = re.compile(r"^import\s+(static\s+)?([\w.$]+)(\.\*)?\s*;\s*$", re.M)

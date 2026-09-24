@@ -1,52 +1,34 @@
 package dev.simulated_team.simulated.neoforge.service.compat;
 
 import dan200.computercraft.api.network.wired.WiredElement;
-import dan200.computercraft.api.network.wired.WiredElementCapability;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.PeripheralCapability;
+import dev.simulated_team.simulated.neoforge.capability.SimBlockEntityCapabilities;
 import dev.simulated_team.simulated.service.compat.SimPeripheralService;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class NeoForgeSimPeripheralService implements SimPeripheralService {
 
-    private static final List<Entry<BlockEntity, IPeripheral>> PERIPHERALS = new ArrayList<>();
-    private static final List<Entry<BlockEntity, WiredElement>> WIRED_ELEMENTS = new ArrayList<>();
+    // 1.20.1: CC: Tweaked on Forge looks peripherals and wired elements up through these capabilities (capabilities
+    // are identified by their type, so this is the same instance CC: Tweaked uses)
+    private static final Capability<IPeripheral> PERIPHERAL = CapabilityManager.get(new CapabilityToken<>() {
+    });
+    private static final Capability<WiredElement> WIRED_ELEMENT = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends BlockEntity> void addPeripheral(final Supplier<BlockEntityType<T>> typeSupplier, final CapabilityGetter<T, IPeripheral> getter) {
-        PERIPHERALS.add((Entry<BlockEntity, IPeripheral>) new Entry<>(typeSupplier, getter));
+        SimBlockEntityCapabilities.<T, IPeripheral, IPeripheral>register(typeSupplier, PERIPHERAL, getter::get, Function.identity());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends BlockEntity> void addWired(Supplier<BlockEntityType<T>> typeSupplier, CapabilityGetter<T, WiredElement> getter) {
-        WIRED_ELEMENTS.add((Entry<BlockEntity, WiredElement>) new Entry<>(typeSupplier, getter));
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-        for (final Entry<BlockEntity, IPeripheral> entry : PERIPHERALS) {
-            event.registerBlockEntity(PeripheralCapability.get(), entry.typeSupplier.get(), (be, direction) ->
-                    entry.peripheralFunction().get(be, direction)
-            );
-        }
-
-        for (final Entry<BlockEntity, WiredElement> entry : WIRED_ELEMENTS) {
-            event.registerBlockEntity(WiredElementCapability.get(), entry.typeSupplier.get(), (be, direction) ->
-                    entry.peripheralFunction().get(be, direction)
-            );
-        }
-    }
-
-    private record Entry<T extends BlockEntity, V>(Supplier<BlockEntityType<T>> typeSupplier,
-                                                   CapabilityGetter<T, V> peripheralFunction) {
+    public <T extends BlockEntity> void addWired(final Supplier<BlockEntityType<T>> typeSupplier, final CapabilityGetter<T, WiredElement> getter) {
+        SimBlockEntityCapabilities.<T, WiredElement, WiredElement>register(typeSupplier, WIRED_ELEMENT, getter::get, Function.identity());
     }
 }

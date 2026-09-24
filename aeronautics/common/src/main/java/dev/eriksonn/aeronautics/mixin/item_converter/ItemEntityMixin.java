@@ -4,7 +4,6 @@ import dev.eriksonn.aeronautics.content.components.Converter;
 import dev.eriksonn.aeronautics.content.components.Levitating;
 import dev.eriksonn.aeronautics.index.AeroDataComponents;
 import dev.eriksonn.aeronautics.index.AeroTags;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -31,11 +30,8 @@ public abstract class ItemEntityMixin {
 		if(level.dimension().equals(Level.OVERWORLD) && item.is(AeroTags.ItemTags.CONVERTS_TO_CLOUD_SKIPPER)) {
 			// magic cloud number, i have no idea where its actually defined
 			if(entity.getY() >= 192 && entity.getY() <= 196 && !AeroDataComponents.CONVERTER.has(item)) {
-				final DataComponentPatch patch = DataComponentPatch.builder()
-						.set(AeroDataComponents.CONVERTER, Converter.cloudSkipper())
-						.set(AeroDataComponents.LEVITATING, Levitating.DEFAULT)
-						.build();
-				item.applyComponents(patch);
+				AeroDataComponents.CONVERTER.set(item, Converter.cloudSkipper());
+				AeroDataComponents.LEVITATING.set(item, Levitating.DEFAULT);
 				entity.setDeltaMovement(entity.getDeltaMovement().scale(0.5f));
 			}
 		}

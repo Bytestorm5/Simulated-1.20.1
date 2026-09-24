@@ -41,11 +41,6 @@ public class LinkedTypewriterMenuImpl extends LinkedTypewriterMenuCommon {
         }
 
         @Override
-        public boolean isFake() {
-            return true;
-        }
-
-        @Override
         public boolean isActive() {
             return LinkedTypewriterMenuImpl.this.slotsActive;
         }

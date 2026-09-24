@@ -20,7 +20,6 @@ import foundry.veil.api.network.VeilPacketManager;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.createmod.catnip.data.Pair;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -100,7 +99,7 @@ public class PhysicsStaffServerHandler extends SavedData {
 
     public static PhysicsStaffServerHandler get(final ServerLevel level) {
         final PhysicsStaffServerHandler data = level.getChunkSource().getDataStorage().computeIfAbsent(
-                new SavedData.Factory<>(PhysicsStaffServerHandler::new, (nbt, lookup) -> create(level, nbt, lookup), null),
+                nbt -> create(level, nbt), PhysicsStaffServerHandler::new,
                 PhysicsStaffServerHandler.ID);
         data.level = level;
 
@@ -186,7 +185,7 @@ public class PhysicsStaffServerHandler extends SavedData {
     }
 
     @Override
-    public @NotNull CompoundTag save(final CompoundTag tag, final HolderLookup.@NotNull Provider provider) {
+    public @NotNull CompoundTag save(final CompoundTag tag) {
         final ListTag tags = new ListTag();
         this.saveLocks(tags);
         tag.put(ID, tags);

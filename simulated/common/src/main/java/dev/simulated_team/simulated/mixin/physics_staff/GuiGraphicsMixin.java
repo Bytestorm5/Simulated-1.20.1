@@ -37,7 +37,7 @@ public abstract class GuiGraphicsMixin {
                                               final int seed,
                                               final int guiOffset,
                                               final Operation<Void> original) {
-        final boolean isStaff = stack.is(SimItems.PHYSICS_STAFF);
+        final boolean isStaff = SimItems.PHYSICS_STAFF.isIn(stack);
 
 
         if (isStaff) {

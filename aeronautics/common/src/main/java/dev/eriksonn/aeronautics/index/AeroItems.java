@@ -4,16 +4,14 @@ import com.simibubi.create.AllItems;
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.content.components.Levitating;
 import dev.eriksonn.aeronautics.content.items.AviatorsGogglesItem;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.item.Rarity;
 
 public class AeroItems {
@@ -32,26 +30,21 @@ public class AeroItems {
 					.tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
 					.register();
 
-	public static ItemEntry<Item> MUSIC_DISC_CLOUD_SKIPPER =
-			REGISTRATE.item("music_disc_cloud_skipper", Item::new)
+	// 1.20.1: no jukebox song registry, music discs are RecordItems (comparator output 12, 225 seconds long)
+	public static ItemEntry<RecordItem> MUSIC_DISC_CLOUD_SKIPPER =
+			REGISTRATE.item("music_disc_cloud_skipper", p -> new RecordItem(12, AeroSoundEvents.MUSIC_DISC_CLOUD_SKIPPER.registryObject(), p, 225 * 20))
 					.properties(p -> p
 							.stacksTo(1)
 							.rarity(Rarity.RARE)
-							.jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, Aeronautics.path("cloud_skipper")))
-							.component(AeroDataComponents.LEVITATING, Levitating.DEFAULT)
 					)
+					.onRegister(item -> AeroDataComponents.setDefaultLevitating(item, Levitating.DEFAULT))
 					.tag(AeroTags.ItemTags.MUSIC_DISCS)
 					.lang("Music Disc")
 					.register();
 
-	public static ItemEntry<Item> ENDSTONE_POWDER = ingredient("end_stone_powder", p -> p
-			.component(AeroDataComponents.LEVITATING, Levitating.END_STONE));
-
-	private static ItemEntry<Item> ingredient(final String name, NonNullUnaryOperator<Item.Properties> poperator) {
-		return REGISTRATE.item(name, Item::new)
-				.properties(poperator)
-				.register();
-	}
+	public static ItemEntry<Item> ENDSTONE_POWDER = REGISTRATE.item("end_stone_powder", Item::new)
+			.onRegister(item -> AeroDataComponents.setDefaultLevitating(item, Levitating.END_STONE))
+			.register();
 
 	public static void init() {}
 }

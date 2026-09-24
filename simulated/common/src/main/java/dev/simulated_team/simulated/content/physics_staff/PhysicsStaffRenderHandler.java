@@ -60,8 +60,8 @@ public class PhysicsStaffRenderHandler {
         final Minecraft minecraft = Minecraft.getInstance();
         final LocalPlayer player = minecraft.player;
 
-        if (!player.getItemInHand(InteractionHand.MAIN_HAND).is(SimItems.PHYSICS_STAFF) &&
-                !player.getItemInHand(InteractionHand.OFF_HAND).is(SimItems.PHYSICS_STAFF)) {
+        if (!SimItems.PHYSICS_STAFF.isIn(player.getItemInHand(InteractionHand.MAIN_HAND)) &&
+                !SimItems.PHYSICS_STAFF.isIn(player.getItemInHand(InteractionHand.OFF_HAND))) {
             return;
         }
 
@@ -141,10 +141,10 @@ public class PhysicsStaffRenderHandler {
 
             final PoseStack.Pose pose = ps.pose();
             final int color = 0xffffffff;
-            buffer.addVertex(pose, 0.0f - 0.5f, 0.0f - 0.5f, 0.0f).setColor(color).setUv(0.0f, 1.0f).setLight(LightTexture.FULL_BRIGHT);
-            buffer.addVertex(pose, 0.0f - 0.5f, 1.0f - 0.5f, 0.0f).setColor(color).setUv(0.0f, 0.0f).setLight(LightTexture.FULL_BRIGHT);
-            buffer.addVertex(pose, 1.0f - 0.5f, 1.0f - 0.5f, 0.0f).setColor(color).setUv(1.0f, 0.0f).setLight(LightTexture.FULL_BRIGHT);
-            buffer.addVertex(pose, 1.0f - 0.5f, 0.0f - 0.5f, 0.0f).setColor(color).setUv(1.0f, 1.0f).setLight(LightTexture.FULL_BRIGHT);
+            buffer.vertex(pose.pose(), 0.0f - 0.5f, 0.0f - 0.5f, 0.0f).color(color).uv(0.0f, 1.0f).uv2(LightTexture.FULL_BRIGHT).endVertex();
+            buffer.vertex(pose.pose(), 0.0f - 0.5f, 1.0f - 0.5f, 0.0f).color(color).uv(0.0f, 0.0f).uv2(LightTexture.FULL_BRIGHT).endVertex();
+            buffer.vertex(pose.pose(), 1.0f - 0.5f, 1.0f - 0.5f, 0.0f).color(color).uv(1.0f, 0.0f).uv2(LightTexture.FULL_BRIGHT).endVertex();
+            buffer.vertex(pose.pose(), 1.0f - 0.5f, 0.0f - 0.5f, 0.0f).color(color).uv(1.0f, 1.0f).uv2(LightTexture.FULL_BRIGHT).endVertex();
 
             ps.matrixPop();
         }

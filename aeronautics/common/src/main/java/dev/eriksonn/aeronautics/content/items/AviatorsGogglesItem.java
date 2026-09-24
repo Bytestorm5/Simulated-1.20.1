@@ -13,7 +13,7 @@ public class AviatorsGogglesItem extends BaseArmorItem {
 	private static final ResourceLocation TEXTURE = Aeronautics.path("aviators_goggles");
 
 	public AviatorsGogglesItem(final Properties properties) {
-		super(AeroArmorMaterials.AVIATORS_GOGGLES.asHolder(), TYPE, properties, TEXTURE);
+		super(AeroArmorMaterials.AVIATORS_GOGGLES, TYPE, properties, TEXTURE);
 		GogglesItem.addIsWearingPredicate(player -> AeroItems.AVIATORS_GOGGLES.isIn(player.getItemBySlot(EquipmentSlot.HEAD)));
 	}
 }

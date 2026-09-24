@@ -109,7 +109,7 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
 //            VeilPacketManager.tracking(player).sendPacket(new PlungerLauncherShootPacket(interactionHand));
 
             if (!BacktankUtil.canAbsorbDamage(player, maxUses()))
-                heldStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(interactionHand));
+                heldStack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(interactionHand));
         } else {
             SimulatedClient.PLUNGER_LAUNCHER_RENDER_HANDLER.dontAnimateItem(interactionHand);
         }
@@ -146,7 +146,7 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
                 barrelPos,
                 ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.NONE,
-                CollisionContext.empty()
+                null // 1.20.1: a null entity gives CollisionContext.empty()
         )).getLocation();
         barrelPos = Sable.HELPER.projectOutOfSubLevel(level, barrelPos);
 

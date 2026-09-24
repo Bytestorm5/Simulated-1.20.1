@@ -14,7 +14,7 @@ public class NeoForgeSimFluidService implements SimFluidService {
 
     @Override
     public Fluid getFluidInItem(final ItemStack stack) {
-        final IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FluidHandler.ITEM);
+        final IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
         if(handler != null) {
             final FluidStack fluid = handler.getFluidInTank(0);
             if(!fluid.isEmpty()) {

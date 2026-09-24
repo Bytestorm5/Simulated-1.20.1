@@ -4,7 +4,6 @@ import dev.simulated_team.simulated.content.blocks.nav_table.NavTableBlockEntity
 import dev.simulated_team.simulated.content.blocks.nav_table.navigation_target.NavigationTarget;
 import dev.simulated_team.simulated.index.SimDataComponents;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -53,9 +52,8 @@ public class RecoveryCompassNavigationTarget implements NavigationTarget {
     @Override
     public void onInsert(final ItemStack itemStack, final NavTableBlockEntity be, @Nullable final Player player) {
         if (player != null) {
-            DataComponentMap.Builder builder = SimDataComponents.COMPASS_PLACER_UUID.set(DataComponentMap.builder(), player.getUUID());
-            player.getLastDeathLocation().ifPresent(globalPos -> SimDataComponents.LAST_PLAYER_DEATH_LOCATION.set(builder, globalPos));
-            itemStack.applyComponents(builder.build());
+            SimDataComponents.COMPASS_PLACER_UUID.set(itemStack, player.getUUID());
+            player.getLastDeathLocation().ifPresent(globalPos -> SimDataComponents.LAST_PLAYER_DEATH_LOCATION.set(itemStack, globalPos));
         }
     }
 
