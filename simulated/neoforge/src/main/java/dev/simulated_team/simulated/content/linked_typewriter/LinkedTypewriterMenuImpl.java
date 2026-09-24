@@ -40,6 +40,8 @@ public class LinkedTypewriterMenuImpl extends LinkedTypewriterMenuCommon {
             super(itemHandler, index, xPosition, yPosition);
         }
 
+        // 1.20.1: Slot has no isFake() (1.21 used it to mark these ghost slots as fake)
+
         @Override
         public boolean isActive() {
             return LinkedTypewriterMenuImpl.this.slotsActive;

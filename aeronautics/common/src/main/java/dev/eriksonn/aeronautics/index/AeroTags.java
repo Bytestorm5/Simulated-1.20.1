@@ -66,12 +66,13 @@ public class AeroTags {
 	}
 
 	public static class ItemTags {
-		public static final TagKey<Item> LEATHERS = AllTags.commonItemTag("leathers");
-		public static final TagKey<Item> ARMORS = AllTags.commonItemTag("armors");
-		public static final TagKey<Item> HEAD_ARMOR = TagKey.create(Registries.ITEM, new ResourceLocation("head_armor"));
-		public static final TagKey<Item> IRON_SHEET = AllTags.commonItemTag("plates/iron");
-		public static final TagKey<Item> GOLD_SHEET = AllTags.commonItemTag("plates/gold");
-		public static final TagKey<Item> MUSIC_DISCS = AllTags.commonItemTag("music_discs");
+		public static final TagKey<Item> LEATHERS = Tags.Items.LEATHER;
+		public static final TagKey<Item> ARMORS = Tags.Items.ARMORS;
+		// 1.20.1: minecraft:head_armor doesn't exist yet, forge:armors/helmets is the equivalent
+		public static final TagKey<Item> HEAD_ARMOR = Tags.Items.ARMORS_HELMETS;
+		public static final TagKey<Item> IRON_SHEET = AllTags.forgeItemTag("plates/iron");
+		public static final TagKey<Item> GOLD_SHEET = AllTags.forgeItemTag("plates/gold");
+		public static final TagKey<Item> MUSIC_DISCS = net.minecraft.tags.ItemTags.MUSIC_DISCS;
 
 		public static final TagKey<Item> ENVELOPE = create("envelope");
 		public static final TagKey<Item> SHAFTLESS_ENVELOPE = create("shaftless_envelope");
