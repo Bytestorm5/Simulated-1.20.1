@@ -12,7 +12,7 @@ Sable 2.0.5 (`Bytestorm5/sable-1.20.1`), which keep their 4.x / 2.x APIs.
    ```
    This also installs the sable-companion jar that Sable jar-in-jars. Alternatively, build them from source with
    `./gradlew publishToMavenLocal`, Veil first:
-   - Veil: `veil-1-20-1-migration-aan416`, at or after `04a1ee7`
+   - Veil: `veil-1-20-1-migration-aan416`, at or after `b5320a9`
    - Sable: `claude/sable-1-20-1-migration-1vdzus`, at or after `7e4b4cd`
 
    Both routes install the same coordinates.
@@ -144,6 +144,9 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
     Veil now does this sync, so Aeronautics no longer has upstream's `fixChunkRenderTypeSet`.
   - Builds before `3b0b6fd` also don't set `NormalMat`, `VeilBlockFaceBrightness` or
     `VeilRenderTime` for Veil's own shader programs. That makes levitite render black on sub-levels.
+  - Builds before `04a1ee7` log `Unsupported Uniform Type: bool` at ERROR over a hundred times when an Oculus shader
+    pack loads. Builds before `b5320a9` warn about uniform block members as missing uniforms, e.g. for CC: Tweaked's
+    `monitor_tbo` shader. Both are log noise only.
 - **Sable `7e4b4cd` or later is required.** Earlier builds leave the block entity of a diode-based block (redstone
   accumulator, inductor) or a throttle lever behind when assembling it into a sub-level. That logs "invalid for
   ticking" warnings, and the leftover gets saved with the chunk.

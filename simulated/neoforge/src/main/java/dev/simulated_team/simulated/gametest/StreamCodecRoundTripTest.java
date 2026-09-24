@@ -33,12 +33,18 @@ import net.minecraftforge.forgespi.language.ModFileScanData;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import org.joml.Quaterniond;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Opcodes;
 import org.joml.Quaterniondc;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.joml.Vector3f;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -148,15 +154,44 @@ public class StreamCodecRoundTripTest {
             }
         }
 
+        final ClassLoader loader = StreamCodecRoundTripTest.class.getClassLoader();
         final List<Class<?>> classes = new ArrayList<>();
         for (final String name : names) {
+            // Only load classes that declare a static codec field. Loading every class would also load the client-only
+            // ones, and Forge logs an error for each of those on the GameTest server.
+            if (!hasStaticCodecField(loader, name)) {
+                continue;
+            }
+
             try {
-                classes.add(Class.forName(name, true, StreamCodecRoundTripTest.class.getClassLoader()));
+                classes.add(Class.forName(name, true, loader));
             } catch (final Throwable ignored) {
                 // Client-only classes don't load on the GameTest server
             }
         }
         return classes;
+    }
+
+    private static boolean hasStaticCodecField(final ClassLoader loader, final String name) {
+        try (final InputStream stream = loader.getResourceAsStream(name.replace('.', '/') + ".class")) {
+            if (stream == null) {
+                return true;
+            }
+
+            final boolean[] found = {false};
+            new ClassReader(stream).accept(new ClassVisitor(Opcodes.ASM9) {
+                @Override
+                public FieldVisitor visitField(final int access, final String fieldName, final String descriptor, final String signature, final Object value) {
+                    if ((access & Opcodes.ACC_STATIC) != 0 && descriptor.endsWith("Codec;")) {
+                        found[0] = true;
+                    }
+                    return null;
+                }
+            }, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+            return found[0];
+        } catch (final IOException e) {
+            return true;
+        }
     }
 
     private static Type valueGenericType(final Type type) {
