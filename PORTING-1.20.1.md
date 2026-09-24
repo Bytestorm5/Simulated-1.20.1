@@ -36,7 +36,7 @@ Sable 2.0.5 (`Bytestorm5/sable-1.20.1`), which keep their 4.x / 2.x APIs.
      jars. It catches mixins that only resolve with dev names.
 
    `./gradlew checkAbstractMethodsProduction -PforgeClientInstall=<dir>` checks the reobfuscated jars the same way for
-   interface methods left unimplemented after reobfuscation. For example, an interface that declares `Level getLevel()`
+   interface methods left unimplemented after reobfuscation, and for method calls that don't resolve. For example, an interface that declares `Level getLevel()`
    for a block entity works in dev. In production `BlockEntity#getLevel` is `m_58898_`, so the game throws
    `AbstractMethodError`. `-PalsoCheck=<jar>` checks other jars (e.g. Sable's) too.
 
@@ -146,9 +146,10 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
   diagram renderer (`SimpleSubLevelGroupRenderer`) passes.
 - **Veil draws layered block layers (levitite) without `LevelRenderer#renderChunkLayer`.** The levitite world uniforms
   are therefore set when its render state binds the shader.
-- **Interfaces can't rely on vanilla methods by name.** `BlockEntityLiftingGasProvider`'s `getLevel`/`getBlockPos` are
-  default methods that call `BlockEntity`'s. As abstract methods they crashed the hot air burner and steam vent in
-  production.
+- **Interfaces can't declare vanilla method names.** In production `BlockEntity#getLevel` and `#getBlockPos` have SRG
+  names. A same-named interface method is then either left unimplemented (`AbstractMethodError`), or its call sites
+  get reobfuscated to the SRG name (`NoSuchMethodError`). So `BlockEntityLiftingGasProvider` uses
+  `getProviderLevel`/`getProviderPos`, which delegate to `BlockEntity`.
 - **Forge fires `FMLClientSetupEvent` on worker threads**, so Aeronautics' render-type setup is queued onto the main
   thread.
 - **Forge strips client-only classes on dedicated servers.** Particle providers and Create's radial wrench blacklist are

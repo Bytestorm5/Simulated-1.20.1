@@ -102,7 +102,7 @@ public interface BlockEntityLiftingGasProvider {
         final BlockPos castPos = this.getCastPosition();
 
         if (castPos != null) {
-            final Balloon existingBalloon = BalloonMap.MAP.get(this.getLevel()).getBalloon(castPos);
+            final Balloon existingBalloon = BalloonMap.MAP.get(this.getProviderLevel()).getBalloon(castPos);
 
             if (existingBalloon != null) {
                 // Yip yip!
@@ -119,7 +119,7 @@ public interface BlockEntityLiftingGasProvider {
         if (this.getBalloon() != null)
             return;
 
-        final Level level = this.getLevel();
+        final Level level = this.getProviderLevel();
         final BlockPos castPos = this.getCastPosition();
 
         final BalloonMap balloonMap = BalloonMap.MAP.get(level);
@@ -169,7 +169,7 @@ public interface BlockEntityLiftingGasProvider {
             // it's just like the scorpion and the frog
 
             if (this.isChunkUnloaded() && balloon.getHeaters().isEmpty()) {
-                final Level level = this.getLevel();
+                final Level level = this.getProviderLevel();
                 assert level != null;
 
                 BalloonMap.MAP.get(level).unloadBalloon(serverBalloon);
@@ -247,13 +247,13 @@ public interface BlockEntityLiftingGasProvider {
 
     double getClientPredictedVolume();
 
-    // 1.20.1: BlockEntity's getBlockPos/getLevel are renamed to SRG names in production, so they can't implement
-    // abstract interface methods of the same name. Delegate to them instead.
-    default BlockPos getBlockPos() {
+    // 1.20.1: named so they don't collide with BlockEntity's getBlockPos/getLevel. Those have SRG names in production,
+    // so same-named interface methods break there (AbstractMethodError, or calls reobfuscated to the SRG name)
+    default BlockPos getProviderPos() {
         return ((BlockEntity) this).getBlockPos();
     }
 
-    default Level getLevel() {
+    default Level getProviderLevel() {
         return ((BlockEntity) this).getLevel();
     }
 
@@ -269,7 +269,7 @@ public interface BlockEntityLiftingGasProvider {
             this.tryCreateBalloon();
 
         if (this.getBalloon() instanceof final ServerBalloon balloon && balloon.getTotalFilledVolume() > 1) {
-            AeroAdvancements.HEAD_IN_THE_CLOUDS.awardToNearby(this.getBlockPos(), this.getLevel());
+            AeroAdvancements.HEAD_IN_THE_CLOUDS.awardToNearby(this.getProviderPos(), this.getProviderLevel());
         }
     }
 

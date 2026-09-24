@@ -1,6 +1,8 @@
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.io.IOException;
@@ -22,11 +24,15 @@ import java.util.jar.JarFile;
  * vanilla method name (e.g. {@code Level getLevel()} for a block entity): in dev the vanilla method implements it, but
  * after reobfuscation the vanilla method is {@code m_58898_} and the class throws {@link AbstractMethodError}.
  * <p>
+ * It also resolves every method call in those jars. The reobfuscator can rename a call through an interface to the SRG
+ * name of a colliding vanilla method while the interface keeps the dev name, which throws {@link NoSuchMethodError}.
+ * <p>
  * Usage: {@code AbstractMethodChecker <jar to check>...} with those jars and all their dependencies on the classpath.
  */
 public class AbstractMethodChecker {
     private static final Map<String, ClassNode> CACHE = new HashMap<>();
     private static final Set<String> MISSING = new TreeSet<>();
+    private static int calls;
 
     public static void main(final String[] args) throws IOException {
         final List<String> problems = new ArrayList<>();
@@ -40,7 +46,10 @@ public class AbstractMethodChecker {
                         continue;
                     }
 
-                    final ClassNode node = load(name.substring(0, name.length() - ".class".length()));
+                    final String className = name.substring(0, name.length() - ".class".length());
+                    checkCalls(jar, entry, className, problems);
+
+                    final ClassNode node = load(className);
                     if (node == null || (node.access & (Opcodes.ACC_ABSTRACT | Opcodes.ACC_INTERFACE)) != 0) {
                         continue;
                     }
@@ -56,14 +65,14 @@ public class AbstractMethodChecker {
             MISSING.stream().limit(20).forEach(name -> System.out.println("  " + name));
         }
 
-        System.out.println("Checked " + checked + " concrete classes");
+        System.out.println("Checked " + checked + " concrete classes and " + calls + " method calls");
         if (problems.isEmpty()) {
             System.out.println("No problems found");
             return;
         }
 
         problems.forEach(System.out::println);
-        System.out.println(problems.size() + " unimplemented interface methods");
+        System.out.println(problems.size() + " problems");
         System.exit(1);
     }
 
@@ -85,6 +94,70 @@ public class AbstractMethodChecker {
                 }
             }
         }
+    }
+
+    /**
+     * Reports calls to methods that don't exist on the owner or anything it inherits from.
+     */
+    private static void checkCalls(final JarFile jar, final JarEntry entry, final String className, final List<String> problems) throws IOException {
+        final ClassNode node = new ClassNode();
+        try (final InputStream stream = jar.getInputStream(entry)) {
+            new ClassReader(stream).accept(node, ClassReader.SKIP_FRAMES);
+        }
+
+        final Set<String> reported = new TreeSet<>();
+        for (final MethodNode method : node.methods) {
+            for (final AbstractInsnNode insn : method.instructions) {
+                if (!(insn instanceof final MethodInsnNode call) || call.owner.startsWith("[")) {
+                    continue;
+                }
+
+                final ClassNode owner = load(call.owner);
+                if (owner == null || call.name.equals("<init>") && owner.methods.stream().anyMatch(m -> m.name.equals("<init>") && m.desc.equals(call.desc))) {
+                    continue;
+                }
+
+                calls++;
+                if (!resolves(owner, call.name, call.desc, new TreeSet<>()) && reported.add(call.owner + "#" + call.name + call.desc)) {
+                    problems.add(className + " calls missing method " + call.owner + "#" + call.name + call.desc);
+                }
+            }
+        }
+    }
+
+    /**
+     * Method resolution as the JVM does it: the class, its superclasses, then every superinterface. Classes that aren't
+     * on the classpath count as resolving, since they're reported separately.
+     */
+    private static boolean resolves(final ClassNode node, final String name, final String desc, final Set<String> visited) {
+        if (!visited.add(node.name)) {
+            return false;
+        }
+
+        for (final MethodNode method : node.methods) {
+            if (method.name.equals(name) && method.desc.equals(desc)) {
+                return true;
+            }
+        }
+
+        // Signature-polymorphic methods (MethodHandle#invoke...) match any descriptor
+        if (node.name.equals("java/lang/invoke/MethodHandle") || node.name.equals("java/lang/invoke/VarHandle")) {
+            return true;
+        }
+
+        final List<String> parents = new ArrayList<>(node.interfaces);
+        if (node.superName != null) {
+            parents.add(0, node.superName);
+        }
+
+        for (final String parentName : parents) {
+            final ClassNode parent = load(parentName);
+            if (parent == null || resolves(parent, name, desc, visited)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static boolean isImplemented(final ClassNode node, final Set<String> interfaces, final String name, final String desc) {
