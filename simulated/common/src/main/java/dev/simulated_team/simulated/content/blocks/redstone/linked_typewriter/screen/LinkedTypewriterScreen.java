@@ -23,8 +23,10 @@ import foundry.veil.api.network.VeilPacketManager;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.gui.element.ScreenElement;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -124,13 +126,22 @@ public class LinkedTypewriterScreen extends AbstractSimiContainerScreen<LinkedTy
 
     @Override
     protected void rebuildWidgets() {
-        this.clearFocus();
+        // 1.20.1: Screen#clearFocus is private and Screen#setInitialFocus() doesn't exist, so both are inlined here
+        final ComponentPath currentFocus = this.getCurrentFocusPath();
+        if (currentFocus != null) {
+            currentFocus.applyFocus(false);
+        }
 
         this.rescaleWindow();
         this.keyEditorScreen.resetPositions();
         this.modifier.resetXYPositions();
 
-        this.setInitialFocus();
+        if (this.minecraft.getLastInputType().isKeyboard()) {
+            final ComponentPath initialFocus = super.nextFocusPath(new FocusNavigationEvent.TabNavigation(true));
+            if (initialFocus != null) {
+                this.changeFocus(initialFocus);
+            }
+        }
     }
 
     private void rebuildExtraAreas() {
@@ -223,12 +234,12 @@ public class LinkedTypewriterScreen extends AbstractSimiContainerScreen<LinkedTy
     }
 
     @Override
-    public boolean mouseScrolled(final double mouseX, final double mouseY, final double scrollX, final double scrollY) {
+    public boolean mouseScrolled(final double mouseX, final double mouseY, final double scrollY) {
         if (this.keyEditorScreen.active && !this.modifier.modifying) {
             this.keyEditorScreen.shiftEntries(scrollY > 0);
         }
 
-        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        return super.mouseScrolled(mouseX, mouseY, scrollY);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dev.ryanhcode.offroad.data;
 
 import com.simibubi.create.AllTags;
+import net.minecraftforge.common.Tags;
 import com.simibubi.create.foundation.data.TagGen;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
@@ -37,7 +38,7 @@ public class OffroadTags {
         private static void genBlockTags(final RegistrateTagsProvider<Block> provIn) {
             final TagGen.CreateTagsProvider<Block> prov = new TagGen.CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
             prov.tag(BOREHEAD_EFFECTIVE)
-                    .addTag(AllTags.commonBlockTag("ores"));
+                    .addTag(Tags.Blocks.ORES);
             prov.tag(BOREHEAD_SUPER_EFFECTIVE)
                     .add(net.minecraft.world.level.block.Blocks.ANCIENT_DEBRIS);
         }

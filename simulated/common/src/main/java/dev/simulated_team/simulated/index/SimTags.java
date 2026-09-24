@@ -14,10 +14,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.saveddata.maps.MapDecorationType;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraftforge.common.Tags;
 
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static net.minecraft.world.item.Items.*;
 
@@ -66,10 +70,10 @@ public class SimTags {
     }
 
     public static class Items {
-        public static final TagKey<Item> STONE = AllTags.commonItemTag("stones");
-        public static final TagKey<Item> REDSTONE_DUST = AllTags.commonItemTag("dusts/redstone");
-        public static final TagKey<Item> SLIME_BALLS = AllTags.commonItemTag("slime_balls");
-        public static final TagKey<Item> AMETHYST_SHARDS = AllTags.commonItemTag("gems/amethyst");
+        public static final TagKey<Item> STONE = Tags.Items.STONE;
+        public static final TagKey<Item> REDSTONE_DUST = Tags.Items.DUSTS_REDSTONE;
+        public static final TagKey<Item> SLIME_BALLS = Tags.Items.SLIMEBALLS;
+        public static final TagKey<Item> AMETHYST_SHARDS = Tags.Items.GEMS_AMETHYST;
 
         public static final TagKey<Item> NAMEPLATE_ITEMS = create("nameplate_items");
         public static final TagKey<Item> ROTATE_WITH_NAV_ARROW = create("rotate_with_nav_arrow");
@@ -85,7 +89,7 @@ public class SimTags {
         }
 
         public static TagKey<Item> dyesTag(DyeColor dyeColor) {
-            return TagKey.create(Registries.ITEM, new ResourceLocation("c", "dyes/" + dyeColor.getName()));
+            return dyeColor.getTag();
         }
 
         public static void addGenerators() {
@@ -114,8 +118,10 @@ public class SimTags {
     }
 
     public static class Misc {
-        public static final TagKey<MapDecorationType> NAV_TABLE_FINDABLE = TagKey.create(
-                Registries.MAP_DECORATION_TYPE, Simulated.path("nav_table_findable"));
+        // 1.20.1: map decoration types are an enum without a registry, so they can't be tagged. These are the
+        // 1.20.1 equivalents of the simulated:nav_table_findable map decoration type tag (structure markers).
+        public static final Set<MapDecoration.Type> NAV_TABLE_FINDABLE = Collections.unmodifiableSet(EnumSet.of(
+                MapDecoration.Type.MANSION, MapDecoration.Type.MONUMENT, MapDecoration.Type.RED_X));
 
         // entities which won't block the placement of an armor stand
         public static final TagKey<EntityType<?>> ARMOR_STAND_IGNORE = TagKey.create(
@@ -131,7 +137,7 @@ public class SimTags {
     public static final Map<String, TagKey<Item>> DYE_MAP = new HashMap<>();
     static {
         for (final DyeColor color : DyeColor.values()) {
-            DYE_MAP.put(color.getName(), AllTags.commonItemTag("dyes/" + color.getName()));
+            DYE_MAP.put(color.getName(), color.getTag());
         }
     }
 

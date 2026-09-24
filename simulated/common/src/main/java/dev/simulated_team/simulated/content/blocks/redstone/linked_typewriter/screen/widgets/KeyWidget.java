@@ -13,11 +13,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyWidget extends AbstractSimiWidget {
+    private static final int TOOLTIP_BACKGROUND_SIZE = 6;
+    private static final int TOOLTIP_BACKGROUND_BORDER = 2;
 
     private final LinkedTypewriterEntries.KeyboardEntry EMPTY = new LinkedTypewriterEntries.KeyboardEntry(RedstoneLinkNetworkHandler.Frequency.EMPTY, RedstoneLinkNetworkHandler.Frequency.EMPTY, this.keyNum, BlockPos.ZERO);
 
@@ -125,6 +128,25 @@ public class KeyWidget extends AbstractSimiWidget {
 
     private void renderBackground(@NotNull final GuiGraphics pGuiGraphics, final int x, final int y, final int w, final int h) {
         final SimGUITextures bg = SimGUITextures.LINKED_TYPEWRITER_TOOLTIP_BACKGROUND;
-        pGuiGraphics.blitSprite(bg.location, x, y, 0, w, h);
+        // 1.20.1: there is no GUI sprite atlas, so the nine-sliced sprite (see its .mcmeta) is drawn from its texture directly
+        final ResourceLocation texture = new ResourceLocation(bg.location.getNamespace(), "textures/gui/sprites/" + bg.location.getPath() + ".png");
+        final int size = TOOLTIP_BACKGROUND_SIZE;
+        final int border = Math.min(TOOLTIP_BACKGROUND_BORDER, Math.min(w / 2, h / 2));
+        final int inner = size - 2 * TOOLTIP_BACKGROUND_BORDER;
+        final int innerW = w - 2 * border;
+        final int innerH = h - 2 * border;
+
+        // corners
+        pGuiGraphics.blit(texture, x, y, border, border, 0, 0, border, border, size, size);
+        pGuiGraphics.blit(texture, x + w - border, y, border, border, size - border, 0, border, border, size, size);
+        pGuiGraphics.blit(texture, x, y + h - border, border, border, 0, size - border, border, border, size, size);
+        pGuiGraphics.blit(texture, x + w - border, y + h - border, border, border, size - border, size - border, border, border, size, size);
+        // edges
+        pGuiGraphics.blit(texture, x + border, y, innerW, border, TOOLTIP_BACKGROUND_BORDER, 0, inner, border, size, size);
+        pGuiGraphics.blit(texture, x + border, y + h - border, innerW, border, TOOLTIP_BACKGROUND_BORDER, size - border, inner, border, size, size);
+        pGuiGraphics.blit(texture, x, y + border, border, innerH, 0, TOOLTIP_BACKGROUND_BORDER, border, inner, size, size);
+        pGuiGraphics.blit(texture, x + w - border, y + border, border, innerH, size - border, TOOLTIP_BACKGROUND_BORDER, border, inner, size, size);
+        // center
+        pGuiGraphics.blit(texture, x + border, y + border, innerW, innerH, TOOLTIP_BACKGROUND_BORDER, TOOLTIP_BACKGROUND_BORDER, inner, inner, size, size);
     }
 }

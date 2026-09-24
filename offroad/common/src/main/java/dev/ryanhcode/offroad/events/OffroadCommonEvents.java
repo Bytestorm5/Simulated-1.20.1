@@ -7,22 +7,20 @@ import dev.ryanhcode.offroad.handlers.client.MultiMiningClientHandler;
 import dev.ryanhcode.offroad.handlers.server.MultiMiningServerManager;
 import dev.ryanhcode.offroad.index.OffroadDataComponents;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class OffroadCommonEvents {
 
-    public static void modifyDefaultComponents(final BiConsumer<ItemLike, Consumer<DataComponentPatch.Builder>> modify) {
-        modify.accept(AllBlocks.FLYWHEEL, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.FLYWHEEL); });
-        modify.accept(AllBlocks.LARGE_WATER_WHEEL, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.LARGE_WATER_WHEEL); });
-        modify.accept(AllBlocks.CRUSHING_WHEEL, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.CRUSHING_WHEEL); });
-        modify.accept(AllBlocks.WATER_WHEEL, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.WATER_WHEEL); });
-        modify.accept(AllBlocks.MECHANICAL_ROLLER, builder -> { OffroadDataComponents.TIRE.set(builder, TireLike.MECHANICAL_ROLLER); });
+    /**
+     * 1.20.1: replaces the default data components 1.21 added to Create's items through ModifyDefaultComponentsEvent.
+     */
+    public static void registerDefaultComponents() {
+        OffroadDataComponents.registerDefaultTire(AllBlocks.FLYWHEEL, TireLike.FLYWHEEL);
+        OffroadDataComponents.registerDefaultTire(AllBlocks.LARGE_WATER_WHEEL, TireLike.LARGE_WATER_WHEEL);
+        OffroadDataComponents.registerDefaultTire(AllBlocks.CRUSHING_WHEEL, TireLike.CRUSHING_WHEEL);
+        OffroadDataComponents.registerDefaultTire(AllBlocks.WATER_WHEEL, TireLike.WATER_WHEEL);
+        OffroadDataComponents.registerDefaultTire(AllBlocks.MECHANICAL_ROLLER, TireLike.MECHANICAL_ROLLER);
     }
 
     public static void physicsTick(final SubLevelPhysicsSystem physicsSystem, final double timeStep) {

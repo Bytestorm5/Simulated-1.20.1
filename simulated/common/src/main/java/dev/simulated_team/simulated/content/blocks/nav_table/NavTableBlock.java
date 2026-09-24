@@ -70,7 +70,7 @@ public class NavTableBlock extends DirectionalBlock implements IBE<NavTableBlock
             return ItemInteractionResult.CONSUME;
         }
 
-        return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private boolean canSwitchStacks(ItemStack heldStack, Level level, BlockPos pos) {

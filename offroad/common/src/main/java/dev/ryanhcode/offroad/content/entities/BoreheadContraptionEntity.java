@@ -19,7 +19,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -40,6 +42,12 @@ public class BoreheadContraptionEntity extends ControlledContraptionEntity {
         entity.setControllerPos(controller.getBlockPosition());
         entity.setContraption(contraption);
         return entity;
+    }
+
+    // 1.20.1: EntityType.Builder has no eyeHeight(...), the eye height of 0 is set here instead
+    @Override
+    protected float getEyeHeight(final Pose pose, final EntityDimensions dimensions) {
+        return 0;
     }
 
     @Override

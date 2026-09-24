@@ -65,7 +65,7 @@ public class AltitudeSensorScreen extends AbstractSimiScreen {
     }
 
     @Override
-    public void renderBackground(final GuiGraphics graphics, final int mouseX, final int mouseY, final float partialTick) {
+    public void renderBackground(final GuiGraphics graphics) {
         final int a = ((int) (0x50 * Math.min(1, (this.ticksOpen + AnimationTickHolder.getPartialTicks()) / 20f))) << 24;
         graphics.fillGradient(0, 0, this.width, this.height, 0x101010 | a, 0x101010 | a);
 
@@ -100,7 +100,8 @@ public class AltitudeSensorScreen extends AbstractSimiScreen {
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         final Tesselator tesselator = Tesselator.getInstance();
-        final BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        final BufferBuilder bufferbuilder = tesselator.getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
         final float imageSize = 256f;
         final float uvx1 = BAR.startX / imageSize;
@@ -113,11 +114,11 @@ public class AltitudeSensorScreen extends AbstractSimiScreen {
         final float py1 = (y - highMax) + BAR.height;
         final float py2 = (y - lowMax) + BAR.height;
 
-        bufferbuilder.addVertex(ps.last().pose(), px2, py1, 0.0f).setUv(uvx2, uvy1).setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        bufferbuilder.addVertex(ps.last().pose(), px1, py1, 0.0f).setUv(uvx1, uvy1).setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        bufferbuilder.addVertex(ps.last().pose(), px1, py2, 0.0f).setUv(uvx1, uvy2).setColor(1.0f, 1.0f, 1.0f, 0.0f);
-        bufferbuilder.addVertex(ps.last().pose(), px2, py2, 0.0f).setUv(uvx2, uvy2).setColor(1.0f, 1.0f, 1.0f, 0.0f);
-        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
+        bufferbuilder.vertex(ps.last().pose(), px2, py1, 0.0f).uv(uvx2, uvy1).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+        bufferbuilder.vertex(ps.last().pose(), px1, py1, 0.0f).uv(uvx1, uvy1).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+        bufferbuilder.vertex(ps.last().pose(), px1, py2, 0.0f).uv(uvx1, uvy2).color(1.0f, 1.0f, 1.0f, 0.0f).endVertex();
+        bufferbuilder.vertex(ps.last().pose(), px2, py2, 0.0f).uv(uvx2, uvy2).color(1.0f, 1.0f, 1.0f, 0.0f).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
 
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.altitude_sensor;
 
-import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -42,11 +41,6 @@ public class AltitudeSensorBlock extends FaceAttachedHorizontalDirectionalBlock 
 
     public AltitudeSensorBlock(final Properties pProperties) {
         super(pProperties);
-    }
-
-    @Override
-    protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     @Nullable
@@ -152,21 +146,26 @@ public class AltitudeSensorBlock extends FaceAttachedHorizontalDirectionalBlock 
     }
 
     @Override
-    protected @NotNull ItemInteractionResult useItemOn(final @NotNull ItemStack stack,
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
+        return ItemInteractionResult.use(this.useItemOn(player.getItemInHand(hand), state, level, pos, player, hand, hitResult), hand,
+                () -> super.use(state, level, pos, player, hand, hitResult));
+    }
+
+    public @NotNull ItemInteractionResult useItemOn(final @NotNull ItemStack stack,
                                                        final @NotNull BlockState state,
                                                        final @NotNull Level level,
                                                        final @NotNull BlockPos pos,
                                                        final @NotNull Player player,
                                                        final @NotNull InteractionHand hand,
                                                        final @NotNull BlockHitResult hitResult) {
-        return AllItems.WRENCH.isIn(stack) ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : this.onBlockEntityUseItemOn(level, pos, (be) -> {
+        return AllItems.WRENCH.isIn(stack) ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : this.getBlockEntityOptional(level, pos).map((be) -> {
 
             if (level.isClientSide) {
                 this.withBlockEntityDo(level, pos, AltitudeSensorScreen::open);
             }
 
             return ItemInteractionResult.SUCCESS;
-        });
+        }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
     }
 
     public enum FaceType implements StringRepresentable {

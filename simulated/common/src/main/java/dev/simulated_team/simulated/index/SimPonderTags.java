@@ -4,7 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 import dev.simulated_team.simulated.Simulated;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -22,7 +22,7 @@ public class SimPonderTags {
 
     public static void register(final PonderTagRegistrationHelper<ResourceLocation> helper) {
         final PonderTagRegistrationHelper<ItemLike> itemHelper = helper.withKeyFunction(
-                RegisteredObjectsHelper::getKeyOrThrow);
+                CatnipServices.REGISTRIES::getKeyOrThrow);
 
         // Sim Tags
 

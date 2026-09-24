@@ -1,7 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.nameplate;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -57,7 +55,6 @@ import net.minecraft.world.InteractionResult;
 public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<NameplateBlockEntity>, IWrenchable, BlockSubLevelAssemblyListener {
 
     public static final EnumProperty<Position> POSITION = EnumProperty.create("position", Position.class);
-    public static final MapCodec<NameplateBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(propertiesCodec(), DyeColor.CODEC.fieldOf("DyeColor").forGetter(NameplateBlock::getColor)).apply(instance, NameplateBlock::new));
 
     private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -159,8 +156,8 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
         if (!player.isShiftKeyDown() && player.mayBuild()) {
             final IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
             if (itemStack.getItem() instanceof final BlockItem bi && blockState.is(bi.getBlock()) && placementHelper.matchesItem(itemStack)) {
-                final ItemInteractionResult result = placementHelper.getOffset(player, level, blockState, blockPos, blockHitResult)
-                        .placeInWorld(level, (BlockItem) itemStack.getItem(), player, interactionHand, blockHitResult);
+                final ItemInteractionResult result = ItemInteractionResult.of(placementHelper.getOffset(player, level, blockState, blockPos, blockHitResult)
+                        .placeInWorld(level, (BlockItem) itemStack.getItem(), player, interactionHand, blockHitResult));
                 if (result == ItemInteractionResult.SUCCESS) {
                     return ItemInteractionResult.SUCCESS;
                 }

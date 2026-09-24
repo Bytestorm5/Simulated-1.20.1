@@ -18,10 +18,15 @@ import java.util.UUID;
 @Mixin(CompassItemPropertyFunction.class)
 public abstract class CompassItemPropertyFunctionMixin {
 
-    @Shadow protected abstract float getRotationTowardsCompassTarget(Entity entity, long ticks, BlockPos pos);
+    @Shadow
+    private float getRotationTowardsCompassTarget(final Entity entity, final long ticks, final BlockPos pos) {
+        throw new AssertionError();
+    }
 
 	@Shadow
-	protected abstract float getRandomlySpinningRotation(int seed, long ticks);
+	private float getRandomlySpinningRotation(final int seed, final long ticks) {
+		throw new AssertionError();
+	}
 
 	@WrapMethod(method = "getCompassRotation")
     private float simulated$prioritizeID(final ItemStack stack, final ClientLevel level, final int seed, final Entity entity, final Operation<Float> original) {

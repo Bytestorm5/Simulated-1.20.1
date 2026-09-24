@@ -1,16 +1,11 @@
 package dev.simulated_team.simulated.content.item_attributes;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import dev.ryanhcode.sable.mixinterface.block_properties.BlockStateExtension;
 import dev.ryanhcode.sable.physics.config.block_properties.PhysicsBlockPropertyTypes;
 import dev.simulated_team.simulated.index.SimItemAttributeTypes;
-import io.netty.buffer.ByteBuf;
-import foundry.veil.backport.network.RegistryFriendlyByteBuf;
-import foundry.veil.backport.network.codec.ByteBufCodecs;
-import foundry.veil.backport.network.codec.StreamCodec;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,13 +13,37 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record BlockFrictionItemAttribute(double friction) implements ItemAttribute {
-	public static final MapCodec<BlockFrictionItemAttribute> CODEC = Codec.DOUBLE
-			.xmap(BlockFrictionItemAttribute::new, BlockFrictionItemAttribute::friction)
-			.fieldOf("value");
+public class BlockFrictionItemAttribute implements ItemAttribute {
+	// 1.20.1: Create's item attributes are mutable and (de)serialized through save/load instead of codecs
+	private double friction;
 
-	public static final StreamCodec<ByteBuf, BlockFrictionItemAttribute> STREAM_CODEC = ByteBufCodecs.DOUBLE
-			.map(BlockFrictionItemAttribute::new, BlockFrictionItemAttribute::friction);
+	public BlockFrictionItemAttribute(final double friction) {
+		this.friction = friction;
+	}
+
+	public double friction() {
+		return this.friction;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		return o instanceof final BlockFrictionItemAttribute other && Double.compare(this.friction, other.friction) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Double.hashCode(this.friction);
+	}
+
+	@Override
+	public void save(final CompoundTag nbt) {
+		nbt.putDouble("value", this.friction);
+	}
+
+	@Override
+	public void load(final CompoundTag nbt) {
+		this.friction = nbt.getDouble("value");
+	}
 
 	@Override
 	public boolean appliesTo(final ItemStack stack, final Level world) {
@@ -65,16 +84,6 @@ public record BlockFrictionItemAttribute(double friction) implements ItemAttribu
 				return List.of(new BlockFrictionItemAttribute(mass));
 			}
 			return List.of();
-		}
-
-		@Override
-		public MapCodec<? extends ItemAttribute> codec() {
-			return CODEC;
-		}
-
-		@Override
-		public StreamCodec<? super RegistryFriendlyByteBuf, ? extends ItemAttribute> streamCodec() {
-			return STREAM_CODEC;
 		}
 	}
 }

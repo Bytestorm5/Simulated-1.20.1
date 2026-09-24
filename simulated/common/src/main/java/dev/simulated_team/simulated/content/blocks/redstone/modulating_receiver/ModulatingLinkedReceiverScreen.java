@@ -145,7 +145,8 @@ public class ModulatingLinkedReceiverScreen extends AbstractSimiScreen {
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         final Tesselator tesselator = Tesselator.getInstance();
-        final BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        final BufferBuilder bufferbuilder = tesselator.getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
         final float imageSize = 256f;
         final float uvx1 = (sprite.startX + minPos - bandStart) / imageSize;
@@ -158,11 +159,11 @@ public class ModulatingLinkedReceiverScreen extends AbstractSimiScreen {
         final float py1 = (float) (y + 25);
         final float py2 = (y + 25 + sprite.height);
 
-        bufferbuilder.addVertex(ms.last().pose(), px2, py1, 0).setUv(uvx2, uvy1).setColor(1f, 1f, 1f, 0f);
-        bufferbuilder.addVertex(ms.last().pose(), px1, py1, 0).setUv(uvx1, uvy1).setColor(1f, 1f, 1f, 1f);
-        bufferbuilder.addVertex(ms.last().pose(), px1, py2, 0).setUv(uvx1, uvy2).setColor(1f, 1f, 1f, 1f);
-        bufferbuilder.addVertex(ms.last().pose(), px2, py2, 0).setUv(uvx2, uvy2).setColor(1f, 1f, 1f, 0f);
-        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
+        bufferbuilder.vertex(ms.last().pose(), px2, py1, 0).uv(uvx2, uvy1).color(1f, 1f, 1f, 0f).endVertex();
+        bufferbuilder.vertex(ms.last().pose(), px1, py1, 0).uv(uvx1, uvy1).color(1f, 1f, 1f, 1f).endVertex();
+        bufferbuilder.vertex(ms.last().pose(), px1, py2, 0).uv(uvx1, uvy2).color(1f, 1f, 1f, 1f).endVertex();
+        bufferbuilder.vertex(ms.last().pose(), px2, py2, 0).uv(uvx2, uvy2).color(1f, 1f, 1f, 0f).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
         RenderSystem.disableBlend();
 
         SimGUITextures.MODULATINGLINK_MARKER.render(graphics, x + minPos, y + 23);

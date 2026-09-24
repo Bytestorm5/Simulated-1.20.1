@@ -19,7 +19,7 @@ public class OffroadItems {
     private static final SimulatedRegistrate REGISTRATE = Offroad.getRegistrate();
 
     public static final ItemEntry<TireItem> SMALL_TIRE = REGISTRATE.item("small_tire", TireItem::new)
-            .properties(x -> x.component(OffroadDataComponents.TIRE, TireLike.SMALL_TIRE))
+            .onRegister(item -> OffroadDataComponents.registerDefaultTire(item, TireLike.SMALL_TIRE))
             .recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get(), 1)
                     .requires(AllBlocks.SHAFT)
                     .requires(Items.DRIED_KELP)
@@ -29,7 +29,7 @@ public class OffroadItems {
             .register();
 
     public static final ItemEntry<TireItem> TIRE = REGISTRATE.item("tire", TireItem::new)
-            .properties(x -> x.component(OffroadDataComponents.TIRE, TireLike.TIRE))
+            .onRegister(item -> OffroadDataComponents.registerDefaultTire(item, TireLike.TIRE))
             .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                     .pattern(" K ")
                     .pattern("KSK")
@@ -42,7 +42,7 @@ public class OffroadItems {
             .register();
 
     public static final ItemEntry<TireItem> LARGE_TIRE = REGISTRATE.item("large_tire", TireItem::new)
-            .properties(x -> x.component(OffroadDataComponents.TIRE, TireLike.LARGE_TIRE))
+            .onRegister(item -> OffroadDataComponents.registerDefaultTire(item, TireLike.LARGE_TIRE))
             .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                     .pattern(" B ")
                     .pattern("BSB")
@@ -55,7 +55,7 @@ public class OffroadItems {
             .register();
 
     public static final ItemEntry<TireItem> MONSTROUS_TIRE = REGISTRATE.item("monstrous_tire", TireItem::new)
-            .properties(x -> x.component(OffroadDataComponents.TIRE, TireLike.MONSTROUS_TIRE))
+            .onRegister(item -> OffroadDataComponents.registerDefaultTire(item, TireLike.MONSTROUS_TIRE))
             .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                     .pattern(" K ")
                     .pattern("KSK")

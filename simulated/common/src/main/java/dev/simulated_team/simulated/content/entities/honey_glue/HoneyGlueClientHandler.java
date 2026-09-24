@@ -312,7 +312,7 @@ public class HoneyGlueClientHandler implements InteractCallback {
                 player.getEyePosition().add(player.getViewVector(SimDistUtil.getPartialTick()).scale(player.getBlockReach())),
                 ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.NONE,
-                CollisionContext.empty()
+                null // 1.20.1: a null entity gives CollisionContext.empty()
         );
 
         return level.clip(clipContext);

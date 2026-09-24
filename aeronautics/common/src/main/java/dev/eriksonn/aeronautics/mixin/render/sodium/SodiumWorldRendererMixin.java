@@ -6,8 +6,8 @@ import foundry.veil.api.client.render.VeilRenderBridge;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.shader.program.ShaderProgram;
 import foundry.veil.api.client.render.shader.uniform.ShaderUniform;
-import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
-import net.caffeinemc.mods.sodium.client.render.chunk.ChunkRenderMatrices;
+import com.mojang.blaze3d.vertex.PoseStack;
+import me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,12 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Priority <1000 to apply before sable
+ * 1.20.1: targets Embeddium 0.3.x, whose drawChunkLayer takes a PoseStack instead of ChunkRenderMatrices
  */
-@Mixin(value = SodiumWorldRenderer.class, priority = 990)
+@Mixin(value = SodiumWorldRenderer.class, priority = 990, remap = false)
 public class SodiumWorldRendererMixin {
 
     @Inject(method = "drawChunkLayer", at = @At(value = "HEAD"))
-    public void aeronautics$setupLevititeShaders(final RenderType renderType, final ChunkRenderMatrices matrices, final double x, final double y, final double z, final CallbackInfo ci) {
+    public void aeronautics$setupLevititeShaders(final RenderType renderType, final PoseStack poseStack, final double x, final double y, final double z, final CallbackInfo ci) {
         if (renderType == AeroRenderTypes.levitite()) {
             final ShaderProgram shader = VeilRenderSystem.setShader(AeroRenderTypes.LEVITITE_SHADER);
             if (shader == null) return;
@@ -40,7 +41,7 @@ public class SodiumWorldRendererMixin {
     }
 
     @Inject(method = "drawChunkLayer", at = @At(value = "TAIL"))
-    public void aeronautics$cleanupLevititeShaders(final RenderType renderLayer, final ChunkRenderMatrices matrices, final double x, final double y, final double z, final CallbackInfo ci) {
+    public void aeronautics$cleanupLevititeShaders(final RenderType renderLayer, final PoseStack poseStack, final double x, final double y, final double z, final CallbackInfo ci) {
         if (renderLayer == AeroRenderTypes.levitite()) {
             final ShaderProgram shader = VeilRenderSystem.setShader(AeroRenderTypes.LEVITITE_SHADER);
             if (shader == null) return;

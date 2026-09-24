@@ -8,10 +8,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(WorldRenderingPhase.class)
+@Mixin(value = WorldRenderingPhase.class, remap = false)
 public class WorldRenderingPhaseMixin {
 
-    @Inject(method = "fromTerrainRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;tripwire()Lnet/minecraft/client/renderer/RenderType;"), cancellable = true)
+    @Inject(method = "fromTerrainRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;tripwire()Lnet/minecraft/client/renderer/RenderType;", remap = true), cancellable = true)
     private static void aeronautics$injectMaterialMapping(final RenderType layer, final CallbackInfoReturnable<WorldRenderingPhase> cir) {
         if (layer == AeroRenderTypes.levitite()) {
             cir.setReturnValue(WorldRenderingPhase.NONE);

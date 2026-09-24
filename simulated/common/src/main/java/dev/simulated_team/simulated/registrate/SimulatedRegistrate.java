@@ -9,10 +9,8 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import dev.simulated_team.simulated.client.BlockPropertiesTooltip;
 import dev.simulated_team.simulated.content.blocks.nav_table.navigation_target.NavigationTarget;
-import dev.simulated_team.simulated.index.SimDataComponents;
 import dev.simulated_team.simulated.index.SimRegistries;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -21,11 +19,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class SimulatedRegistrate extends CreateRegistrate {
@@ -52,7 +49,7 @@ public class SimulatedRegistrate extends CreateRegistrate {
     public <T> Codec<T> byNameCodecExpanded(final ResourceKey<? extends Registry<T>> key) {
         return ResourceLocation.CODEC.flatXmap((resourceLoc) -> {
             T gatheredEntry = null;
-            for (final RegistryEntry<T, T> entry : this.getAll(key)) {
+            for (final RegistryEntry<T> entry : this.getAll(key)) {
                 if (entry.getId().equals(resourceLoc)) {
                     gatheredEntry = entry.get();
                     break;
@@ -66,7 +63,7 @@ public class SimulatedRegistrate extends CreateRegistrate {
             }
         }, (T) -> {
             ResourceLocation id = null;
-            for (final RegistryEntry<T, T> entry : this.getAll(key)) {
+            for (final RegistryEntry<T> entry : this.getAll(key)) {
                 if (entry.is(T)) {
                     id = entry.getId();
                     break;
@@ -86,11 +83,11 @@ public class SimulatedRegistrate extends CreateRegistrate {
     }
 
     @Override
-    protected <R, T extends R> @NotNull RegistryEntry<R, T> accept(final String name, final ResourceKey<? extends Registry<R>> type, final Builder<R, T, ?, ?> builder, final NonNullSupplier<? extends T> creator, final NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<R, T>> entryFactory) {
-        final RegistryEntry<R, T> entry = super.accept(name, type, builder, creator, entryFactory);
+    protected <R, T extends R> @NotNull RegistryEntry<T> accept(final String name, final ResourceKey<? extends Registry<R>> type, final Builder<R, T, ?, ?> builder, final NonNullSupplier<? extends T> creator, final NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
+        final RegistryEntry<T> entry = super.accept(name, type, builder, creator, entryFactory);
 
         if (type.equals(Registries.ITEM)) {
-            final RegistryEntry<Item, ? extends Item> itemEntry = (RegistryEntry<Item, ? extends Item>) entry;
+            final RegistryEntry<? extends Item> itemEntry = (RegistryEntry<? extends Item>) entry;
             TAB_ITEMS.add(itemEntry::get);
             ITEM_TO_SECTION.put(entry.getId(), this.currentSection);
         }
@@ -103,27 +100,34 @@ public class SimulatedRegistrate extends CreateRegistrate {
         ITEM_TO_SECTION.put(item, this.currentSection);
     }
 
-    public <T extends NavigationTarget> RegistryEntry<NavigationTarget, T> navTarget(final String name, final NonNullSupplier<T> navTableItem, Supplier<ItemLike> itemSupplier) {
-        RegistryEntry<NavigationTarget, T> entry = this.simple(this.self(), name, SimRegistries.Keys.NAVIGATION_TARGET, navTableItem);
+    public <T extends NavigationTarget> RegistryEntry<T> navTarget(final String name, final NonNullSupplier<T> navTableItem, Supplier<ItemLike> itemSupplier) {
+        RegistryEntry<T> entry = this.simple(this.self(), name, SimRegistries.Keys.NAVIGATION_TARGET, navTableItem);
         NAVIGATION_TARGET_ITEMS.put(entry.getId(), itemSupplier);
         return entry;
     }
 
-    public <T extends NavigationTarget> RegistryEntry<NavigationTarget, T> navTarget(final String name, final NonNullSupplier<T> navTableItem, ItemLike item) {
+    public <T extends NavigationTarget> RegistryEntry<T> navTarget(final String name, final NonNullSupplier<T> navTableItem, ItemLike item) {
         return navTarget(name, navTableItem, () -> item);
     }
 
-    public <T extends BlockPropertiesTooltip.Entry> RegistryEntry<BlockPropertiesTooltip.Entry, T>
+    public <T extends BlockPropertiesTooltip.Entry> RegistryEntry<T>
             propertyTooltip(final String name, final NonNullSupplier<T> tooltipFunction) {
         return this.simple(this.self(), name, SimRegistries.Keys.PROPERTY_TOOLTIP, tooltipFunction);
     }
 
-    public static void onAddDefaultComponents(BiConsumer<ItemLike, Consumer<DataComponentPatch.Builder>> modify) {
-        for (Map.Entry<ResourceLocation, Supplier<ItemLike>> entry : NAVIGATION_TARGET_ITEMS.entrySet()) {
-            NavigationTarget target = SimRegistries.NAVIGATION_TARGET.get(entry.getKey());
-            ItemLike item = entry.getValue().get();
-            modify.accept(item, builder -> builder
-                    .set(SimDataComponents.TARGET, target));
+    /**
+     * 1.20.1: items have no default data components, so the navigation target that 1.21 set as the default
+     * {@code TARGET} component of a navigation target's item is looked up here instead.
+     *
+     * @return The navigation target registered for the given item, or null if there is none
+     */
+    public static @Nullable NavigationTarget getDefaultNavigationTarget(final ItemLike item) {
+        final Item asItem = item.asItem();
+        for (final Map.Entry<ResourceLocation, Supplier<ItemLike>> entry : NAVIGATION_TARGET_ITEMS.entrySet()) {
+            if (entry.getValue().get().asItem() == asItem) {
+                return SimRegistries.NAVIGATION_TARGET.get(entry.getKey());
+            }
         }
+        return null;
     }
 }

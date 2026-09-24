@@ -7,6 +7,7 @@ import dev.simulated_team.simulated.index.SimBlockEntityTypes;
 import dev.simulated_team.simulated.index.SimBlockShapes;
 import dev.simulated_team.simulated.index.SimClickInteractions;
 import dev.simulated_team.simulated.multiloader.CommonRedstoneBlock;
+import dev.simulated_team.simulated.backport.ItemInteractionResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -62,7 +63,8 @@ public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock i
 
     @Override
     public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hitResult) {
-        return this.useWithoutItem(state, level, pos, player, hitResult);
+        return ItemInteractionResult.use(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION, hand,
+                () -> this.useWithoutItem(state, level, pos, player, hitResult));
     }
 
     public InteractionResult useWithoutItem(final BlockState state, final Level level, final BlockPos pos, final Player player, final BlockHitResult hitResult) {

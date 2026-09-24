@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.mixin.levitite;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.eriksonn.aeronautics.content.components.Levitating;
 import dev.eriksonn.aeronautics.index.AeroDataComponents;
 import net.createmod.catnip.math.VecHelper;
@@ -15,7 +16,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity {
@@ -25,12 +25,14 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Shadow public abstract ItemStack getItem();
 
-    @Inject(method = "getDefaultGravity", at = @At("HEAD"), cancellable = true)
-    private void aeronautics$levitatingGravity(final CallbackInfoReturnable<Double> cir) {
-        final Levitating component = AeroDataComponents.LEVITATING.get(this.getItem());
-        if (component != null) {
-            cir.setReturnValue(0d);
+    // 1.20.1: items have no getDefaultGravity, the gravity step in tick is skipped by reporting no gravity instead
+    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;isNoGravity()Z"))
+    private boolean aeronautics$levitatingGravity(final boolean noGravity) {
+        if (noGravity) {
+            return true;
         }
+        final Levitating component = AeroDataComponents.LEVITATING.get(this.getItem());
+        return component != null;
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V"))
@@ -42,7 +44,7 @@ public abstract class ItemEntityMixin extends Entity {
 
             if (this.level().isClientSide && component.particle().isPresent()) {
                 if (this.level().random.nextFloat() < Mth.clamp(this.getItem().getCount() - 10, 5, 100) / 64f) {
-                    final Vec3 ppos = VecHelper.offsetRandomly(this.getPosition(0), this.getRandom(), 0.4f).add(0, 0.3, 0);
+                    final Vec3 ppos = VecHelper.offsetRandomly(this.getPosition(0), this.random, 0.4f).add(0, 0.3, 0);
                     this.level().addParticle(component.particle().get(), ppos.x, ppos.y, ppos.z, 0, 0, 0);
                 }
             }

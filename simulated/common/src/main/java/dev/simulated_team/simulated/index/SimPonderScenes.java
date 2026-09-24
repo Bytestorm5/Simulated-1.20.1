@@ -7,10 +7,9 @@ import dev.simulated_team.simulated.data.SimBlockStateGen;
 import dev.simulated_team.simulated.ponder.new_ponder_tooltip.NewPonderTooltipManager;
 import dev.simulated_team.simulated.ponder.scenes.*;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class SimPonderScenes {
@@ -102,10 +101,10 @@ public class SimPonderScenes {
 
     }
 
-    private static ItemProviderEntry<Item, Item> vanillaItemProvider(final String id) {
+    private static ItemProviderEntry<Item> vanillaItemProvider(final String id) {
         return new ItemProviderEntry<>(
                 Simulated.getRegistrate(),
-                DeferredHolder.create(ResourceKey.create(Registries.ITEM, new ResourceLocation(id)))
+                RegistryObject.create(new ResourceLocation(id), ForgeRegistries.ITEMS)
         );
     }
 }

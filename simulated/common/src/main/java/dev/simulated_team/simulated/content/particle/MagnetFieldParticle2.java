@@ -59,8 +59,8 @@ public class MagnetFieldParticle2 extends SimpleAnimatedParticle {
 
     @Override
     public void render(final VertexConsumer buffer, final Camera renderInfo, final float partialTicks) {
-        final Quaternionf quaternionf = new Quaternionf();
-        this.getFacingCameraMode().setRotation(quaternionf, renderInfo, partialTicks);
+        // 1.20.1: no FacingCameraMode, use the camera rotation like LOOKAT_XYZ did
+        final Quaternionf quaternionf = new Quaternionf(renderInfo.rotation());
         if (this.roll != 0.0F) {
             quaternionf.rotateZ(Mth.lerp(partialTicks, this.oRoll, this.roll));
         }
@@ -95,6 +95,25 @@ public class MagnetFieldParticle2 extends SimpleAnimatedParticle {
         quaternionf.rotateX((float)(Math.PI/2.0));
 
         this.renderRotatedQuad(buffer, quaternionf, x+offsetX, y+offsetY, z+offsetZ, partialTicks);
+    }
+
+    // 1.20.1: SingleQuadParticle has no renderRotatedQuad, so this mirrors the 1.21 implementation
+    private void renderRotatedQuad(final VertexConsumer buffer, final Quaternionf quaternion, final float x, final float y, final float z, final float partialTicks) {
+        final float quadSize = this.getQuadSize(partialTicks);
+        final float u0 = this.getU0();
+        final float u1 = this.getU1();
+        final float v0 = this.getV0();
+        final float v1 = this.getV1();
+        final int light = this.getLightColor(partialTicks);
+        this.renderVertex(buffer, quaternion, x, y, z, 1.0F, -1.0F, quadSize, u1, v1, light);
+        this.renderVertex(buffer, quaternion, x, y, z, 1.0F, 1.0F, quadSize, u1, v0, light);
+        this.renderVertex(buffer, quaternion, x, y, z, -1.0F, 1.0F, quadSize, u0, v0, light);
+        this.renderVertex(buffer, quaternion, x, y, z, -1.0F, -1.0F, quadSize, u0, v1, light);
+    }
+
+    private void renderVertex(final VertexConsumer buffer, final Quaternionf quaternion, final float x, final float y, final float z, final float xOffset, final float yOffset, final float quadSize, final float u, final float v, final int light) {
+        final Vector3f pos = new Vector3f(xOffset, yOffset, 0.0F).rotate(quaternion).mul(quadSize).add(x, y, z);
+        buffer.vertex(pos.x(), pos.y(), pos.z()).uv(u, v).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
     }
 
     @Override

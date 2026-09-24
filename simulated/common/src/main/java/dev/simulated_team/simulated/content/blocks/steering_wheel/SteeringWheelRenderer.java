@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.model.BakedModelHelper;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperBufferFactory;
 import net.createmod.catnip.render.SuperByteBuffer;
@@ -85,7 +85,7 @@ public class SteeringWheelRenderer extends KineticBlockEntityRenderer<SteeringWh
 
     public static BakedModel generateModel(final BakedModel template, final BlockState planksBlockState) {
         final Block planksBlock = planksBlockState.getBlock();
-        final ResourceLocation id = RegisteredObjectsHelper.getKeyOrThrow(planksBlock);
+        final ResourceLocation id = CatnipServices.REGISTRIES.getKeyOrThrow(planksBlock);
         final String wood = plankStateToWoodName(planksBlockState);
 
         if (wood == null)
@@ -104,7 +104,7 @@ public class SteeringWheelRenderer extends KineticBlockEntityRenderer<SteeringWh
     @Nullable
     private static String plankStateToWoodName(final BlockState planksBlockState) {
         final Block planksBlock = planksBlockState.getBlock();
-        final ResourceLocation id = RegisteredObjectsHelper.getKeyOrThrow(planksBlock);
+        final ResourceLocation id = CatnipServices.REGISTRIES.getKeyOrThrow(planksBlock);
         final String path = id.getPath();
 
         if (path.endsWith("_planks")) // Covers most wood types

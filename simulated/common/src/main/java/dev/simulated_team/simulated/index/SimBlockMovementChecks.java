@@ -280,14 +280,14 @@ public class SimBlockMovementChecks {
      * This will be used to determine if a given block is attached to another block in a given direction.
      */
     public static synchronized void registerAttachedCheck(final AttachedCheck check) {
-        ATTACHED_CHECKS.addFirst(check);
+        ATTACHED_CHECKS.add(0, check);
     }
 
     /**
      * Registers an entry for adding additional blocks to simulated's assembly process.
      */
     public static synchronized void registerAdditionalBlocks(final AdditionalBlocks additionalBlocks) {
-        ADDITIONAL_BLOCK_REGISTRATIONS.addFirst(additionalBlocks);
+        ADDITIONAL_BLOCK_REGISTRATIONS.add(0, additionalBlocks);
     }
 
     @FunctionalInterface

@@ -55,7 +55,7 @@ public class OpticalSensorBlock extends DirectedDirectionalBlock implements IBE<
                 return ItemInteractionResult.SUCCESS;
             }
         }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

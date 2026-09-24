@@ -101,35 +101,35 @@ public class WheelMountBlock extends HorizontalKineticBlock implements IBE<Wheel
         final Direction hitDirection = blockHitResult.getDirection();
 
         if(!hitDirection.equals(blockState.getValue(HORIZONTAL_FACING)) && hitDirection != Direction.DOWN) {
-            return super.useItemOn(heldItem, blockState, level, blockPos, player, interactionHand, blockHitResult);
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (level.isClientSide()) {
-            return this.onBlockEntityUseItemOn(level, blockPos, mount -> {
+            return this.getBlockEntityOptional(level, blockPos).map(mount -> {
                 final ItemStack potentialTire = mount.getHeldItem();
-                if ((heldItem.isEmpty() && OffroadDataComponents.TIRE.has(potentialTire))
-                        || (OffroadDataComponents.TIRE.has(heldItem) && OffroadDataComponents.TIRE.has(potentialTire))
-                        || (OffroadDataComponents.TIRE.has(heldItem) && potentialTire.isEmpty())
+                if ((heldItem.isEmpty() && OffroadDataComponents.hasTire(potentialTire))
+                        || (OffroadDataComponents.hasTire(heldItem) && OffroadDataComponents.hasTire(potentialTire))
+                        || (OffroadDataComponents.hasTire(heldItem) && potentialTire.isEmpty())
                 ) {
                     return ItemInteractionResult.SUCCESS;
                 }
 
-                return super.useItemOn(heldItem, blockState, level, blockPos, player, interactionHand, blockHitResult);
-            });
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
         }
 
         if (this.switchStacks(level, blockPos, player, interactionHand)) {
             return ItemInteractionResult.CONSUME;
         }
 
-        return super.useItemOn(heldItem, blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private boolean switchStacks(final Level level, final BlockPos pos, final Player player, final InteractionHand hand) {
         final boolean[] passed = { false };
 
         final ItemStack heldItem = player.getItemInHand(hand);
-        final TireLike tireLike = OffroadDataComponents.TIRE.get(heldItem);
+        final TireLike tireLike = OffroadDataComponents.getTire(heldItem);
 
         if (heldItem.isEmpty() || tireLike != null) {
             this.withBlockEntityDo(level, pos, mount -> {

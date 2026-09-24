@@ -35,7 +35,7 @@ public class BoreheadBearingBlock extends DirectionalAxisKineticBlock implements
             TEMP_POSITIONS.clear();
 
             if (blockState.getBlock() instanceof BoreheadBearingBlock) {
-                TEMP_POSITIONS.addFirst(blockPos.relative(blockState.getValue(FACING)));
+                TEMP_POSITIONS.add(0, blockPos.relative(blockState.getValue(FACING)));
             }
 
             return TEMP_POSITIONS;

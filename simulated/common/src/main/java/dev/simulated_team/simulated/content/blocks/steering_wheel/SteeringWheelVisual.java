@@ -126,6 +126,6 @@ public class SteeringWheelVisual extends KineticBlockEntityVisual<SteeringWheelB
 
     private static Model generateModel(final SteeringWheelRenderer.ModelKey modelKey) {
         final BakedModel bakedModel = SteeringWheelRenderer.generateModel(SimPartialModels.STEERING_WHEEL.get(), modelKey.material());
-        return new BakedModelBuilder(bakedModel).build();
+        return BakedModelBuilder.create(bakedModel).build();
     }
 }

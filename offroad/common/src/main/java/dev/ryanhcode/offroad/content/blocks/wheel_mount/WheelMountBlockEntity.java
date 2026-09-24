@@ -36,7 +36,6 @@ import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -54,7 +53,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
@@ -134,7 +132,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
     @Override
     public void sable$physicsTick(final ServerSubLevel subLevel, final RigidBodyHandle handle, final double timeStep) {
         final ItemStack item = this.getHeldItem();
-        final TireLike tire = OffroadDataComponents.TIRE.get(item);
+        final TireLike tire = OffroadDataComponents.getTire(item);
         final BlockPos blockPos = this.getBlockPos();
 
         if (tire == null) {
@@ -241,7 +239,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
         super.tick();
 
         final ItemStack item = this.getHeldItem();
-        final TireLike tire = OffroadDataComponents.TIRE.get(item);
+        final TireLike tire = OffroadDataComponents.getTire(item);
 
         this.lastChasingYaw = this.chasingYaw;
         this.chasingYaw = Mth.lerp(0.4, this.chasingYaw, this.computeYaw());
@@ -334,12 +332,12 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
     }
 
     @Override
-    public boolean writeToClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Direction side) {
+    public boolean writeToClipboard(final CompoundTag tag, final Direction side) {
         return false;
     }
 
     @Override
-    public boolean readFromClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Player player, final Direction side, final boolean simulate) {
+    public boolean readFromClipboard(final CompoundTag tag, final Player player, final Direction side, final boolean simulate) {
         return false;
     }
 
@@ -356,7 +354,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
         for (int i = -1; i <= 1; i++) {
             final Vec3 localPosO = wheelPosCenter.add(JOMLConversion.toMojang(normalD).scale(i));
 
-            final ClipContext clipContext = new ClipContext(localPosO, localPosO.subtract(0.0, 5.0, 0.0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty());
+            final ClipContext clipContext = new ClipContext(localPosO, localPosO.subtract(0.0, 5.0, 0.0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null);
             ((ClipContextExtension) clipContext).sable$setIgnoredSubLevel(Sable.HELPER.getContaining(this));
             final BlockHitResult clipResult = this.level.clip(clipContext);
 
@@ -465,7 +463,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
 
     @Override
     protected void write(final CompoundTag tag, final boolean clientPacket) {
-        tag.put("CurrentStack", this.getHeldItem().saveOptional());
+        tag.put("CurrentStack", this.getHeldItem().save(new CompoundTag()));
 
         if (clientPacket) {
             tag.putInt("SteeringSignalStrength", this.lastServerSteeringSignal);
@@ -478,7 +476,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
 
     @Override
     protected void read(final CompoundTag tag, final boolean clientPacket) {
-        final ItemStack stack = ItemStack.parseOptional(tag.getCompound("CurrentStack"));
+        final ItemStack stack = ItemStack.of(tag.getCompound("CurrentStack"));
 
         this.inventory.suppressUpdate = true;
         this.inventory.slot.setStack(stack);
@@ -512,8 +510,8 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
     @Override
     protected AABB createRenderBoundingBox() {
         AABB aabb = new AABB(this.getBlockPos());
-        if(this.getHeldItem() != null && OffroadDataComponents.TIRE.has(this.getHeldItem())) {
-            final TireLike tire = OffroadDataComponents.TIRE.get(this.getHeldItem().getComponents());
+        if(this.getHeldItem() != null && OffroadDataComponents.hasTire(this.getHeldItem())) {
+            final TireLike tire = OffroadDataComponents.getTire(this.getHeldItem());
             aabb = aabb.inflate(tire.radius() + 1);
         }
         return aabb;

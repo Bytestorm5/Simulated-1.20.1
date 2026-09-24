@@ -9,6 +9,8 @@ import net.minecraft.core.UUIDUtil;
 import dev.simulated_team.simulated.backport.DataComponentType;
 import foundry.veil.backport.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 
@@ -38,6 +40,20 @@ public class SimDataComponents {
             .persistent(Codec.FLOAT)
             .networkSynchronized(ByteBufCodecs.FLOAT)
     );
+
+    /**
+     * 1.20.1: items have no default components, so the spring's default bounciness of 1 (set as a default component
+     * on 1.21) is applied here when the stack has no explicit value.
+     *
+     * @return The bounciness of the stack, or null if it isn't bouncy
+     */
+    public static @Nullable Float getBounciness(final ItemStack stack) {
+        final Float bounciness = BOUNCINESS.get(stack);
+        if (bounciness == null && SimItems.SPRING.isIn(stack)) {
+            return 1f;
+        }
+        return bounciness;
+    }
 
     private static <T> DataComponentType<T> register(final String name, final UnaryOperator<DataComponentType.Builder<T>> builder) {
         final DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();

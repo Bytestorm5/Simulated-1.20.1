@@ -6,7 +6,7 @@ import dev.simulated_team.simulated.index.SimMenuTypes;
 import dev.simulated_team.simulated.service.SimMenuService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -17,7 +17,7 @@ public abstract class LinkedTypewriterMenuCommon extends GhostItemMenu<LinkedTyp
 
     public boolean slotsActive = false;
 
-    public LinkedTypewriterMenuCommon(final MenuType<?> type, final int id, final Inventory inv, final RegistryFriendlyByteBuf extraData) {
+    public LinkedTypewriterMenuCommon(final MenuType<?> type, final int id, final Inventory inv, final FriendlyByteBuf extraData) {
         super(type, id, inv, extraData);
     }
 
@@ -30,12 +30,12 @@ public abstract class LinkedTypewriterMenuCommon extends GhostItemMenu<LinkedTyp
     }
 
     @Override
-    protected LinkedTypewriterBlockEntity createOnClient(final RegistryFriendlyByteBuf extraData) {
+    protected LinkedTypewriterBlockEntity createOnClient(final FriendlyByteBuf extraData) {
         final ClientLevel world = Minecraft.getInstance().level;
 
         final BlockEntity blockEntity = world.getBlockEntity(extraData.readBlockPos());
         if (blockEntity instanceof final LinkedTypewriterBlockEntity linkedTypewriter) {
-            linkedTypewriter.readClient(extraData.readNbt(), extraData.registryAccess());
+            linkedTypewriter.readClient(extraData.readNbt());
             return linkedTypewriter;
         }
 

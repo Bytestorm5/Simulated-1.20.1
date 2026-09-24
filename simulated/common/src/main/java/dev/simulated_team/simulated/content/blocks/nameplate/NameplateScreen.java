@@ -89,7 +89,7 @@ public class NameplateScreen extends Screen {
    @Override
    public void render(final GuiGraphics gui, final int pMouseX, final int pMouseY, final float pPartialTick) {
       Lighting.setupForFlatItems();
-      this.renderBackground(gui, pMouseX, pMouseY, pPartialTick);
+      this.renderBackground(gui);
       gui.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
       this.renderSign(gui);

@@ -280,7 +280,7 @@ public class SimBlockEntityTypes {
                 if (dir == null) {
                     return null; //don't just give our inventory to non-directional requests.
                 } else {
-					if (be.getBlockState().is(SimBlocks.AUGER_COG)) {
+					if (SimBlocks.AUGER_COG.has(be.getBlockState())) {
 						return null; //don't give out inventory to requests when we are a cog auger.
 					}
 
