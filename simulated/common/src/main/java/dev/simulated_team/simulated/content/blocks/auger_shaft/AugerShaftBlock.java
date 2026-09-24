@@ -23,7 +23,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
@@ -118,8 +117,8 @@ public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<Au
     public ItemInteractionResult useItemOn(final ItemStack heldItem, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
         final IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
         if (helper.matchesItem(heldItem))
-            return helper.getOffset(player, level, blockState, blockPos, blockHitResult)
-                    .placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult);
+            return ItemInteractionResult.of(helper.getOffset(player, level, blockState, blockPos, blockHitResult)
+                    .placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult));
 
         if (!(blockState.getBlock() instanceof AugerCogBlock)) {
             final Boolean encased = blockState.getValue(ENCASED);
@@ -140,7 +139,7 @@ public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<Au
             }
         }
 
-        return super.useItemOn(heldItem, blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -154,18 +153,16 @@ public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<Au
 
     @Nullable
     protected InteractionResult transformAuger(final BlockState state, final BlockState newState, final UseOnContext context, final Level level) {
-        final RegistryAccess reg = level.registryAccess();
-
         final AugerShaftBlockEntity abe = this.getBlockEntity(level, context.getClickedPos());
         if (abe != null) {
             final CompoundTag tag = new CompoundTag();
-            abe.write(tag, reg, false);
+            abe.write(tag, false);
             abe.beingWrenched = true;
 
             KineticBlockEntity.switchToBlockState(level, context.getClickedPos(), newState.setValue(AXIS, state.getValue(AXIS)));
             final AugerShaftBlockEntity newBE = this.getBlockEntity(level, context.getClickedPos());
             if (newBE != null) {
-                newBE.read(tag, reg, false);
+                newBE.read(tag, false);
                 newBE.notifyUpdate();
 
                 IWrenchable.playRotateSound(level, context.getClickedPos());
@@ -236,7 +233,7 @@ public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<Au
     }
 
     @Override
-    protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block neighborBlock, final BlockPos neighborPos, final boolean movedByPiston) {
+    public void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block neighborBlock, final BlockPos neighborPos, final boolean movedByPiston) {
 //        this.withBlockEntityDo(level, pos, (be) -> be.stopped = false);
 
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);

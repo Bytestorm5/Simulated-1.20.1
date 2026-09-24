@@ -56,17 +56,17 @@ public class SwivelBearingPlateBlock extends DirectionalKineticBlock implements 
     }
 
     @Override
-    protected VoxelShape getCollisionShape(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final CollisionContext collisionContext) {
+    public VoxelShape getCollisionShape(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final CollisionContext collisionContext) {
         return SimBlockShapes.SWIVEL_BEARING_PLATE_COLLISION.get(blockState.getValue(FACING));
     }
 
     @Override
-    protected VoxelShape getShape(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final CollisionContext collisionContext) {
+    public VoxelShape getShape(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final CollisionContext collisionContext) {
         return SimBlockShapes.SWIVEL_BEARING_PLATE.get(blockState.getValue(FACING));
     }
 
     @Override
-    protected VoxelShape getBlockSupportShape(final BlockState state, final BlockGetter level, final BlockPos pos) {
+    public VoxelShape getBlockSupportShape(final BlockState state, final BlockGetter level, final BlockPos pos) {
         return SimBlockShapes.SWIVEL_BEARING_PLATE.get(state.getValue(FACING));
     }
 
@@ -93,7 +93,7 @@ public class SwivelBearingPlateBlock extends DirectionalKineticBlock implements 
             this.withBlockEntityDo(level, pos, SwivelBearingPlateBlockEntity::setParentAssembleNextTick);
         }
 
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class SwivelBearingPlateBlock extends DirectionalKineticBlock implements 
         return InteractionResult.PASS;
     }
     @Override
-    public ItemStack getCloneItemStack(final LevelReader level, final BlockPos pos, final BlockState state) {
+    public ItemStack getCloneItemStack(final BlockGetter level, final BlockPos pos, final BlockState state) {
         return SimBlocks.SWIVEL_BEARING.asStack();
     }
 

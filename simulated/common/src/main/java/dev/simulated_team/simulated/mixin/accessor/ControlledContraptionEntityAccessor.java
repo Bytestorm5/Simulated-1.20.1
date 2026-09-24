@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(ControlledContraptionEntity.class)
+@Mixin(value = ControlledContraptionEntity.class, remap = false)
 public interface ControlledContraptionEntityAccessor {
 
     @Accessor

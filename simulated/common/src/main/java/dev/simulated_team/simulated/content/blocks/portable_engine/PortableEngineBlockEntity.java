@@ -1,6 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.portable_engine;
 
 
+import net.minecraftforge.common.ForgeMod;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.IControlContraption;
@@ -37,7 +38,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
@@ -327,7 +327,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
         final List<Player> players = this.level.getEntitiesOfClass(Player.class, new AABB(pos).inflate(7.0));
 
         for (final Player player : players) {
-            if (Sable.HELPER.distanceSquaredWithSubLevels(this.level, player.getEyePosition(), center) < Mth.square(player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 0.7)) {
+            if (Sable.HELPER.distanceSquaredWithSubLevels(this.level, player.getEyePosition(), center) < Mth.square(player.getAttributeValue(ForgeMod.BLOCK_REACH.get()) + 0.7)) {
                 openHatch = this.canOpenHatch(player);
 
                 if (openHatch) break;

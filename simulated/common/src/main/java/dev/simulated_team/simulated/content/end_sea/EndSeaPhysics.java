@@ -42,7 +42,7 @@ public record EndSeaPhysics(ResourceLocation dimension, Optional<Integer> priori
      */
     public static final Codec<EndSeaPhysics> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("dimension").forGetter(EndSeaPhysics::dimension),
-            Codec.optionalField("priority", Codec.INT, true).forGetter(EndSeaPhysics::priority),
+            Codec.optionalField("priority", Codec.INT).forGetter(EndSeaPhysics::priority),
             Codec.DOUBLE.fieldOf("start_y").forGetter(EndSeaPhysics::startY),
             Codec.DOUBLE.optionalFieldOf("depth_gradient", 1d).forGetter(EndSeaPhysics::depthGradient),
             Codec.DOUBLE.optionalFieldOf("drag", 1d).forGetter(EndSeaPhysics::drag)

@@ -112,8 +112,8 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
                 perpendicularNormal = Vec3.atLowerCornerOf(Direction.NORTH.getNormal());
             }
         } else {
-            selfNormal = entity.calculateViewVector(-Mth.lerp(pt, entity.xRotO, entity.getXRot()),-Mth.lerp(pt, entity.yRotO, entity.getYRot())).reverse();
-            perpendicularNormal = entity.calculateViewVector(-Mth.lerp(pt, entity.xRotO, entity.getXRot()),-Mth.lerp(pt, entity.yRotO, entity.getYRot())-90).reverse();
+            selfNormal = Vec3.directionFromRotation(-Mth.lerp(pt, entity.xRotO, entity.getXRot()),-Mth.lerp(pt, entity.yRotO, entity.getYRot())).reverse();
+            perpendicularNormal = Vec3.directionFromRotation(-Mth.lerp(pt, entity.xRotO, entity.getXRot()),-Mth.lerp(pt, entity.yRotO, entity.getYRot())-90).reverse();
         }
 
         poseStack.pushPose();
@@ -150,7 +150,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
                 final Direction otherDir = other.getData(LaunchedPlungerEntity.PLUNGED_DIRECTION);
                 otherNormal = Vec3.atLowerCornerOf(otherDir.getNormal());
             } else {
-                otherNormal = other.calculateViewVector(-Mth.lerp(pt, other.xRotO, other.getXRot()),-Mth.lerp(pt, other.yRotO, other.getYRot())).reverse();
+                otherNormal = Vec3.directionFromRotation(-Mth.lerp(pt, other.xRotO, other.getXRot()),-Mth.lerp(pt, other.yRotO, other.getYRot())).reverse();
             }
 
             Vec3 targetOldPos = new Vec3(other.xo, other.yo, other.zo);
@@ -178,12 +178,12 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
                     final PlayerRenderer playerrenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher()
                             .getRenderer(player);
                     float headYDirection = Mth.lerp(pt, player.yHeadRotO, player.yHeadRot);
-                    final float bodyDifference = Math.abs(headYDirection - player.getPreciseBodyRotation(pt)) / 50f;
+                    final float bodyDifference = Math.abs(headYDirection - Mth.lerp(pt, player.yBodyRotO, player.yBodyRot)) / 50f;
                     final float headXDirection = Mth.lerp(pt, player.xRotO, player.getXRot());
                     final float lookDelta = Math.abs(Mth.map(headXDirection, 90, 0, 1f, 0f));
-                    headYDirection = Mth.lerp(lookDelta, headYDirection, player.getPreciseBodyRotation(pt));
-                    final Vec3 viewDirection = player.calculateViewVector(headXDirection, headYDirection);
-                    final Vec3 handDirection = player.calculateViewVector(0, headYDirection + 90.0f);
+                    headYDirection = Mth.lerp(lookDelta, headYDirection, Mth.lerp(pt, player.yBodyRotO, player.yBodyRot));
+                    final Vec3 viewDirection = Vec3.directionFromRotation(headXDirection, headYDirection);
+                    final Vec3 handDirection = Vec3.directionFromRotation(0, headYDirection + 90.0f);
                     target = player.getPosition(pt).add(0.0, 1.28, 0.0).add(viewDirection.scale(0.875)).add(handDirection.scale(Math.abs(Mth.map(headXDirection, 90, 0, 0.325f, 0f)) * (1)));
                 } else {
                     target = Vec3.ZERO;
@@ -330,64 +330,64 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
             NEXT_ORIENTATION.transform(NEXT_NORMAL.set(0, -1, 0));
 
             NEXT_ORIENTATION.transform(POS.set(-nextCableRadius, -nextCableRadius, 0));
-            builder.addVertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).setColor(color).setUv(0, nextV).setLight(lightEnd).setNormal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z);
+            builder.vertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).color(color).uv(0, nextV).uv2(lightEnd).normal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z).endVertex();
 
             ORIENTATION.transform(POS.set(-cableRadius, -cableRadius, 0));
-            builder.addVertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).setColor(color).setUv(0, v).setLight(lightStart).setNormal(NORMAL.x, NORMAL.y, NORMAL.z);
+            builder.vertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).color(color).uv(0, v).uv2(lightStart).normal(NORMAL.x, NORMAL.y, NORMAL.z).endVertex();
 
             ORIENTATION.transform(POS.set(cableRadius, -cableRadius, 0));
-            builder.addVertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).setColor(color).setUv(u, v).setLight(lightStart).setNormal(NORMAL.x, NORMAL.y, NORMAL.z);
+            builder.vertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).color(color).uv(u, v).uv2(lightStart).normal(NORMAL.x, NORMAL.y, NORMAL.z).endVertex();
 
             NEXT_ORIENTATION.transform(POS.set(nextCableRadius, -nextCableRadius, 0));
-            builder.addVertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).setColor(color).setUv(u, nextV).setLight(lightEnd).setNormal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z);
+            builder.vertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).color(color).uv(u, nextV).uv2(lightEnd).normal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z).endVertex();
 
             // Up
             ORIENTATION.transform(NORMAL.set(0, 1, 0));
             NEXT_ORIENTATION.transform(NEXT_NORMAL.set(0, 1, 0));
 
             ORIENTATION.transform(POS.set(-cableRadius, cableRadius, 0));
-            builder.addVertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).setColor(color).setUv(0, v).setLight(lightStart).setNormal(NORMAL.x, NORMAL.y, NORMAL.z);
+            builder.vertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).color(color).uv(0, v).uv2(lightStart).normal(NORMAL.x, NORMAL.y, NORMAL.z).endVertex();
 
             NEXT_ORIENTATION.transform(POS.set(-nextCableRadius, nextCableRadius, 0));
-            builder.addVertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).setColor(color).setUv(0, nextV).setLight(lightEnd).setNormal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z);
+            builder.vertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).color(color).uv(0, nextV).uv2(lightEnd).normal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z).endVertex();
 
             NEXT_ORIENTATION.transform(POS.set(nextCableRadius, nextCableRadius, 0));
-            builder.addVertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).setColor(color).setUv(u, nextV).setLight(lightEnd).setNormal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z);
+            builder.vertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).color(color).uv(u, nextV).uv2(lightEnd).normal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z).endVertex();
 
             ORIENTATION.transform(POS.set(cableRadius, cableRadius, 0));
-            builder.addVertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).setColor(color).setUv(u, v).setLight(lightStart).setNormal(NORMAL.x, NORMAL.y, NORMAL.z);
+            builder.vertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).color(color).uv(u, v).uv2(lightStart).normal(NORMAL.x, NORMAL.y, NORMAL.z).endVertex();
 
             // West
             ORIENTATION.transform(NORMAL.set(-1, 0, 0));
             NEXT_ORIENTATION.transform(NEXT_NORMAL.set(-1, 0, 0));
 
             NEXT_ORIENTATION.transform(POS.set(-nextCableRadius, -nextCableRadius, 0));
-            builder.addVertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).setColor(color).setUv(u, nextV).setLight(lightEnd).setNormal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z);
+            builder.vertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).color(color).uv(u, nextV).uv2(lightEnd).normal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z).endVertex();
 
             NEXT_ORIENTATION.transform(POS.set(-nextCableRadius, nextCableRadius, 0));
-            builder.addVertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).setColor(color).setUv(0, nextV).setLight(lightEnd).setNormal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z);
+            builder.vertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).color(color).uv(0, nextV).uv2(lightEnd).normal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z).endVertex();
 
             ORIENTATION.transform(POS.set(-cableRadius, cableRadius, 0));
-            builder.addVertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).setColor(color).setUv(0, v).setLight(lightStart).setNormal(NORMAL.x, NORMAL.y, NORMAL.z);
+            builder.vertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).color(color).uv(0, v).uv2(lightStart).normal(NORMAL.x, NORMAL.y, NORMAL.z).endVertex();
 
             ORIENTATION.transform(POS.set(-cableRadius, -cableRadius, 0));
-            builder.addVertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).setColor(color).setUv(u, v).setLight(lightStart).setNormal(NORMAL.x, NORMAL.y, NORMAL.z);
+            builder.vertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).color(color).uv(u, v).uv2(lightStart).normal(NORMAL.x, NORMAL.y, NORMAL.z).endVertex();
 
             // East
             ORIENTATION.transform(NORMAL.set(1, 0, 0));
             NEXT_ORIENTATION.transform(NEXT_NORMAL.set(1, 0, 0));
 
             ORIENTATION.transform(POS.set(cableRadius, -cableRadius, 0));
-            builder.addVertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).setColor(color).setUv(u, v).setLight(lightStart).setNormal(NORMAL.x, NORMAL.y, NORMAL.z);
+            builder.vertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).color(color).uv(u, v).uv2(lightStart).normal(NORMAL.x, NORMAL.y, NORMAL.z).endVertex();
 
             ORIENTATION.transform(POS.set(cableRadius, cableRadius, 0));
-            builder.addVertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).setColor(color).setUv(0, v).setLight(lightStart).setNormal(NORMAL.x, NORMAL.y, NORMAL.z);
+            builder.vertex((float) (x - origin.x() + POS.x), (float) (y - origin.y() + POS.y), (float) (z - origin.z() + POS.z)).color(color).uv(0, v).uv2(lightStart).normal(NORMAL.x, NORMAL.y, NORMAL.z).endVertex();
 
             NEXT_ORIENTATION.transform(POS.set(nextCableRadius, nextCableRadius, 0));
-            builder.addVertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).setColor(color).setUv(0, nextV).setLight(lightEnd).setNormal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z);
+            builder.vertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).color(color).uv(0, nextV).uv2(lightEnd).normal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z).endVertex();
 
             NEXT_ORIENTATION.transform(POS.set(nextCableRadius, -nextCableRadius, 0));
-            builder.addVertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).setColor(color).setUv(u, nextV).setLight(lightEnd).setNormal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z);
+            builder.vertex((float) (nextX - origin.x() + POS.x), (float) (nextY - origin.y() + POS.y), (float) (nextZ - origin.z() + POS.z)).color(color).uv(u, nextV).uv2(lightEnd).normal(NEXT_NORMAL.x, NEXT_NORMAL.y, NEXT_NORMAL.z).endVertex();
 
             ORIENTATION.set(NEXT_ORIENTATION);
             v = nextV;

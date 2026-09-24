@@ -101,6 +101,6 @@ public class RopeConnectorBlock extends AbstractDirectionalAxisBlock implements 
             return RopeHolderBlock.shearRope(this, level, pos, (ServerPlayer) player);
         }
 
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

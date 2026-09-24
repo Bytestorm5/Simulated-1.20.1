@@ -64,7 +64,7 @@ public final class Simulated {
             final Rarity rarity = item.getDefaultInstance().getRarity();
             FontHelper.Palette color = FontHelper.Palette.STANDARD_CREATE;
             if (rarity == Rarity.EPIC)
-                color = new FontHelper.Palette(TooltipHelper.styleFromColor(SimColors.EPIC_OURPLE), TooltipHelper.styleFromColor(rarity.color()));
+                color = new FontHelper.Palette(TooltipHelper.styleFromColor(SimColors.EPIC_OURPLE), TooltipHelper.styleFromColor(rarity.color));
 
             return new ItemDescription
                     .Modifier(item, color)

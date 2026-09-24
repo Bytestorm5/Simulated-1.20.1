@@ -28,7 +28,7 @@ public record AssemblePacket(BlockPos pos) implements CustomPacketPayload {
         final ServerPlayer player = context.player();
         final ServerLevel level = player.serverLevel();
 
-        if (player.canInteractWithBlock(this.pos, 4) &&
+        if (player.canReach(this.pos, 4) &&
                 level.getBlockEntity(this.pos) instanceof final PhysicsAssemblerBlockEntity assembler) {
             assembler.assembleOrDisassemble();
             SimStats.INTERACT_WITH_ASSEMBLER.awardTo(context.player());

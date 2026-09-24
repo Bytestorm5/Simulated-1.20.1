@@ -11,14 +11,12 @@ import dev.simulated_team.simulated.Simulated;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import foundry.veil.backport.network.RegistryFriendlyByteBuf;
 import foundry.veil.backport.network.codec.ByteBufCodecs;
 import foundry.veil.backport.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -47,12 +45,12 @@ public class LinkedTypewriterEntries {
         final LinkedTypewriterEntries keys = new LinkedTypewriterEntries();
 
         for (final Tag tag : tags) {
-            final RegistryOps<Tag> ops = registryAccess.createSerializationContext(NbtOps.INSTANCE);
+            final NbtOps ops = NbtOps.INSTANCE;
             final DataResult<Pair<KeyboardEntry, Tag>> result = KeyboardEntry.CODEC.decode(ops, tag);
-            if (result.isError()) { //if there was an error saving the entry, we want to output to the console instead of crashing
+            if (result.error().isPresent()) { //if there was an error saving the entry, we want to output to the console instead of crashing
                 Simulated.LOGGER.error(result.error().get().message());
             } else {
-                final KeyboardEntry entry = result.getOrThrow(false, error -> { }).get(0);
+                final KeyboardEntry entry = result.getOrThrow(false, error -> { }).getFirst();
                 entry.setLocation(pos);
                 keys.setKey(entry.glfwKeyCode, entry);
             }
@@ -145,9 +143,9 @@ public class LinkedTypewriterEntries {
         }
 
         for (final Map.Entry<Integer, KeyboardEntry> set : this.keyMap.entrySet()) {
-            final RegistryOps<Tag> ops = registryAccess.createSerializationContext(NbtOps.INSTANCE);
+            final NbtOps ops = NbtOps.INSTANCE;
             final DataResult<Tag> result = KeyboardEntry.CODEC.encodeStart(ops, set.getValue());
-            if (result.isError()) { //if there was an error saving the entry, we want to output to the console instead of crashing
+            if (result.error().isPresent()) { //if there was an error saving the entry, we want to output to the console instead of crashing
                 Simulated.LOGGER.error(result.error().get().message());
             } else {
                 tags.add(result.getOrThrow(false, error -> { }));
@@ -161,7 +159,7 @@ public class LinkedTypewriterEntries {
      * @return An immutable copy of the entry list.
      */
     public List<KeyboardEntry> getEntries() {
-        return List.copyOf(this.keyMap.sequencedValues());
+        return List.copyOf(this.keyMap.values());
     }
 
     public int getSize() {
@@ -175,9 +173,9 @@ public class LinkedTypewriterEntries {
     public static class KeyboardEntry implements IRedstoneLinkable {
 
         public static final Codec<KeyboardEntry> CODEC = RecordCodecBuilder.create((instance) ->
-                instance.group(ItemStack.OPTIONAL_CODEC.fieldOf("FirstItem")
+                instance.group(ItemStack.CODEC.fieldOf("FirstItem")
                                         .forGetter(KeyboardEntry::getFirstAsItemStack),
-                                ItemStack.OPTIONAL_CODEC.fieldOf("SecondItem")
+                                ItemStack.CODEC.fieldOf("SecondItem")
                                         .forGetter(KeyboardEntry::getSecondAsItemStack),
                                 Codec.INT.fieldOf("GLFWKey").forGetter(KeyboardEntry::getGLFWKeyCode))
                         .apply(instance, KeyboardEntry::createFromCodec));
@@ -254,7 +252,7 @@ public class LinkedTypewriterEntries {
         }
 
         public ItemStack getFirstAsItemStack() {
-            return this.get(0).getStack();
+            return this.getFirst().getStack();
         }
 
         private Item getFirstItem() {

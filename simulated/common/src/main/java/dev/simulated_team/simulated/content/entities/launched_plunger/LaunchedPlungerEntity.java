@@ -29,11 +29,11 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -74,14 +74,14 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
     private boolean addedToPlungerHandler = false;
     private PhysicsConstraintHandle constraint;
 
-    private static final ProjectileDeflection DEFLECTION = (projectile, entity, randomSource) -> {
+    private static void deflect(final Projectile projectile, final Entity entity) {
         Vec3 target = Vec3.ZERO;
         if (entity instanceof LaunchedPlungerEntity launchedPlungerEntity) {
             target = launchedPlungerEntity.getData(TARGET_POS);
             target = target.subtract(entity.position());
         }
         projectile.setDeltaMovement(projectile.getDeltaMovement().scale(0.8).add(target.normalize().scale(0.5f)));
-    };
+    }
 
     public LaunchedPlungerEntity(final EntityType<? extends LaunchedPlungerEntity> entityType, final Level level) {
         super(entityType, level);
@@ -92,18 +92,18 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData(final SynchedEntityData.Builder builder) {
+    protected void defineSynchedData() {
         //client stuff
-        builder.define(OTHER_PLUNGER_ID, -1);
+        this.entityData.define(OTHER_PLUNGER_ID, -1);
 
-        builder.define(TARGET_POS, Vec3.ZERO);
-        builder.define(OTHER_PLUNGER, Optional.empty());
-        builder.define(PLUNGED_BLOCK_POS, BlockPos.ZERO);
+        this.entityData.define(TARGET_POS, Vec3.ZERO);
+        this.entityData.define(OTHER_PLUNGER, Optional.empty());
+        this.entityData.define(PLUNGED_BLOCK_POS, BlockPos.ZERO);
 
-        builder.define(IS_FIRST, Boolean.FALSE);
+        this.entityData.define(IS_FIRST, Boolean.FALSE);
 
-        builder.define(PLUNGED_DIRECTION, Direction.UP);
-        builder.define(IS_PLUNGED, false);
+        this.entityData.define(PLUNGED_DIRECTION, Direction.UP);
+        this.entityData.define(IS_PLUNGED, false);
     }
 
     @Override
@@ -385,7 +385,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
         this.setData(IS_PLUNGED, compoundTag.getBoolean("IsPlunged"));
 
         this.setData(PLUNGED_DIRECTION, NBTHelper.readEnum(compoundTag, "PlungedDir", Direction.class));
-        this.setData(PLUNGED_BLOCK_POS, NbtUtils.readBlockPos(compoundTag, "PlungedBlockPos").get());
+        this.setData(PLUNGED_BLOCK_POS, NbtUtils.readBlockPos(compoundTag.getCompound("PlungedBlockPos")));
         this.setData(TARGET_POS, VecHelper.readNBT((ListTag) compoundTag.get("TargetPos")));
 
         this.setData(IS_FIRST, compoundTag.getBoolean("IsFirst"));
@@ -405,10 +405,16 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
         this.noPhysics = false;
     }
 
+    // 1.20.1: projectiles have no deflection hook, so emulate 1.21's deflection() when a projectile damages the plunger
     @Override
-    public ProjectileDeflection deflection(final Projectile projectile) {
-        this.discard();
-        return DEFLECTION;
+    public boolean hurt(final DamageSource source, final float amount) {
+        if (source.getDirectEntity() instanceof final Projectile projectile && projectile != this) {
+            this.discard();
+            deflect(projectile, this);
+            return false;
+        }
+
+        return super.hurt(source, amount);
     }
 
     @Override

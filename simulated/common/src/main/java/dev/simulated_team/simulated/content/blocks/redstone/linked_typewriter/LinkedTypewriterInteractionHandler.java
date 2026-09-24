@@ -1,6 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
-import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.content.redstone.link.controller.LinkedControllerItem;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import dev.simulated_team.simulated.index.SimSoundEvents;
@@ -18,9 +18,10 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.lwjgl.glfw.GLFW;
@@ -211,11 +212,11 @@ public class LinkedTypewriterInteractionHandler {
             return;
         }
 
-        final ItemContainerContents linkedControllerData = item.get(AllDataComponents.LINKED_CONTROLLER_ITEMS);
+        final CompoundTag linkedControllerData = item.getTagElement("Items");
 
         final List<ItemStack> linkedControllerItems;
 
-        if (linkedControllerData == null) {
+        if (linkedControllerData == null || linkedControllerData.isEmpty()) {
             final int size = 12;
             final ObjectArrayList<ItemStack> emptyData = new ObjectArrayList<>(size);
 
@@ -225,7 +226,11 @@ public class LinkedTypewriterInteractionHandler {
 
             linkedControllerItems = emptyData;
         } else {
-            linkedControllerItems = new ObjectArrayList<>(linkedControllerData.stream().toList());
+            final ItemStackHandler frequencyItems = LinkedControllerItem.getFrequencyItems(linkedControllerData);
+            linkedControllerItems = new ObjectArrayList<>(frequencyItems.getSlots());
+            for (int i = 0; i < frequencyItems.getSlots(); i++) {
+                linkedControllerItems.add(frequencyItems.getStackInSlot(i));
+            }
 
             while (linkedControllerItems.size() < 12) {
                 linkedControllerItems.add(ItemStack.EMPTY);

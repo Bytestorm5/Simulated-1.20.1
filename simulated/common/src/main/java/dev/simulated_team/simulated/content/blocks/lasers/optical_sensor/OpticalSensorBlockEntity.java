@@ -23,7 +23,6 @@ import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -43,7 +42,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3dc;
 
 import java.awt.*;
@@ -224,13 +222,13 @@ public class OpticalSensorBlockEntity extends AbstractLaserBlockEntity implement
     }
 
     @Override
-    public boolean writeToClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Direction side) {
+    public boolean writeToClipboard(final CompoundTag tag, final Direction side) {
         tag.putFloat("Opacity", this.getOpacity());
         return true;
     }
 
     @Override
-    public boolean readFromClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Player player, final Direction side, final boolean simulate) {
+    public boolean readFromClipboard(final CompoundTag tag, final Player player, final Direction side, final boolean simulate) {
         if(simulate) {
             return true;
         }

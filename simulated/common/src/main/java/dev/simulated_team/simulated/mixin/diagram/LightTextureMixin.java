@@ -24,10 +24,13 @@ public abstract class LightTextureMixin implements LightTextureExtension {
     private Minecraft minecraft;
 
     @Shadow
-    protected static void clampColor(final Vector3f color) {
+    private static void clampColor(final Vector3f color) {
     }
 
-    @Shadow protected abstract float notGamma(float value);
+    @Shadow
+    private float notGamma(final float value) {
+        throw new AssertionError();
+    }
 
     @Shadow @Final private NativeImage lightPixels;
 

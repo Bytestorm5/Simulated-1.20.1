@@ -112,11 +112,11 @@ public class MergingGlueBlockEntity extends SmartBlockEntity implements BlockEnt
     }
 
     private void breakGlue() {
-        if (this.level.getBlockState(this.getBlockPos()).is(SimBlocks.MERGING_GLUE)) {
+        if (this.level.getBlockState(this.getBlockPos()).is(SimBlocks.MERGING_GLUE.get())) {
             this.level.destroyBlock(this.getBlockPos(), true);
         }
 
-        if (this.partnerPosition != null && this.level.getBlockState(this.partnerPosition).is(SimBlocks.MERGING_GLUE)) {
+        if (this.partnerPosition != null && this.level.getBlockState(this.partnerPosition).is(SimBlocks.MERGING_GLUE.get())) {
             this.level.destroyBlock(this.partnerPosition, true);
         }
     }

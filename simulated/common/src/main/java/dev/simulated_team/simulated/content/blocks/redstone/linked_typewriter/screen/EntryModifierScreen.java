@@ -72,7 +72,7 @@ public class EntryModifierScreen {
         final PsuedoKeyboardEntry psuedoEntry = new PsuedoKeyboardEntry();
         if (toModify != null) {
             psuedoEntry.keyCode(toModify.glfwKeyCode)
-                    .first(toModify.get(0))
+                    .first(toModify.getFirst())
                     .second(toModify.getSecond());
 
             this.parentScreen.getNewEntries().getKeyMap().remove(toModify.glfwKeyCode);

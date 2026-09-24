@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
+import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -14,13 +15,10 @@ import dev.simulated_team.simulated.mixin_interface.PlayerTypewriterExtension;
 import dev.simulated_team.simulated.service.SimPlatformService;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -41,6 +39,9 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
     private final List<Integer> pressedKeys = new ArrayList<>();
     private UUID currentUser;
     private String typedEntry = "";
+    // 1.20.1: block entities have no data components, so the custom name given by a renamed item is stored here
+    @Nullable
+    private Component customName;
 
     public boolean powered;
     public final AttachedComputerHandler computerHandler;
@@ -81,7 +82,7 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
     }
 
     public static boolean playerInRange(final Player player, final Level world, final BlockPos pos) {
-        final double range = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue();
+        final double range = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue();
 
         // Make sure we take into account sub-levels! We are a sable addon after all!
         return Sable.HELPER.distanceSquaredWithSubLevels(world, player.getEyePosition(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < range * range;
@@ -128,12 +129,12 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
     }
 
     public void sendConnectMessage(final Player player) {
-        final Component customName = this.components().getOrDefault(DataComponents.CUSTOM_NAME, SimLang.translate("linked_typewriter.title").component());
+        final Component customName = this.customName != null ? this.customName : SimLang.translate("linked_typewriter.title").component();
         player.displayClientMessage(SimLang.translate("linked_typewriter.start_controlling", customName.getString()).component(), true);
     }
 
     public void sendDisconnectMessage(final Player player) {
-        final Component customName = this.components().getOrDefault(DataComponents.CUSTOM_NAME, SimLang.translate("linked_typewriter.title").component());
+        final Component customName = this.customName != null ? this.customName : SimLang.translate("linked_typewriter.title").component();
         player.displayClientMessage(SimLang.translate("linked_typewriter.stop_controlling", customName.getString()).component(), true);
     }
 
@@ -237,6 +238,10 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
         tag.putString("typedEntry", this.typedEntry);
         tag.put("Keys", this.entryMap.saveKeys());
 
+        if (this.customName != null) {
+            tag.putString("CustomName", Component.Serializer.toJson(this.customName));
+        }
+
         if (this.currentUser != null) {
             tag.putUUID("CurrentUser", this.currentUser);
         }
@@ -248,11 +253,26 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
 
         this.typedEntry = tag.getString("typedEntry");
         this.entryMap = LinkedTypewriterEntries.readKeys(tag.getList("Keys", 10), this.getBlockPos());
+        this.customName = tag.contains("CustomName", 8) ? Component.Serializer.fromJson(tag.getString("CustomName")) : null;
         if (tag.contains("CurrentUser")) {
             this.currentUser = tag.getUUID("CurrentUser");
         } else {
             this.currentUser = null;
         }
+    }
+
+    @Nullable
+    public Component getCustomName() {
+        return this.customName;
+    }
+
+    public boolean hasCustomName() {
+        return this.customName != null;
+    }
+
+    public void setCustomName(@Nullable final Component customName) {
+        this.customName = customName;
+        this.setChanged();
     }
 
     public String getTypedEntry() {
@@ -293,13 +313,13 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
     }
 
     @Override
-    public boolean writeToClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Direction side) {
+    public boolean writeToClipboard(final CompoundTag tag, final Direction side) {
         tag.put("Keys", this.entryMap.saveKeys());
         return true;
     }
 
     @Override
-    public boolean readFromClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Player player, final Direction side, final boolean simulate) {
+    public boolean readFromClipboard(final CompoundTag tag, final Player player, final Direction side, final boolean simulate) {
         if (simulate) {
             return true;
         }

@@ -80,7 +80,7 @@ public class EndSeaPhysicsData {
                 try {
                     final DataResult<EndSeaPhysics> dataResult = EndSeaPhysics.CODEC.parse(JsonOps.INSTANCE, entry.getValue());
 
-                    if (dataResult.isError()) {
+                    if (dataResult.error().isPresent()) {
                         Simulated.LOGGER.error(String.valueOf(dataResult.error().get()));
                     }
 

@@ -5,7 +5,7 @@ import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.LinkedTypewriterEntries;
 import dev.simulated_team.simulated.index.SimBlocks;
 import foundry.veil.api.network.handler.ServerPacketContext;
-import net.minecraft.core.component.DataComponents;
+import dev.simulated_team.simulated.index.SimBlockEntityTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -19,7 +19,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.Level;
 
 public record TypewriterSaveKeyToItemPacket(InteractionHand hand, LinkedTypewriterEntries.KeyboardEntry entry) implements CustomPacketPayload {
@@ -36,15 +36,16 @@ public record TypewriterSaveKeyToItemPacket(InteractionHand hand, LinkedTypewrit
         final ItemStack item = player.getItemInHand(this.hand);
 
         CompoundTag currentTag = new CompoundTag();
-        if (item.has(DataComponents.BLOCK_ENTITY_DATA)) {
-            currentTag = item.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
+        final CompoundTag existingTag = BlockItem.getBlockEntityData(item);
+        if (existingTag != null) {
+            currentTag = existingTag.copy();
         } else {
             currentTag.putString("id", item.getItem().toString());
         }
 
-        final RegistryOps<Tag> ops = context.level().registryAccess().createSerializationContext(NbtOps.INSTANCE);
+        final RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, context.level().registryAccess());
         final DataResult<Tag> result = LinkedTypewriterEntries.KeyboardEntry.CODEC.encodeStart(ops, this.entry);
-        if (result.isError()) {
+        if (result.error().isPresent()) {
             Simulated.LOGGER.warn("Unable to process entry for item saving!: {}", result.error().get().message());
             return;
         }
@@ -74,7 +75,7 @@ public record TypewriterSaveKeyToItemPacket(InteractionHand hand, LinkedTypewrit
 
         currentTag.put("Keys", keys);
         if (item.is(SimBlocks.LINKED_TYPEWRITER.asItem())) {
-            CustomData.set(DataComponents.BLOCK_ENTITY_DATA, item, currentTag);
+            BlockItem.setBlockEntityData(item, SimBlockEntityTypes.LINKED_TYPEWRITER.get(), currentTag);
         }
     }
 

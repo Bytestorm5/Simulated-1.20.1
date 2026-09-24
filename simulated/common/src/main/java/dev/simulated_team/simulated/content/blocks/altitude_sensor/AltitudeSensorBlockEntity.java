@@ -14,7 +14,6 @@ import dev.simulated_team.simulated.util.Observable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -22,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
@@ -170,14 +168,14 @@ public class AltitudeSensorBlockEntity extends SmartBlockEntity implements IHave
 	}
 
 	@Override
-	public boolean writeToClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Direction side) {
+	public boolean writeToClipboard(final CompoundTag tag, final Direction side) {
 		tag.putFloat("high_signal", this.highSignal);
 		tag.putFloat("low_signal", this.lowSignal);
 		return true;
 	}
 
 	@Override
-	public boolean readFromClipboard(final HolderLookup.@NotNull Provider registries, final CompoundTag tag, final Player player, final Direction side, final boolean simulate) {
+	public boolean readFromClipboard(final CompoundTag tag, final Player player, final Direction side, final boolean simulate) {
 		if(simulate) {
 			return true;
 		}

@@ -249,7 +249,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
 
     @Override
     protected void write(final CompoundTag tag, final boolean clientPacket) {
-        tag.put("CurrentStack", this.getHeldItem().saveOptional());
+        tag.put("CurrentStack", this.getHeldItem().save(new CompoundTag()));
 
         if (this.currentTarget != null) {
             this.writeCurrentTarget(tag);
@@ -262,7 +262,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
 
     @Override
     protected void read(final CompoundTag tag, final boolean clientPacket) {
-        final ItemStack stack = ItemStack.parseOptional(tag.getCompound("CurrentStack"));
+        final ItemStack stack = ItemStack.of(tag.getCompound("CurrentStack"));
         this.inventory.slot.setStack(stack);
 
         if (tag.contains("CurrentTarget")) {

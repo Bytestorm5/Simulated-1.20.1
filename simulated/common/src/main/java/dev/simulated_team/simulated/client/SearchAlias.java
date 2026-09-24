@@ -18,7 +18,7 @@ import java.util.List;
 
 public record SearchAlias(List<String> terms, List<ExtraCodecs.TagOrElementLocation> results) {
     public static final Codec<List<String>> TERM_CODEC = SimCodecUtil.withAlternative(
-            Codec.STRING.xmap(List::of, List::getFirst),
+            Codec.STRING.xmap(List::of, l -> l.get(0)),
             Codec.STRING.listOf()
     );
 

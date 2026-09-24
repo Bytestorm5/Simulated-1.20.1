@@ -70,7 +70,7 @@ public class RedstoneInductorBlock extends AbstractDiodeBlock implements IBE<Red
 
         pLevel.setBlock(pPos, pState.cycle(INVERTED), 3);
 
-        return this.onBlockEntityUseItemOn(pLevel, pPos, be -> {
+        return this.getBlockEntityOptional(pLevel, pPos).map(be -> {
             final int backSignal = this.getBackSignal(pLevel, pPos, pState);
 
             be.updateSignal();
@@ -79,7 +79,7 @@ public class RedstoneInductorBlock extends AbstractDiodeBlock implements IBE<Red
             pLevel.playSound(null, pPos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
 
             return ItemInteractionResult.SUCCESS;
-        });
+        }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
     }
 
     @Override

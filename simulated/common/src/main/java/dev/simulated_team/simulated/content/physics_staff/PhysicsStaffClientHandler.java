@@ -417,7 +417,7 @@ public class PhysicsStaffClientHandler {
 
         dragSessions.clear();
         for (final Pair<UUID, Vector3d> pair : newSessions) {
-            dragSessions.put(pair.get(0), pair.getSecond());
+            dragSessions.put(pair.getFirst(), pair.getSecond());
         }
     }
 

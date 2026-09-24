@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public interface RopeHolderBlock <T extends SmartBlockEntity> extends BlockSubLevelAssemblyListener, IBE<T> {
     static <T extends SmartBlockEntity> ItemInteractionResult shearRope(final RopeHolderBlock<T> block, final Level level, final BlockPos pos, final ServerPlayer player) {
-        return block.onBlockEntityUseItemOn(level, pos, be -> {
+        return block.getBlockEntityOptional(level, pos).map(be -> {
             final RopeStrandHolderBehavior ropeHolder = block.getHolder(be);
 
             final ServerRopeStrand strand = ropeHolder.getAttachedStrand();
@@ -44,7 +44,7 @@ public interface RopeHolderBlock <T extends SmartBlockEntity> extends BlockSubLe
 
             otherHolder.destroyRope(player, pos.getCenter(), !player.getAbilities().instabuild);
             return ItemInteractionResult.SUCCESS;
-        });
+        }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
     }
 
     default RopeStrandHolderBehavior getHolder(final T blockEntity) {

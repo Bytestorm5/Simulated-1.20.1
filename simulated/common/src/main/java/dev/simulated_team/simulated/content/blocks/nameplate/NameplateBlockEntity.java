@@ -9,7 +9,6 @@ import dev.simulated_team.simulated.data.advancements.SimAdvancements;
 import dev.simulated_team.simulated.index.SimStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -64,7 +62,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
     }
 
     public static boolean canPlayerReach(final NameplateBlockEntity be, final Player player) {
-        return getClosestDistance(be, player.getEyePosition()) < player.blockInteractionRange() + 4;
+        return getClosestDistance(be, player.getEyePosition()) < player.getBlockReach() + 4;
     }
 
     @Override
@@ -344,7 +342,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
 
         if (tag.contains("ControllerPos")) {
             this.controller = false;
-            this.controllerPos = NbtUtils.readBlockPos(tag, "ControllerPos").get();
+            this.controllerPos = NbtUtils.readBlockPos(tag.getCompound("ControllerPos"));
         } else {
             this.controller = true;
             this.controllerPos = this.getBlockPos();
@@ -365,7 +363,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
         final Direction facing = this.getBlockState().getValue(NameplateBlock.FACING);
         final Vec3i off = facing.getCounterClockWise(Direction.Axis.Y).getNormal();
 
-        final AABB bounds = AABB.encapsulatingFullBlocks(this.getBlockPos(), this.getBlockPos().offset(off.multiply(this.controllerWidth - 1)));
+        final AABB bounds = new AABB(this.getBlockPos()).minmax(new AABB(this.getBlockPos().offset(off.multiply(this.controllerWidth - 1))));
         return bounds;
     }
 
@@ -375,7 +373,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
     }
 
     @Override
-    public boolean writeToClipboard(final HolderLookup.@NotNull Provider var1, final CompoundTag tag, final Direction var3) {
+    public boolean writeToClipboard(final CompoundTag tag, final Direction var3) {
         final NameplateBlockEntity controller = this.findController();
 
         tag.putString("StoredName", controller.getName());
@@ -385,7 +383,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
     }
 
     @Override
-    public boolean readFromClipboard(final HolderLookup.@NotNull Provider var1, final CompoundTag tag, final Player player, final Direction var4, final boolean simulate) {
+    public boolean readFromClipboard(final CompoundTag tag, final Player player, final Direction var4, final boolean simulate) {
         final NameplateBlockEntity controller = this.findController();
         if (!controller.allowsEditing()) {
             return false;

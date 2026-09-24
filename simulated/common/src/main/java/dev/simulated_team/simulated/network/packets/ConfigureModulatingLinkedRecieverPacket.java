@@ -44,7 +44,8 @@ public class ConfigureModulatingLinkedRecieverPacket extends SimBlockEntityConfi
 
     @Override
     protected void applySettings(final ServerPlayer serverPlayer, final ModulatingLinkedReceiverBlockEntity be) {
-        if (be instanceof final ModulatingLinkedReceiverBlockEntity abe) {
+        final ModulatingLinkedReceiverBlockEntity abe = be;
+        if (abe != null) {
             abe.minRange = this.minRange;
             abe.maxRange = this.maxRange;
 

@@ -27,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -197,7 +196,7 @@ public class SymmetricSailBlock extends RotatedPillarBlock implements IWrenchabl
     }
 
     @Override
-    public ItemStack getCloneItemStack(final LevelReader level, final BlockPos pos, final BlockState state) {
+    public ItemStack getCloneItemStack(final BlockGetter level, final BlockPos pos, final BlockState state) {
         return SimBlocks.WHITE_SYMMETRIC_SAIL.asStack();
     }
 

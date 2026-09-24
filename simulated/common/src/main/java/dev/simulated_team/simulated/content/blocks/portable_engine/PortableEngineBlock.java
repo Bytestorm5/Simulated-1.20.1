@@ -147,7 +147,7 @@ public class PortableEngineBlock extends HorizontalKineticBlock implements IBE<P
                 if (be.getCurrentBurnTime() <= 0) {
                     SimStats.PORTABLE_ENGINES_FED.awardTo(player);
                 }
-            } else if (ItemStack.isSameItem(heldItem, currentItemStack) && ItemStack.isSameItemSameComponents(heldItem, currentItemStack)) {
+            } else if (ItemStack.isSameItem(heldItem, currentItemStack) && ItemStack.isSameItemSameTags(heldItem, currentItemStack)) {
                 int targetAmount = currentItemStack.getCount() + heldItem.getCount();
                 targetAmount = Math.min(targetAmount, currentItemStack.getMaxStackSize());
                 final int transferAmount = Math.min(targetAmount - currentItemStack.getCount(), heldItem.getCount());

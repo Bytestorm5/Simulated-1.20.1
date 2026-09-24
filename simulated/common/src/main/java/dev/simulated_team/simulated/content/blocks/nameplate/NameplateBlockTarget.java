@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.content.blocks.nameplate;
 
-import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -15,7 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import java.util.List;
 
 public class NameplateBlockTarget extends ConditionalDisplayTarget {
-    public static final RegistryEntry<DisplayTarget, NameplateBlockTarget> NAMEPLATE = Simulated.getRegistrate().displayTarget("nameplate", NameplateBlockTarget::new).register();
+    public static final RegistryEntry<NameplateBlockTarget> NAMEPLATE = Simulated.getRegistrate().displayTarget("nameplate", NameplateBlockTarget::new).register();
 
     @Override
     public boolean allowsWriting(final DisplayLinkContext context) {

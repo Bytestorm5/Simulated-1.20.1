@@ -58,7 +58,7 @@ public class NewPonderTooltipManager {
 
 	public static void save() {
 		final DataResult<JsonElement> result = CODEC.encode(WATCHED_PONDER_SCENES, JsonOps.INSTANCE, new JsonArray());
-		if(result.isError()) {
+		if(result.error().isPresent()) {
 			return;
 		}
 
@@ -75,7 +75,7 @@ public class NewPonderTooltipManager {
 
 		final DataResult<Set<ResourceLocation>> result = CODEC.parse(JsonOps.INSTANCE, getOrCreateFile());
 		WATCHED_PONDER_SCENES = new HashSet<>();
-		result.ifSuccess((set) -> WATCHED_PONDER_SCENES.addAll(set));
+		result.result().ifPresent((set) -> WATCHED_PONDER_SCENES.addAll(set));
 	}
 
 	private static @NotNull JsonElement getOrCreateFile() {

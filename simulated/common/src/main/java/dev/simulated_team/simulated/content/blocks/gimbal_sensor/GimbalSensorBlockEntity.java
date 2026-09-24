@@ -25,7 +25,6 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -417,7 +416,7 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
         }
 
         @Override
-        public boolean writeToClipboard(HolderLookup.@NotNull Provider registries, CompoundTag tag, Direction side) {
+        public boolean writeToClipboard(CompoundTag tag, Direction side) {
             if(!acceptsValueSettings())
                 return false;
             tag.putInt("ScrollValue1", this.primaryValue);
@@ -426,7 +425,7 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
         }
 
         @Override
-        public boolean readFromClipboard(HolderLookup.@NotNull Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+        public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
             if(!acceptsValueSettings()) return false;
             if(!tag.contains("ScrollValue1") || !tag.contains("ScrollValue2")) return true;
             if(simulate) return true;

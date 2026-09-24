@@ -47,7 +47,8 @@ public class ConfigureAltitudeSensorPacket extends SimBlockEntityConfigurationPa
 
     @Override
     protected void applySettings(final ServerPlayer serverPlayer, final AltitudeSensorBlockEntity be) {
-        if (be instanceof final AltitudeSensorBlockEntity abe) {
+        final AltitudeSensorBlockEntity abe = be;
+        if (abe != null) {
             abe.highSignal = this.highSignal;
             abe.lowSignal = this.lowSignal;
 

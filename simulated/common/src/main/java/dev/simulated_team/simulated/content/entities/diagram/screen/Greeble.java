@@ -2,6 +2,7 @@ package dev.simulated_team.simulated.content.entities.diagram.screen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 
@@ -29,7 +30,7 @@ public record Greeble(ResourceLocation texture, List<TextureSlice> slices, int w
 	}
 
 	public record TextureSlice(int x, int y, int width, int height) {
-		public static Codec<TextureSlice> CODEC = Codec.INT.listOf(4, 4).xmap(TextureSlice::new, TextureSlice::asList);
+		public static Codec<TextureSlice> CODEC = Codec.INT.listOf().comapFlatMap(list -> Util.fixedSize(list, 4).map(TextureSlice::new), TextureSlice::asList);
 
 		public TextureSlice(final List<Integer> list) {
 			this(list.get(0), list.get(1), list.get(2), list.get(3));

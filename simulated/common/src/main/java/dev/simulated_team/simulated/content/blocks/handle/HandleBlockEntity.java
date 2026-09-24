@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.handle;
 
+import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.ryanhcode.sable.Sable;
@@ -19,7 +20,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -160,7 +160,7 @@ public class HandleBlockEntity extends SmartBlockEntity implements BlockEntitySu
             final Vector3d constraintGoal = JOMLConversion.toJOML(player.getEyePosition().add(player.getLookAngle().scale(Math.max(2.0, this.scrollDistance))));
             final Vector3d constraintPosition = HandleBlockEntity.this.getGrabCenter();
 
-            final double validRange = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue() + 2.0;
+            final double validRange = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() + 2.0;
             final double currentDistance = Sable.HELPER.distanceSquaredWithSubLevels(HandleBlockEntity.this.level, constraintGoal, constraintPosition);
 
             if (Mth.equal(-1, this.scrollDistance) || currentDistance > validRange * validRange) {

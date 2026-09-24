@@ -53,12 +53,12 @@ public class AnalogTransmissionBlock extends RotatedPillarKineticBlock implement
 
         final IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
         if (helper.matchesItem(heldItem)) {
-            return helper
+            return ItemInteractionResult.of(helper
                     .getOffset(player, level, blockState, blockPos, blockHitResult)
-                    .placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult);
+                    .placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult));
         }
 
-        return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

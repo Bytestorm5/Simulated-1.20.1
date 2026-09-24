@@ -196,7 +196,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
             if (attached != null && this.getPlatePos() != null) {
                 final BlockState plateBlock = this.level.getBlockState(this.getPlatePos());
 
-                if (plateBlock.is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK)) {
+                if (plateBlock.is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK.get())) {
                     this.setTargetAngleFromCurrentOrientation(plateBlock, attached);
                 }
             }
@@ -248,9 +248,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
                         pipeline.wakeUp(serverSubLevel);
                     }
 
-                    if (attached instanceof final ServerSubLevel serverSubLevel) {
-                        pipeline.wakeUp(serverSubLevel);
-                    }
+                    pipeline.wakeUp(attached);
                 }
             }
         }
@@ -522,7 +520,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
 
     private void checkPersistence(final UUID id) {
         if (this.getPlatePos() != null && SimLevelUtil.isAreaActuallyLoaded(this.getLevel(), this.getPlatePos(), 1)) {
-            if (!this.getLevel().getBlockState(this.getPlatePos()).is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK)) {
+            if (!this.getLevel().getBlockState(this.getPlatePos()).is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK.get())) {
                 return;
             }
         }
@@ -554,7 +552,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
             }
 
             final BlockState plateState = this.level.getBlockState(platePos);
-            if (!plateState.is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK)) return;
+            if (!plateState.is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK.get())) return;
 
             final Direction plateFacing = plateState.getValue(SwivelBearingPlateBlock.FACING);
             this.attachConstraints(plateSubLevel, JOMLConversion.toJOML(platePos.relative(plateFacing).getCenter()));
@@ -563,7 +561,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
 
     public void associatePlateWithParent() {
         if (this.getPlatePos() != null) {
-            if (this.getLevel().getBlockState(this.getPlatePos()).is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK)) {
+            if (this.getLevel().getBlockState(this.getPlatePos()).is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK.get())) {
                 final SwivelBearingPlateBlockEntity plate = (SwivelBearingPlateBlockEntity) this.getLevel().getBlockEntity(this.getPlatePos());
                 plate.setParent(this);
             }
@@ -576,7 +574,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
         if (platePos == null) return;
         final BlockState plateState = this.level.getBlockState(platePos);
 
-        if (!plateState.is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK)) return;
+        if (!plateState.is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK.get())) return;
 
         final Vector3d anchorPos = JOMLConversion.toJOML(this.getBlockPos().relative(this.getBlockState().getValue(DirectionalKineticBlock.FACING)).getCenter());
         final Vec3 facingVec = Vec3.atLowerCornerOf(this.getBlockState().getValue(DirectionalKineticBlock.FACING).getNormal());
@@ -658,7 +656,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
         }
 
         if (compound.contains("SwivelPlate")) {
-            final BlockPos blockPos = NbtUtils.readBlockPos(compound, "SwivelPlate").orElseThrow();
+            final BlockPos blockPos = NbtUtils.readBlockPos(compound.getCompound("SwivelPlate"));
             this.setPlatePos(blockPos);
         }
 
@@ -719,7 +717,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
             final SubLevel subLevel = container.getSubLevel(this.subLevelID);
             if (this.subLevelID != null && subLevel == null) return;
 
-            if (this.getLevel().getBlockState(platePos).is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK)) {
+            if (this.getLevel().getBlockState(platePos).is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK.get())) {
                 SimBlocks.SWIVEL_BEARING_LINK_BLOCK.get().withBlockEntityDo(this.level, platePos, SwivelBearingPlateBlockEntity::beforeAssembly);
                 this.getLevel().setBlock(platePos, Blocks.AIR.defaultBlockState(), 2);
             }

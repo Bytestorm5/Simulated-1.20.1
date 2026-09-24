@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.handle;
 
+import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.AllItems;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
@@ -13,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -43,7 +43,7 @@ public class ClientHandleHandler extends BlockHoldInteraction {
         final Vector3d projected = Sable.HELPER.projectOutOfSubLevel(player.level(), grabCenter);
 
         final Vec3 eyePosition = player.getEyePosition();
-        this.desiredRange = (float) Math.min(projected.distance(eyePosition.x, eyePosition.y, eyePosition.z), Math.min(HandleBlockEntity.MAX_HANDLE_RANGE, player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue()));
+        this.desiredRange = (float) Math.min(projected.distance(eyePosition.x, eyePosition.y, eyePosition.z), Math.min(HandleBlockEntity.MAX_HANDLE_RANGE, player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue()));
         this.movingSubLevel = player.isShiftKeyDown();
         player.swing(hand);
 
@@ -185,7 +185,7 @@ public class ClientHandleHandler extends BlockHoldInteraction {
     }
 
     public void deltaRange(final Player player, final float delta) {
-        this.desiredRange = (float) Mth.clamp(this.desiredRange + delta, 1, Math.min(player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue(), HandleBlockEntity.MAX_HANDLE_RANGE));
+        this.desiredRange = (float) Mth.clamp(this.desiredRange + delta, 1, Math.min(player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue(), HandleBlockEntity.MAX_HANDLE_RANGE));
     }
 
     @Override

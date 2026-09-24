@@ -44,7 +44,7 @@ public class SimCodecUtil {
         @Override
         public <T1> DataResult<Pair<T, T1>> decode(final DynamicOps<T1> ops, final T1 input) {
             final DataResult<Pair<T, T1>> result = this.first.decode(ops, input);
-            if(result.isSuccess())
+            if(result.result().isPresent())
                 return result;
             return this.second.decode(ops, input);
         }
@@ -52,7 +52,7 @@ public class SimCodecUtil {
         @Override
         public <T1> DataResult<T1> encode(final T input, final DynamicOps<T1> ops, final T1 prefix) {
             final DataResult<T1> result = this.first.encode(input, ops, prefix);
-            if(result.isSuccess())
+            if(result.result().isPresent())
                 return result;
             return this.second.encode(input, ops, prefix);
         }

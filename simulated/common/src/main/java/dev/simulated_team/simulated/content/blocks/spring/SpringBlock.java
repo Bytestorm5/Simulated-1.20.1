@@ -48,7 +48,7 @@ public class SpringBlock extends WrenchableDirectionalBlock implements IBE<Sprin
     }
 
     @Override
-    public ItemStack getCloneItemStack(final LevelReader levelReader, final BlockPos blockPos, final BlockState blockState) {
+    public ItemStack getCloneItemStack(final BlockGetter levelReader, final BlockPos blockPos, final BlockState blockState) {
         return SimItems.SPRING.asStack();
     }
 
@@ -141,7 +141,7 @@ public class SpringBlock extends WrenchableDirectionalBlock implements IBE<Sprin
     }
 
     @Override
-    protected void spawnAfterBreak(final BlockState blockState, final ServerLevel serverLevel, final BlockPos blockPos, final ItemStack itemStack, final boolean bl) {
+    public void spawnAfterBreak(final BlockState blockState, final ServerLevel serverLevel, final BlockPos blockPos, final ItemStack itemStack, final boolean bl) {
         super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
     }
 

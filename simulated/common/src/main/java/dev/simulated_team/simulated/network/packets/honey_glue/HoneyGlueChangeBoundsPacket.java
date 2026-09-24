@@ -46,7 +46,7 @@ public record HoneyGlueChangeBoundsPacket(AABB bounds, UUID honeyGlue) implement
         if (entity instanceof final HoneyGlueEntity honeyGlue) {
             final Pair<Boolean, String> pair = HoneyGlueMaxSizing.checkBounds(this.bounds);
 
-            if (!pair.get(0)) {
+            if (!pair.getFirst()) {
                 SimSoundEvents.HONEY_ADDED.play(entity.level(), null, honeyGlue.getBoundingBox().getCenter(), 0.5F, 0.5F);
                 honeyGlue.spawnParticles();
                 entity.remove(Entity.RemovalReason.KILLED);

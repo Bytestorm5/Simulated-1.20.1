@@ -2,7 +2,7 @@ package dev.simulated_team.simulated.compat.computercraft;
 
 import dan200.computercraft.api.peripheral.AttachedComputerSet;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class AttachedComputerHandler {
 

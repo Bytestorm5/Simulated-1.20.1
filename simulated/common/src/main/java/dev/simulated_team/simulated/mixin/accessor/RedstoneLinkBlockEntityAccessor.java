@@ -5,7 +5,7 @@ import com.simibubi.create.content.redstone.link.RedstoneLinkBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(RedstoneLinkBlockEntity.class)
+@Mixin(value = RedstoneLinkBlockEntity.class, remap = false)
 public interface RedstoneLinkBlockEntityAccessor {
 
     @Accessor("link")

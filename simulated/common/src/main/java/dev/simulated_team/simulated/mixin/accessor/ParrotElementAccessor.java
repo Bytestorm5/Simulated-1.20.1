@@ -5,7 +5,7 @@ import net.minecraft.world.entity.animal.Parrot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(ParrotElementImpl.class)
+@Mixin(value = ParrotElementImpl.class, remap = false)
 public interface ParrotElementAccessor {
 
     @Accessor

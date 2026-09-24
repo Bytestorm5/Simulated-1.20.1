@@ -37,7 +37,7 @@ public class SoundsProvider implements DataProvider {
 		JsonObject json = new JsonObject();
 		final DataResult<JsonElement> result = CODEC.encode(this.definitionMap, JsonOps.INSTANCE, new JsonObject());
 
-		if (result.isSuccess()) {
+		if (result.result().isPresent()) {
 			json = result.getOrThrow(false, error -> { }).getAsJsonObject();
 		}
 

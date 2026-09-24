@@ -42,8 +42,8 @@ public record HoneyGlueSpawnPacket(BlockPos from, BlockPos to) implements Custom
     }
 
     private InteractionHand getHoneyGlueHand(final Player player) {
-        return player.getItemInHand(InteractionHand.MAIN_HAND).is(SimItems.HONEY_GLUE) ? InteractionHand.MAIN_HAND :
-                player.getItemInHand(InteractionHand.OFF_HAND).is(SimItems.HONEY_GLUE) ? InteractionHand.OFF_HAND :
+        return player.getItemInHand(InteractionHand.MAIN_HAND).is(SimItems.HONEY_GLUE.get()) ? InteractionHand.MAIN_HAND :
+                player.getItemInHand(InteractionHand.OFF_HAND).is(SimItems.HONEY_GLUE.get()) ? InteractionHand.OFF_HAND :
                         null;
     }
 
@@ -56,10 +56,10 @@ public record HoneyGlueSpawnPacket(BlockPos from, BlockPos to) implements Custom
         if (hand == null)
             return;
 
-        final AABB newBounds = AABB.encapsulatingFullBlocks(this.from, this.to);
+        final AABB newBounds = new AABB(this.from).minmax(new AABB(this.to));
         final Pair<Boolean, String> pair = HoneyGlueMaxSizing.checkBounds(newBounds);
 
-        if (pair.get(0)) {
+        if (pair.getFirst()) {
             final ServerLevel level = (ServerLevel) context.level();
             assert level != null;
 
@@ -67,7 +67,7 @@ public record HoneyGlueSpawnPacket(BlockPos from, BlockPos to) implements Custom
             level.playSound(player, this.to, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1.0f);
 
             final ItemStack honeyGlueItem = player.getItemInHand(hand);
-            honeyGlueItem.hurtAndBreak(1, level, player, (item) -> {});
+            honeyGlueItem.hurtAndBreak(1, player, (p) -> {});
 
             final HoneyGlueEntity entity = SimEntityTypes.HONEY_GLUE.create(level);
             assert entity != null;

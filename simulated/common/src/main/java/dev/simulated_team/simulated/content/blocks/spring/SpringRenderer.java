@@ -363,11 +363,12 @@ public class SpringRenderer extends SmartBlockEntityRenderer<SpringBlockEntity> 
 
     private void vert(final PoseStack ms, final VertexConsumer a, final Vector3dc pos, final int color, final float u1, final float v1, final Vector3dc normal, final int light) {
         normal.normalize(this.normalizedNormal);
-        a.addVertex(ms.last().pose(), (float) pos.x(), (float) pos.y(), (float) pos.z())
-                .setColor(color)
-                .setUv(u1, v1)
-                .setLight(light)
-                .setNormal(ms.last(), (float) this.normalizedNormal.x(), (float) this.normalizedNormal.y(), (float) this.normalizedNormal.z());
+        a.vertex(ms.last().pose(), (float) pos.x(), (float) pos.y(), (float) pos.z())
+                .color(color)
+                .uv(u1, v1)
+                .uv2(light)
+                .normal(ms.last().normal(), (float) this.normalizedNormal.x(), (float) this.normalizedNormal.y(), (float) this.normalizedNormal.z())
+                .endVertex();
     }
 
     @Override

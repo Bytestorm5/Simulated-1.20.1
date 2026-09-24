@@ -104,7 +104,7 @@ public class RopeStrandRenderer {
             }
             ps.popPose();
 
-            final RopeRenderPoint last = ropeRenderPoints.getLast();
+            final RopeRenderPoint last = ropeRenderPoints.get(ropeRenderPoints.size() - 1);
             if (containingPose != null) {
                 final Vector3d renderPos = last.position();
                 final Quaternionf orientation = last.orientation();
@@ -151,13 +151,15 @@ public class RopeStrandRenderer {
 
                 currentCorner.sub(previousCorner, cornerDiff).normalize();
 
-                linesVB.addVertex(pose, (float) previousCorner.x, (float) previousCorner.y, (float) previousCorner.z)
-                        .setColor(0f, 0f, 0f, .4f)
-                        .setNormal(ps.last(), (float) cornerDiff.x, (float) cornerDiff.y, (float) cornerDiff.z);
+                linesVB.vertex(pose, (float) previousCorner.x, (float) previousCorner.y, (float) previousCorner.z)
+                        .color(0f, 0f, 0f, .4f)
+                        .normal(ps.last().normal(), (float) cornerDiff.x, (float) cornerDiff.y, (float) cornerDiff.z)
+                        .endVertex();
 
-                linesVB.addVertex(pose, (float) currentCorner.x, (float) currentCorner.y, (float) currentCorner.z)
-                        .setColor(0f, 0f, 0f, .4f)
-                        .setNormal(ps.last(), (float) cornerDiff.x, (float) cornerDiff.y, (float) cornerDiff.z);
+                linesVB.vertex(pose, (float) currentCorner.x, (float) currentCorner.y, (float) currentCorner.z)
+                        .color(0f, 0f, 0f, .4f)
+                        .normal(ps.last().normal(), (float) cornerDiff.x, (float) cornerDiff.y, (float) cornerDiff.z)
+                        .endVertex();
             }
         }
     }
@@ -213,7 +215,7 @@ public class RopeStrandRenderer {
             normal.set(runningNormal);
         }
 
-        ropeRenderPoints.add(new RopeRenderPoint(new Quaternionf(runningRotation), points.getLast().renderPos(partialTick, new Vector3d())));
+        ropeRenderPoints.add(new RopeRenderPoint(new Quaternionf(runningRotation), points.get(points.size() - 1).renderPos(partialTick, new Vector3d())));
         return ropeRenderPoints;
     }
 }

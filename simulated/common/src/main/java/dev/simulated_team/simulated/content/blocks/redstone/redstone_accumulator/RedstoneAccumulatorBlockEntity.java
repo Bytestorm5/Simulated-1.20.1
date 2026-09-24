@@ -13,7 +13,6 @@ import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -155,7 +154,7 @@ public class RedstoneAccumulatorBlockEntity extends SmartBlockEntity implements 
     }
 
     @Override
-    public boolean readFromClipboard(final HolderLookup.@NotNull Provider provider, final CompoundTag tag, final Player player, final Direction direction, final boolean simulate) {
+    public boolean readFromClipboard(final CompoundTag tag, final Player player, final Direction direction, final boolean simulate) {
         if (!tag.contains("Inverted")) {
             return false;
         } else if (simulate) {
@@ -171,7 +170,7 @@ public class RedstoneAccumulatorBlockEntity extends SmartBlockEntity implements 
     }
 
     @Override
-    public boolean writeToClipboard(final HolderLookup.@NotNull Provider provider, final CompoundTag tag, final Direction direction) {
+    public boolean writeToClipboard(final CompoundTag tag, final Direction direction) {
         tag.putBoolean("Inverted", this.getBlockState().getOptionalValue(RedstoneAccumulatorBlock.INVERTED).orElse(false));
         return true;
     }

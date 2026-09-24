@@ -250,11 +250,11 @@ public class DiagramEntity extends HangingEntity implements ISyncPersistentData,
     }
 
     @Override
-    public EntityDimensions getDimensions(final Pose pose) {
-        return super.getDimensions(pose).withEyeHeight(0);
+    protected float getEyeHeight(final Pose pose, final EntityDimensions dimensions) {
+        return 0;
     }
 
-    @Override
+    // 1.20.1: HangingEntity has no calculateBoundingBox hook; recalculateBoundingBox() below calls this directly
     protected AABB calculateBoundingBox(final BlockPos blockPos, final Direction direction) {
         Vec3 pos = Vec3.atLowerCornerOf(this.getPos())
                 .add(.5, .5, .5)
@@ -389,7 +389,7 @@ public class DiagramEntity extends HangingEntity implements ISyncPersistentData,
     }
 
     @Override
-    protected void defineSynchedData(final SynchedEntityData.Builder builder) {
+    protected void defineSynchedData() {
 
     }
 
@@ -400,7 +400,7 @@ public class DiagramEntity extends HangingEntity implements ISyncPersistentData,
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void lerpTo(final double pX, final double pY, final double pZ, final float pYRot, final float pXRot, final int pSteps) {
+    public void lerpTo(final double pX, final double pY, final double pZ, final float pYRot, final float pXRot, final int pSteps, final boolean teleport) {
         final BlockPos blockpos =
                 this.pos.offset(BlockPos.containing(pX - this.getX(), pY - this.getY(), pZ - this.getZ()));
         this.setPos(blockpos.getX(), blockpos.getY(), blockpos.getZ());

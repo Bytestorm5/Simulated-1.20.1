@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.throttle_lever;
 
+import net.minecraftforge.common.ForgeMod;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
@@ -12,7 +13,6 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -48,7 +48,7 @@ public class ThrottleLeverClientGripHandler {
             return true;
         }
 
-        final double reach = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue() + 2.0;
+        final double reach = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() + 2.0;
 
         final BlockPos blockPos = blockEntity.getBlockPos();
 
@@ -94,7 +94,7 @@ public class ThrottleLeverClientGripHandler {
         final VoxelShape leverShape = SimBlocks.THROTTLE_LEVER.get().getHandleShape(SimBlocks.THROTTLE_LEVER.getDefaultState());
 
         eyePos.set(localViewPosition);
-        viewVector.set(localViewDirection).mul(player.blockInteractionRange()).add(eyePos);
+        viewVector.set(localViewDirection).mul(player.getBlockReach()).add(eyePos);
 
         final BlockHitResult hitResult = leverShape.clip(JOMLConversion.toMojang(eyePos), JOMLConversion.toMojang(viewVector), BlockPos.ZERO);
 

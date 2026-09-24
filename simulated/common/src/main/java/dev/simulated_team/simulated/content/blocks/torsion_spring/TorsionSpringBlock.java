@@ -47,12 +47,12 @@ public class TorsionSpringBlock extends DirectionalKineticBlock implements IBE<T
     }
 
     @Override
-    protected VoxelShape getShape(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final CollisionContext collisionContext) {
+    public VoxelShape getShape(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final CollisionContext collisionContext) {
         return SimBlockShapes.TORSION_SPRING.get(blockState.getValue(FACING));
     }
 
     @Override
-    protected void neighborChanged(final BlockState blockState, final Level level, final BlockPos blockPos, final Block block, final BlockPos blockPos2, final boolean bl) {
+    public void neighborChanged(final BlockState blockState, final Level level, final BlockPos blockPos, final Block block, final BlockPos blockPos2, final boolean bl) {
         super.neighborChanged(blockState, level, blockPos, block, blockPos2, bl);
         final boolean signal = level.hasNeighborSignal(blockPos);
         if (signal != blockState.getValue(POWERED)) {
@@ -62,7 +62,7 @@ public class TorsionSpringBlock extends DirectionalKineticBlock implements IBE<T
     }
 
     @Override
-    protected boolean hasAnalogOutputSignal(final BlockState blockState) {
+    public boolean hasAnalogOutputSignal(final BlockState blockState) {
         return blockState.getValue(FACING).getAxis().isHorizontal();
     }
 

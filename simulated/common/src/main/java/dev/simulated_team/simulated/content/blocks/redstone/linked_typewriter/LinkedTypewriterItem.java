@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
+import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.content.redstone.link.RedstoneLinkBlockEntity;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -8,13 +9,11 @@ import dev.simulated_team.simulated.mixin.accessor.RedstoneLinkBlockEntityAccess
 import net.createmod.catnip.data.Couple;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +24,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class LinkedTypewriterItem extends BlockItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand usedHand) {
-        final BlockHitResult blockHitResult = RaycastHelper.rayTraceRange(level, player, player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE));
+        final BlockHitResult blockHitResult = RaycastHelper.rayTraceRange(level, player, player.getAttributeValue(ForgeMod.BLOCK_REACH.get()));
         if (blockHitResult.getType() == HitResult.Type.MISS && level.isClientSide) {
             LinkedTypewriterItemBindHandler.reset();
         }
@@ -82,10 +83,10 @@ public class LinkedTypewriterItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(final ItemStack stack, final TooltipContext context, final List<Component> tooltipComponents, final TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        if (stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
-            final CompoundTag tag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
+    public void appendHoverText(final ItemStack stack, @Nullable final Level level, final List<Component> tooltipComponents, final TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
+        final CompoundTag tag = BlockItem.getBlockEntityData(stack);
+        if (tag != null) {
             if (tag.contains("Keys", CompoundTag.TAG_LIST)) {
                 final int keyCount = tag.getList("Keys", CompoundTag.TAG_COMPOUND).size();
                 tooltipComponents.add(Component.translatable("simulated.linked_typewriter.key_count", keyCount).withStyle(ChatFormatting.GOLD));

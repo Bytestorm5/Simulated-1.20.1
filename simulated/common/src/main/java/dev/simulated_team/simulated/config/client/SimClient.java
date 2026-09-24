@@ -3,14 +3,14 @@ package dev.simulated_team.simulated.config.client;
 import dev.simulated_team.simulated.config.client.items.SimItemConfigs;
 import dev.simulated_team.simulated.config.client.block.SimBlockConfigs;
 import net.createmod.catnip.config.ConfigBase;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class SimClient extends ConfigBase {
     public final SimItemConfigs itemConfig = this.nested(0, SimItemConfigs::new, SimClient.Comments.itemConfig);
     public final SimBlockConfigs blockConfig = this.nested(0, SimBlockConfigs::new, SimClient.Comments.blockConfig);
 
     @Override
-    @NonNull
+    @NotNull
     public String getName() {
         return "client";
     }

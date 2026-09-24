@@ -496,7 +496,7 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
 
         while (points.size() < incomingPoints.size()) {
             final Vector3dc position = incomingPoints.get(incomingPoints.size() - points.size() - 1);
-            points.addFirst(new ClientRopePoint(new Vector3d(position), new Vector3d(position), new ObjectArrayList<>()));
+            points.add(0, new ClientRopePoint(new Vector3d(position), new Vector3d(position), new ObjectArrayList<>()));
         }
 
         while (points.size() > incomingPoints.size()) {
@@ -552,7 +552,7 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
      */
     private void loadServerStrand(final CompoundTag tag) {
         final DataResult<Pair<ServerRopeStrand, Tag>> result = ServerRopeStrand.CODEC.decode(NbtOps.INSTANCE, tag);
-        final ServerRopeStrand strand = result.getOrThrow(false, error -> { }).get(0);
+        final ServerRopeStrand strand = result.getOrThrow(false, error -> { }).getFirst();
 
         this.ownedServerStrand = strand;
         this.queuedLevelAddition = true;

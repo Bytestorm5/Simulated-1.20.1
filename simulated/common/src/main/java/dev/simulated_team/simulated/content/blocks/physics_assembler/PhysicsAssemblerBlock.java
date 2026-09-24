@@ -34,7 +34,7 @@ public class PhysicsAssemblerBlock extends FaceAttachedHorizontalDirectionalBloc
     }
 
     @Override
-    protected boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
+    public boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
         return canAttach(level, pos, getConnectedDirection(state).getOpposite());
     }
 
@@ -68,7 +68,7 @@ public class PhysicsAssemblerBlock extends FaceAttachedHorizontalDirectionalBloc
     }
 
     @Override
-    protected VoxelShape getCollisionShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
+    public VoxelShape getCollisionShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
         final Direction facing = state.getValue(FACING);
         return switch (state.getValue(FACE)) {
             case CEILING -> SimBlockShapes.PHYSICS_ASSEMBLER_CEILING_COLLISION.get(facing);

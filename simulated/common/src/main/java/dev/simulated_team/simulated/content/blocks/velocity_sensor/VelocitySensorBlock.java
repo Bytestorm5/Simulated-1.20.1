@@ -37,7 +37,7 @@ public class VelocitySensorBlock extends AbstractDirectionalAxisBlock implements
     }
 
     @Override
-    protected int getSignal(final @NotNull BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final Direction direction) {
+    public int getSignal(final @NotNull BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final Direction direction) {
         final int powered = blockState.getValue(POWERED);
         if (powered == 0) {
             return 0;
@@ -62,7 +62,7 @@ public class VelocitySensorBlock extends AbstractDirectionalAxisBlock implements
 
     //needed, otherwise there is no way to get redstone signal out of the top of the velocity sensor on a wall!
     @Override
-    protected int getDirectSignal(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction direction) {
+    public int getDirectSignal(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction direction) {
         final Direction facing = state.getValue(FACING);
         //if we're not on a wall, don't hardpower nearby blocks
         if (!facing.getAxis().isHorizontal()) {
@@ -88,7 +88,7 @@ public class VelocitySensorBlock extends AbstractDirectionalAxisBlock implements
     }
 
     @Override
-    protected boolean isSignalSource(final BlockState blockState) {
+    public boolean isSignalSource(final BlockState blockState) {
         return true;
     }
 

@@ -120,10 +120,10 @@ public class EndSeaShadowRenderer {
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
 
-        shader.setDefaultUniforms(VertexFormat.Mode.QUADS, RenderSystem.getModelViewMatrix(), RenderSystem.getProjectionMatrix(), minecraft.getWindow());
-        shader.apply();
+        // 1.20.1: BufferUploader.drawWithShader sets the default uniforms and applies the shader itself
 
-        final BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        final BufferBuilder builder = Tesselator.getInstance().getBuilder();
+        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         final Vector3d pos = new Vector3d();
         final Vec3 cameraPos = camera.getPosition();
 
@@ -133,12 +133,12 @@ public class EndSeaShadowRenderer {
 
             voidAnchor.sub(cameraPos.x, cameraPos.y, cameraPos.z, pos);
             final Matrix4f pose = new Matrix4f().translate((float) pos.x, (float) pos.y, (float) pos.z);
-            builder.addVertex(pose, -size, 0, -size).setUv(0.0f, 0.0f).setColor(0.5f, 0, 0, 1);
-            builder.addVertex(pose, size, 0, -size).setUv(1.0f, 0.0f).setColor(0.5f, 0, 0, 1);
-            builder.addVertex(pose, size, 0, size).setUv(1.0f, 1.0f).setColor(0.5f, 0, 0, 1);
-            builder.addVertex(pose, -size, 0, size).setUv(0.0f, 1.0f).setColor(0.5f, 0, 0, 1);
+            builder.vertex(pose, -size, 0, -size).uv(0.0f, 0.0f).color(0.5f, 0, 0, 1).endVertex();
+            builder.vertex(pose, size, 0, -size).uv(1.0f, 0.0f).color(0.5f, 0, 0, 1).endVertex();
+            builder.vertex(pose, size, 0, size).uv(1.0f, 1.0f).color(0.5f, 0, 0, 1).endVertex();
+            builder.vertex(pose, -size, 0, size).uv(0.0f, 1.0f).color(0.5f, 0, 0, 1).endVertex();
         }
-        BufferUploader.drawWithShader(builder.buildOrThrow());
+        BufferUploader.drawWithShader(builder.end());
         RenderSystem.disableDepthTest();
         shader.clear();
 

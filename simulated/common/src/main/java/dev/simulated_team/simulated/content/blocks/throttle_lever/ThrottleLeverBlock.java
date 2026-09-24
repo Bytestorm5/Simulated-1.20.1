@@ -170,7 +170,7 @@ public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock i
     }
 
     @Override
-    protected boolean isPathfindable(final BlockState blockState, final PathComputationType pathComputationType) {
+    public boolean isPathfindable(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final PathComputationType pathComputationType) {
         return false;
     }
 }

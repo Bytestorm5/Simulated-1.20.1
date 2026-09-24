@@ -106,7 +106,7 @@ public class LinkedTypewriterItemBindHandler {
         if (key != GLFW.GLFW_KEY_ESCAPE) {
             final InteractionHand hand = getHand();
             if (hand != null) {
-                VeilPacketManager.server().sendPacket(new TypewriterSaveKeyToItemPacket(hand, new LinkedTypewriterEntries.KeyboardEntry(frequency.get(0), frequency.getSecond(), key, BlockPos.ZERO)));
+                VeilPacketManager.server().sendPacket(new TypewriterSaveKeyToItemPacket(hand, new LinkedTypewriterEntries.KeyboardEntry(frequency.getFirst(), frequency.getSecond(), key, BlockPos.ZERO)));
                 LinkedTypewriterInteractionHandler.preventPress(key, scanCode);
 
                 SimLang.builder()

@@ -88,7 +88,7 @@ public class SteeringWheelBlock extends HorizontalDirectionalBlock
 
     public static boolean lookingAtWheel(final Player player, final BlockPos pos, final float pt, final VoxelShape wheel, final VoxelShape mount) {
         Vec3 from = player.getEyePosition(pt);
-        Vec3 to = from.add(player.getViewVector(pt).scale(player.blockInteractionRange()));
+        Vec3 to = from.add(player.getViewVector(pt).scale(player.getBlockReach()));
         final SubLevel subLevel = Sable.HELPER.getContaining(player.level(), pos);
         if (subLevel != null) {
             final Pose3dc pose;
@@ -116,7 +116,7 @@ public class SteeringWheelBlock extends HorizontalDirectionalBlock
     }
 
     @Override
-    protected VoxelShape getInteractionShape(final BlockState state, final BlockGetter level, final BlockPos pos) {
+    public VoxelShape getInteractionShape(final BlockState state, final BlockGetter level, final BlockPos pos) {
         if (state.getValue(ON_FLOOR)) {
             return SimBlockShapes.STEERING_WHEEL_FULL_FLOOR.get(state.getValue(FACING));
         } else {
@@ -165,7 +165,7 @@ public class SteeringWheelBlock extends HorizontalDirectionalBlock
         if (player.isShiftKeyDown()) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        return this.onBlockEntityUseItemOn(level, pos, be -> be.applyMaterialIfValid(stack));
+        return this.getBlockEntityOptional(level, pos).map(be -> be.applyMaterialIfValid(stack)).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class SteeringWheelBlock extends HorizontalDirectionalBlock
     }
 
     @Override
-    protected boolean hasAnalogOutputSignal(final BlockState blockState) {
+    public boolean hasAnalogOutputSignal(final BlockState blockState) {
         return true;
     }
 

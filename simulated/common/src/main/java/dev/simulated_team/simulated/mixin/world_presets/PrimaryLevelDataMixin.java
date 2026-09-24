@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.mixin.world_presets;
 
+import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.Lifecycle;
@@ -11,7 +12,9 @@ import net.minecraft.world.level.LevelSettings;
 import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.presets.WorldPresets;
+import net.minecraft.world.level.storage.LevelVersion;
 import net.minecraft.world.level.storage.PrimaryLevelData;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,15 +32,15 @@ public class PrimaryLevelDataMixin implements PrimaryLevelDataExtension {
 	@Shadow private EndDragonFight.Data endDragonFightData;
 	private ResourceLocation simulated$worldPresetKey = WorldPresets.NORMAL.location();
 
-	@Inject(method = "parse", at = @At("RETURN"), remap = false)
-	private static <T> void simulated$parse(final Dynamic<T> dynamic, final LevelSettings levelSettings, final PrimaryLevelData.SpecialWorldProperty specialWorldProperty, final WorldOptions worldOptions, final Lifecycle lifecycle, final CallbackInfoReturnable<PrimaryLevelData> cir) {
+	@Inject(method = "parse", at = @At("RETURN"))
+	private static <T> void simulated$parse(final Dynamic<T> dynamic, final DataFixer fixerUpper, final int playerDataVersion, @Nullable final CompoundTag loadedPlayerTag, final LevelSettings levelSettings, final LevelVersion levelVersion, final PrimaryLevelData.SpecialWorldProperty specialWorldProperty, final WorldOptions worldOptions, final Lifecycle lifecycle, final CallbackInfoReturnable<PrimaryLevelData> cir) {
 		final DataResult<String> string = dynamic.get(simulated$WORLD_PRESET_KEY).asString();
-		if(string.isSuccess()) {
-			((PrimaryLevelDataExtension) cir.getReturnValue()).setPreset(new ResourceLocation(string.getOrThrow(false, error -> { })));
+		if(string.result().isPresent()) {
+			((PrimaryLevelDataExtension) cir.getReturnValue()).setPreset(new ResourceLocation(string.result().get()));
 		}
 	}
 
-	@Inject(method = "setTagData", at = @At("TAIL"), remap = false)
+	@Inject(method = "setTagData", at = @At("TAIL"))
 	private void simulated$setTagData(final RegistryAccess registryAccess, final CompoundTag compoundTag, final CompoundTag compoundTag2, final CallbackInfo ci) {
 		compoundTag.putString(simulated$WORLD_PRESET_KEY, this.getPreset().toString());
 	}

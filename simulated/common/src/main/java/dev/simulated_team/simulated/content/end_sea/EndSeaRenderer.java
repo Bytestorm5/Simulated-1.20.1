@@ -29,12 +29,7 @@ public class EndSeaRenderer {
     private static final ResourceLocation SHADER = Simulated.path("end_sea");
 
     private static final int LAYER_COUNT = 48;
-    private static final VertexFormat FORMAT = VertexFormat.builder()
-            .add("Position", VertexFormatElement.POSITION)
-            .add("Color", VertexFormatElement.COLOR)
-            .add("UV0", VertexFormatElement.UV0)
-            .add("UV2", VertexFormatElement.UV2)
-            .build();
+    private static final VertexFormat FORMAT = DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP;
 
     private static final Vec3[] LAYER_COLORS = new Vec3[]{
             new Vec3(0.022087, 0.098399, 0.110818),
@@ -87,7 +82,8 @@ public class EndSeaRenderer {
         shader.setTexture("ShadowDepthSampler", GL30.GL_TEXTURE_2D, shadowBuffer.getDepthTextureAttachment().getId());
         shader.setTexture("ShadowStrengthSampler", GL30.GL_TEXTURE_2D, shadowBuffer.getColorTextureAttachment(0).getId());
 
-        final BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, FORMAT);
+        final BufferBuilder builder = Tesselator.getInstance().getBuilder();
+        builder.begin(VertexFormat.Mode.QUADS, FORMAT);
 
         for (int i = 0; i < LAYER_COLORS.length; i++) {
             LAYER_COLORS[i] = LAYER_COLORS[i].lerp(LAYER_COLORS[i].normalize(), 1.0);
@@ -124,25 +120,29 @@ public class EndSeaRenderer {
 
             final Matrix4f pose = poseStack.last().pose();
 
-            builder.addVertex(pose, -1.0f, yCoord, -1.0f)
-                    .setColor((float) layer.x, (float) layer.y, (float) layer.z, alpha)
-                    .setUv(0.0f + parallelUVShift, 0.0f + uvShift)
-                    .setUv2(0, 0);
+            builder.vertex(pose, -1.0f, yCoord, -1.0f)
+                    .color((float) layer.x, (float) layer.y, (float) layer.z, alpha)
+                    .uv(0.0f + parallelUVShift, 0.0f + uvShift)
+                    .uv2(0, 0)
+                    .endVertex();
 
-            builder.addVertex(pose, 1.0f, yCoord, -1.0f)
-                    .setColor((float) layer.x, (float) layer.y, (float) layer.z, alpha)
-                    .setUv(uvScale + parallelUVShift, 0.0f + uvShift)
-                    .setUv2(1, 0);
+            builder.vertex(pose, 1.0f, yCoord, -1.0f)
+                    .color((float) layer.x, (float) layer.y, (float) layer.z, alpha)
+                    .uv(uvScale + parallelUVShift, 0.0f + uvShift)
+                    .uv2(1, 0)
+                    .endVertex();
 
-            builder.addVertex(pose, 1.0f, yCoord, 1.0f)
-                    .setColor((float) layer.x, (float) layer.y, (float) layer.z, alpha)
-                    .setUv(uvScale + parallelUVShift, uvScale + uvShift)
-                    .setUv2(1, 1);
+            builder.vertex(pose, 1.0f, yCoord, 1.0f)
+                    .color((float) layer.x, (float) layer.y, (float) layer.z, alpha)
+                    .uv(uvScale + parallelUVShift, uvScale + uvShift)
+                    .uv2(1, 1)
+                    .endVertex();
 
-            builder.addVertex(pose, -1.0f, yCoord, 1.0f)
-                    .setColor((float) layer.x, (float) layer.y, (float) layer.z, alpha)
-                    .setUv(0.0f + parallelUVShift, uvScale + uvShift)
-                    .setUv2(0, 1);
+            builder.vertex(pose, -1.0f, yCoord, 1.0f)
+                    .color((float) layer.x, (float) layer.y, (float) layer.z, alpha)
+                    .uv(0.0f + parallelUVShift, uvScale + uvShift)
+                    .uv2(0, 1)
+                    .endVertex();
         }
 
         RenderSystem.disableCull();
@@ -153,7 +153,7 @@ public class EndSeaRenderer {
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 
-        BufferUploader.drawWithShader(builder.buildOrThrow());
+        BufferUploader.drawWithShader(builder.end());
         ShaderProgram.unbind();
 
         RenderSystem.disableBlend();

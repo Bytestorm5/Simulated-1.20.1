@@ -50,7 +50,7 @@ public class SwivelBearingPlateBlockEntity extends KineticBlockEntity implements
     }
 
     private void destroyBearing() {
-        if (this.parent != null && this.getLevel().getBlockState(this.parent).is(SimBlocks.SWIVEL_BEARING)) {
+        if (this.parent != null && this.getLevel().getBlockState(this.parent).is(SimBlocks.SWIVEL_BEARING.get())) {
             this.getLevel().destroyBlock(this.parent, false);
         }
     }
@@ -104,12 +104,12 @@ public class SwivelBearingPlateBlockEntity extends KineticBlockEntity implements
         super.read(compound, clientPacket);
 
         if (compound.contains("parent")) {
-            this.parent = NbtUtils.readBlockPos(compound, "parent").get();
+            this.parent = NbtUtils.readBlockPos(compound.getCompound("parent"));
         }
 
 
         if (compound.contains("ParentPos")) {
-            this.parent = NbtUtils.readBlockPos(compound, "ParentPos").get();
+            this.parent = NbtUtils.readBlockPos(compound.getCompound("ParentPos"));
         }
 
         if (compound.contains("ParentSubLevelId")) {

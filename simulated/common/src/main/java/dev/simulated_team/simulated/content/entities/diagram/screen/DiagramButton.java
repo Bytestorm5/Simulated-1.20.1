@@ -46,7 +46,7 @@ public class DiagramButton extends AbstractWidget {
 
     @Override
     protected void renderWidget(final GuiGraphics guiGraphics, final int mouseX, final int mouseY, final float partialTicks) {
-        this.texture.render(guiGraphics, this.getX() - 1, this.getY() - 1, this.isHovered() || this.iconSwitch.get() ? DiagramScreen.BUTTON_COLOR : DiagramScreen.DULL_BUTTON_COLOR);
+        this.texture.render(guiGraphics, this.getX() - 1, this.getY() - 1, this.isHovered() || this.iconSwitch.getAsBoolean() ? DiagramScreen.BUTTON_COLOR : DiagramScreen.DULL_BUTTON_COLOR);
 
         if (this.diagramTooltip != null && this.isHovered()) {
             final List<FormattedText> lines = List.of(this.diagramTooltip.get());

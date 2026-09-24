@@ -80,9 +80,9 @@ public class SwivelBearingBlock extends DirectionalKineticBlock implements IBE<S
         final ItemStack heldItem = player.getItemInHand(interactionHand);
         final IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
         if (helper.matchesItem(heldItem)) {
-            return helper
+            return ItemInteractionResult.of(helper
                     .getOffset(player, level, blockState, blockPos, blockHitResult)
-                    .placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult);
+                    .placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult));
         }
 
 
@@ -138,7 +138,7 @@ public class SwivelBearingBlock extends DirectionalKineticBlock implements IBE<S
     }
 
     @Override
-    protected VoxelShape getShape(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final CollisionContext collisionContext) {
+    public VoxelShape getShape(final BlockState blockState, final BlockGetter blockGetter, final BlockPos blockPos, final CollisionContext collisionContext) {
         return blockState.getValue(ASSEMBLED) ? SimBlockShapes.SWIVEL_BEARING_ASSEMBLED.get(blockState.getValue(FACING)) : Shapes.block();
     }
 

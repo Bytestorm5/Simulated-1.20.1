@@ -5,8 +5,10 @@ import dev.simulated_team.simulated.network.packets.handle.ClientboundPlayersHol
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import net.createmod.catnip.platform.CatnipServices;
+import foundry.veil.api.network.VeilPacketManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.Map;
 import java.util.UUID;
@@ -57,6 +59,10 @@ public class ServerHandleHoldingHandler {
 	}
 
 	public static void sync() {
-		CatnipServices.NETWORK.sendToAllClients(new ClientboundPlayersHoldingHandlePacket(holdingPlayers.keySet()));
+		// 1.20.1: Catnip has no sendToAllClients for payloads, so send to every player through Veil
+		final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		if (server != null) {
+			VeilPacketManager.all(server).sendPacket(new ClientboundPlayersHoldingHandlePacket(holdingPlayers.keySet()));
+		}
 	}
 }

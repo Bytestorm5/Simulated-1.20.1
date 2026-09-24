@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope.strand.client;
 
+import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import dev.ryanhcode.sable.Sable;
@@ -23,7 +24,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -59,7 +59,7 @@ public class ZiplineClientManager implements InteractCallback {
             return;
         }
 
-        final double maxRange = mc.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
+        final double maxRange = mc.player.getAttributeValue(ForgeMod.BLOCK_REACH.get()) + 1;
         final HitResult hitResult = mc.hitResult;
 
         final ClientLevelRopeManager ropeManager = ClientLevelRopeManager.getOrCreate(mc.level);
@@ -192,7 +192,7 @@ public class ZiplineClientManager implements InteractCallback {
 
         final ClosestQuery query = getClosestPointOnStrand(strand, playerPosition);
 
-        final boolean isEnd = query.position().distanceSquared(strand.getPoints().getLast().position()) < 0.25;
+        final boolean isEnd = query.position().distanceSquared(strand.getPoints().get(strand.getPoints().size() - 1).position()) < 0.25;
         final boolean isStart = query.position().distanceSquared(strand.getPoints().get(0).position()) < 0.25;
 
         final Vec3 mojNormal = new Vec3(query.normal.x, query.normal.y, query.normal.z);
@@ -210,7 +210,7 @@ public class ZiplineClientManager implements InteractCallback {
         final Vec3 diff = target.subtract(playerPosition);
         final Vec3 normal = JOMLConversion.toMojang(query.normal());
         final Vec3 assistanceForce = normal.scale(mc.player.getDeltaMovement().dot(normal)).scale(0.04);
-        final double reach = mc.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
+        final double reach = mc.player.getAttributeValue(ForgeMod.BLOCK_REACH.get()) + 1;
 
         if (diff.lengthSqr() > reach * reach) {
             disembark();
@@ -232,7 +232,7 @@ public class ZiplineClientManager implements InteractCallback {
     }
 
     public static boolean canStartRidingDistance(final ClosestQuery query, final Player player) {
-        final double reach = player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
+        final double reach = player.getAttributeValue(ForgeMod.BLOCK_REACH.get()) + 1;
         return query.position.distanceSquared(JOMLConversion.toJOML(player.position())) <= reach * reach;
     }
 

@@ -45,7 +45,7 @@ public class AbsorberBlock extends HorizontalDirectionalBlock implements IBE<Abs
 
 
     @Override
-    protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block block, final BlockPos fromPos, final boolean isMoving) {
+    public void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block block, final BlockPos fromPos, final boolean isMoving) {
         if (!level.isClientSide) {
             final boolean flag = state.getValue(POWERED);
             if (flag != level.hasNeighborSignal(pos)) {
@@ -55,7 +55,7 @@ public class AbsorberBlock extends HorizontalDirectionalBlock implements IBE<Abs
     }
 
     @Override
-    protected VoxelShape getShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
+    public VoxelShape getShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
         return SimBlockShapes.EVAPORATOR;
     }
 
@@ -81,10 +81,12 @@ public class AbsorberBlock extends HorizontalDirectionalBlock implements IBE<Abs
                 serverLevel.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), mouthPos.x, mouthPos.y, mouthPos.z, 5, 0, 0.1, 0, 0.01);
             }
 
-            stack.consume(1, player);
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+            }
             return ItemInteractionResult.CONSUME;
         }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

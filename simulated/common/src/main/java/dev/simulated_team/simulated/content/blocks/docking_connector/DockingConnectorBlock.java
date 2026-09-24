@@ -78,7 +78,7 @@ public class DockingConnectorBlock extends WrenchableDirectionalBlock implements
         // Remove the paired connector even if the block doesn't change
         if (state.getValue(POWERED) && (blockChanged || state.getValue(FACING) != newState.getValue(FACING))) {
             final BlockPos pairedConnectorPos = pos.relative(state.getValue(FACING));
-            if (level.getBlockState(pairedConnectorPos).is(SimBlocks.PAIRED_DOCKING_CONNECTOR)) {
+            if (level.getBlockState(pairedConnectorPos).is(SimBlocks.PAIRED_DOCKING_CONNECTOR.get())) {
                 level.removeBlock(pairedConnectorPos, isMoving);
             }
         }
@@ -123,7 +123,7 @@ public class DockingConnectorBlock extends WrenchableDirectionalBlock implements
     }
 
     @Override
-    protected boolean triggerEvent(final @NotNull BlockState state, final @NotNull Level level, final @NotNull BlockPos pos, final int id, final int param) {
+    public boolean triggerEvent(final @NotNull BlockState state, final @NotNull Level level, final @NotNull BlockPos pos, final int id, final int param) {
         super.triggerEvent(state, level, pos, id, param);
         final BlockEntity be = level.getBlockEntity(pos);
         return be != null && be.triggerEvent(id, param);

@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class DisplayLinkScreenMixin {
     @Shadow private DisplayLinkBlockEntity blockEntity;
 
-    @Shadow private Label targetLineLabel;
+    @Shadow Label targetLineLabel;
 
     @WrapOperation(method = "initGathererOptions", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/api/behaviour/display/DisplayTarget;getLineOptionText(I)Lnet/minecraft/network/chat/Component;"))
     private Component simulated$displayConditionalError(final DisplayTarget instance, final int line, final Operation<Component> original, @Local(name = "level") final ClientLevel level) {

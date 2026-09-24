@@ -30,7 +30,7 @@ public class AugerCogBlock extends AugerShaftBlock implements ICogWheel {
     }
 
     @Override
-    protected boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
+    public boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
         return super.canSurvive(state, level, pos);
     }
 }

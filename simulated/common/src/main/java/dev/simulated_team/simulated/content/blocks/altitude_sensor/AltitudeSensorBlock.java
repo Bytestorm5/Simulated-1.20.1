@@ -112,7 +112,7 @@ public class AltitudeSensorBlock extends FaceAttachedHorizontalDirectionalBlock 
     }
 
     @Override
-    protected int getDirectSignal(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction direction) {
+    public int getDirectSignal(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction direction) {
         if (direction != Direction.UP) {
             return 0;
         }
