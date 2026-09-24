@@ -14,8 +14,9 @@ import dev.ryanhcode.sable.util.SableNBTUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import foundry.veil.backport.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaterniond;
 import org.joml.Quaterniondc;
@@ -143,8 +145,14 @@ public class GustEntity extends Entity implements IEntityAdditionalSpawnData {
     }
 
     @Override
-    protected void defineSynchedData(final @NotNull SynchedEntityData.Builder builder) {
+    protected void defineSynchedData() {
 
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        // 1.20.1: Forge only sends the additional spawn data through its own spawn packet
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -158,12 +166,12 @@ public class GustEntity extends Entity implements IEntityAdditionalSpawnData {
     }
 
     @Override
-    public void writeSpawnData(final @NotNull RegistryFriendlyByteBuf buffer) {
+    public void writeSpawnData(final @NotNull FriendlyByteBuf buffer) {
         SableBufferUtils.write(buffer, this.orientation);
     }
 
     @Override
-    public void readSpawnData(final @NotNull RegistryFriendlyByteBuf buffer) {
+    public void readSpawnData(final @NotNull FriendlyByteBuf buffer) {
         SableBufferUtils.read(buffer, this.orientation);
     }
 }

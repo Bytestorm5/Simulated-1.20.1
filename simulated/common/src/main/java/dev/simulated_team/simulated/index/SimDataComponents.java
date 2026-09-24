@@ -2,6 +2,7 @@ package dev.simulated_team.simulated.index;
 
 import com.mojang.serialization.Codec;
 import dev.simulated_team.simulated.Simulated;
+import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import dev.simulated_team.simulated.content.blocks.nav_table.navigation_target.NavigationTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -53,6 +54,17 @@ public class SimDataComponents {
             return 1f;
         }
         return bounciness;
+    }
+
+    /**
+     * 1.20.1 items have no default components, so items registered as navigation targets get theirs from
+     * {@link SimulatedRegistrate#getDefaultNavigationTarget}.
+     *
+     * @return The navigation target of the stack, or null if it has none
+     */
+    public static @Nullable NavigationTarget getTarget(final ItemStack stack) {
+        final NavigationTarget target = TARGET.get(stack);
+        return target != null ? target : SimulatedRegistrate.getDefaultNavigationTarget(stack.getItem());
     }
 
     private static <T> DataComponentType<T> register(final String name, final UnaryOperator<DataComponentType.Builder<T>> builder) {

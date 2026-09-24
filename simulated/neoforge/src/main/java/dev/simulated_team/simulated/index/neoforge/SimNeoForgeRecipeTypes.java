@@ -5,7 +5,6 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.data.neoforge.PortableEngineDyeingRecipe;
 import net.createmod.catnip.lang.Lang;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
@@ -65,8 +64,8 @@ public enum SimNeoForgeRecipeTypes implements IRecipeTypeInfo, StringRepresentab
 
     @SuppressWarnings("unchecked")
     @Override
-    public <I extends RecipeInput, R extends Recipe<I>> RecipeType<R> getType() {
-        return (RecipeType<R>) this.type.get();
+    public <T extends RecipeType<?>> T getType() {
+        return (T) this.type.get();
     }
 
     @Override
@@ -75,7 +74,7 @@ public enum SimNeoForgeRecipeTypes implements IRecipeTypeInfo, StringRepresentab
     }
 
     private static class Registers {
-        private static final DeferredRegister<RecipeSerializer<?>> SERIALIZER_REGISTER = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, Simulated.MOD_ID);
+        private static final DeferredRegister<RecipeSerializer<?>> SERIALIZER_REGISTER = DeferredRegister.create(Registries.RECIPE_SERIALIZER, Simulated.MOD_ID);
         private static final DeferredRegister<RecipeType<?>> TYPE_REGISTER = DeferredRegister.create(Registries.RECIPE_TYPE, Simulated.MOD_ID);
     }
 

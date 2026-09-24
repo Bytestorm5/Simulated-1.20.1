@@ -5,7 +5,6 @@ import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.content.ponder.scenes.*;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
@@ -13,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class AeroPonderScenes {
 
     public static void register(final PonderSceneRegistrationHelper<ResourceLocation> registry) {
-        final PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registry.withKeyFunction(DeferredHolder::getId);
+        final PonderSceneRegistrationHelper<ItemProviderEntry<?>> helper = registry.withKeyFunction(ItemProviderEntry::getId);
 
         helper.forComponents(aeroItemProvider("levitite_blend_bucket"))
                 .addStoryBoard("levitite/blend", LevititeScenes::levititeBlend)
@@ -54,10 +53,10 @@ public class AeroPonderScenes {
                 .addStoryBoard("airpressure/miniprop",(builder,util) -> AirPressureScenes.airPressure(builder,util,new AirPressureScenes.Miniprop()));
     }
 
-    private static ItemProviderEntry<Item, Item> aeroItemProvider(final String id) {
+    private static ItemProviderEntry<Item> aeroItemProvider(final String id) {
         return new ItemProviderEntry<>(
                 Aeronautics.getRegistrate(),
-                DeferredHolder.create(ResourceKey.create(Registries.ITEM, Aeronautics.path(id)))
+                RegistryObject.create(Aeronautics.path(id), Registries.ITEM, Aeronautics.MOD_ID)
         );
     }
 }

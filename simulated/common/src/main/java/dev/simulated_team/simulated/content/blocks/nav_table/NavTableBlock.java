@@ -76,7 +76,7 @@ public class NavTableBlock extends DirectionalBlock implements IBE<NavTableBlock
     private boolean canSwitchStacks(ItemStack heldStack, Level level, BlockPos pos) {
         NavTableBlockEntity blockEntity = (NavTableBlockEntity) level.getBlockEntity(pos);
         if(blockEntity != null) {
-            return SimDataComponents.TARGET.has(heldStack) || !blockEntity.getHeldItem().isEmpty() && heldStack.isEmpty();
+            return SimDataComponents.getTarget(heldStack) != null || !blockEntity.getHeldItem().isEmpty() && heldStack.isEmpty();
         }
         return false;
     }

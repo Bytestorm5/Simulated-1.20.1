@@ -36,52 +36,52 @@ public class HeatedCulledRenderRegionBuilder extends SimpleCulledRenderRegionBui
 
             if (this.shouldFaceRender(cube, Direction.NORTH)) {
                 final Direction dir = Direction.NORTH;
-                consumer.addVertex(matrix4f, x0, y0, z0).setColor(this.getColor(x0, y0, z0)).setUv(0, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x0, y1, z0).setColor(this.getColor(x0, y1, z0)).setUv(0, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x1, y1, z0).setColor(this.getColor(x1, y1, z0)).setUv(1, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x1, y0, z0).setColor(this.getColor(x1, y0, z0)).setUv(1, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
+                consumer.vertex(matrix4f, x0, y0, z0).uv(0, 0).color(this.getColor(x0, y0, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x0, y1, z0).uv(0, 1).color(this.getColor(x0, y1, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x1, y1, z0).uv(1, 1).color(this.getColor(x1, y1, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x1, y0, z0).uv(1, 0).color(this.getColor(x1, y0, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
             }
 
             if (this.shouldFaceRender(cube, Direction.EAST)) {
                 final Direction dir = Direction.NORTH;
-                consumer.addVertex(matrix4f, x1, y0, z0).setColor(this.getColor(x1, y0, z0)).setUv(0, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x1, y1, z0).setColor(this.getColor(x1, y1, z0)).setUv(0, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x1, y1, z1).setColor(this.getColor(x1, y1, z1)).setUv(1, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x1, y0, z1).setColor(this.getColor(x1, y0, z1)).setUv(1, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
+                consumer.vertex(matrix4f, x1, y0, z0).uv(0, 0).color(this.getColor(x1, y0, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x1, y1, z0).uv(0, 1).color(this.getColor(x1, y1, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x1, y1, z1).uv(1, 1).color(this.getColor(x1, y1, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x1, y0, z1).uv(1, 0).color(this.getColor(x1, y0, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
             }
 
             if (this.shouldFaceRender(cube, Direction.SOUTH)) {
                 final Direction dir = Direction.NORTH;
-                consumer.addVertex(matrix4f, x1, y0, z1).setColor(this.getColor(x1, y0, z1)).setUv(1, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x1, y1, z1).setColor(this.getColor(x1, y1, z1)).setUv(1, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x0, y1, z1).setColor(this.getColor(x0, y1, z1)).setUv(0, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x0, y0, z1).setColor(this.getColor(x0, y0, z1)).setUv(0, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
+                consumer.vertex(matrix4f, x1, y0, z1).uv(1, 0).color(this.getColor(x1, y0, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x1, y1, z1).uv(1, 1).color(this.getColor(x1, y1, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x0, y1, z1).uv(0, 1).color(this.getColor(x0, y1, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x0, y0, z1).uv(0, 0).color(this.getColor(x0, y0, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
             }
 
             if (this.shouldFaceRender(cube, Direction.WEST)) {
                 final Direction dir = Direction.NORTH;
-                consumer.addVertex(matrix4f, x0, y0, z1).setColor(this.getColor(x0, y0, z1)).setUv(1, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x0, y1, z1).setColor(this.getColor(x0, y1, z1)).setUv(1, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x0, y1, z0).setColor(this.getColor(x0, y1, z0)).setUv(0, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x0, y0, z0).setColor(this.getColor(x0, y0, z0)).setUv(0, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
+                consumer.vertex(matrix4f, x0, y0, z1).uv(1, 0).color(this.getColor(x0, y0, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x0, y1, z1).uv(1, 1).color(this.getColor(x0, y1, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x0, y1, z0).uv(0, 1).color(this.getColor(x0, y1, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x0, y0, z0).uv(0, 0).color(this.getColor(x0, y0, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
             }
 
             if (this.shouldFaceRender(cube, Direction.DOWN)) {
                 final Direction dir = Direction.DOWN;
                 if (this.accelerator.getBlockState(pos.set(cube.x(), cube.y() - 1, cube.z()).offset(this.worldOrigin)).is(AeroTags.BlockTags.AIRTIGHT)) {
-                    consumer.addVertex(matrix4f, x0, y0, z0).setColor(this.getColor(x0, y0, z0)).setUv(0, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                    consumer.addVertex(matrix4f, x1, y0, z0).setColor(this.getColor(x1, y0, z0)).setUv(1, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                    consumer.addVertex(matrix4f, x1, y0, z1).setColor(this.getColor(x1, y0, z1)).setUv(1, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                    consumer.addVertex(matrix4f, x0, y0, z1).setColor(this.getColor(x0, y0, z1)).setUv(0, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
+                    consumer.vertex(matrix4f, x0, y0, z0).uv(0, 1).color(this.getColor(x0, y0, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                    consumer.vertex(matrix4f, x1, y0, z0).uv(1, 1).color(this.getColor(x1, y0, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                    consumer.vertex(matrix4f, x1, y0, z1).uv(1, 0).color(this.getColor(x1, y0, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                    consumer.vertex(matrix4f, x0, y0, z1).uv(0, 0).color(this.getColor(x0, y0, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
                 }
             }
 
             if (this.shouldFaceRender(cube, Direction.UP)) {
                 final Direction dir = Direction.UP;
-                consumer.addVertex(matrix4f, x0, y1, z1).setColor(this.getColor(x0, y1, z1)).setUv(0, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x1, y1, z1).setColor(this.getColor(x1, y1, z1)).setUv(1, 1).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x1, y1, z0).setColor(this.getColor(x1, y1, z0)).setUv(1, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                consumer.addVertex(matrix4f, x0, y1, z0).setColor(this.getColor(x0, y1, z0)).setUv(0, 0).setNormal(dir.getStepX(), dir.getStepY(), dir.getStepZ());
+                consumer.vertex(matrix4f, x0, y1, z1).uv(0, 1).color(this.getColor(x0, y1, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x1, y1, z1).uv(1, 1).color(this.getColor(x1, y1, z1)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x1, y1, z0).uv(1, 0).color(this.getColor(x1, y1, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
+                consumer.vertex(matrix4f, x0, y1, z0).uv(0, 0).color(this.getColor(x0, y1, z0)).normal(dir.getStepX(), dir.getStepY(), dir.getStepZ()).endVertex();
             }
         }
     }

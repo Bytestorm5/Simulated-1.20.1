@@ -26,6 +26,6 @@ public class NeoForgeSimMenuService implements SimMenuService {
 
 	@Override
 	public void openScreen(final ServerPlayer player, final MenuProvider factory, final Consumer<RegistryFriendlyByteBuf> extraDataWriter) {
-		NetworkHooks.openScreen(player, factory, buf -> extraDataWriter.accept(new RegistryFriendlyByteBuf(buf, player.registryAccess())));
+		NetworkHooks.openScreen(player, factory, buf -> extraDataWriter.accept(new RegistryFriendlyByteBuf(buf, player.server.registryAccess())));
 	}
 }

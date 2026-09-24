@@ -38,12 +38,12 @@ public class BlockPropertiesTooltip {
     private static final Component SUPER_LIGHT = Component.translatable("simulated.tooltip.mass.super_light").withStyle(ChatFormatting.AQUA);
     private static final Component LIGHT = Component.translatable("simulated.tooltip.mass.light").withStyle(ChatFormatting.GREEN);
     private static final Component HEAVY = Component.translatable("simulated.tooltip.mass.heavy").withStyle(ChatFormatting.YELLOW);
-    private static final Component SUPER_HEAVY = Component.translatable("simulated.tooltip.mass.super_heavy").withColor(SimColors.NUH_UH_RED);
-    private static final Component ABSURDLY_HEAVY = Component.translatable("simulated.tooltip.mass.absurdly_heavy").withColor(SimColors.NUH_UH_RED);
+    private static final Component SUPER_HEAVY = Component.translatable("simulated.tooltip.mass.super_heavy").withStyle(s -> s.withColor(SimColors.NUH_UH_RED));
+    private static final Component ABSURDLY_HEAVY = Component.translatable("simulated.tooltip.mass.absurdly_heavy").withStyle(s -> s.withColor(SimColors.NUH_UH_RED));
     private static final Component BOUNCY = Component.translatable("simulated.tooltip.bouncy").withStyle(ChatFormatting.GREEN);
     private static final Component SLIPPERY = Component.translatable("simulated.tooltip.friction.slippery").withStyle(ChatFormatting.AQUA);
     private static final Component STICKY = Component.translatable("simulated.tooltip.friction.sticky").withStyle(ChatFormatting.DARK_GREEN);
-    private static final Component FRAGILE = Component.translatable("simulated.tooltip.fragile").withColor(SimColors.NUH_UH_RED);
+    private static final Component FRAGILE = Component.translatable("simulated.tooltip.fragile").withStyle(s -> s.withColor(SimColors.NUH_UH_RED));
     private static final Component AIRTIGHT = Component.translatable("simulated.tooltip.airtight").withStyle(ChatFormatting.WHITE);
     private static final Component FLOATING = Component.translatable("simulated.tooltip.floating").withStyle(ChatFormatting.DARK_GREEN);
 

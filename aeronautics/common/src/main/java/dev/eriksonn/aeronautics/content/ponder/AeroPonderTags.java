@@ -6,7 +6,7 @@ import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.index.AeroBlocks;
 import dev.eriksonn.aeronautics.index.AeroTags;
 import dev.eriksonn.aeronautics.service.AeroLevititeService;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.ponder.api.registration.MultiTagBuilder;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ public class AeroPonderTags {
 
     public static void register(final PonderTagRegistrationHelper<ResourceLocation> helper) {
         final PonderTagRegistrationHelper<ItemLike> itemHelper = helper.withKeyFunction(
-                RegisteredObjectsHelper::getKeyOrThrow);
+                CatnipServices.REGISTRIES::getKeyOrThrow);
 
         // Aero Tags
 

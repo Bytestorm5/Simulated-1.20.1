@@ -1,6 +1,5 @@
 package dev.simulated_team.simulated.neoforge.events;
 
-import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.LinkedTypewriterItemBindHandler;
 import dev.simulated_team.simulated.events.SimulatedCommonClientEvents;
 import dev.simulated_team.simulated.index.SimClickInteractions;
@@ -10,31 +9,45 @@ import dev.simulated_team.simulated.neoforge.service.SimpleResourceManagerRegist
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.InteractionResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = Simulated.MOD_ID, value = Dist.CLIENT)
+/**
+ * Registered on the Forge event bus by {@link dev.simulated_team.simulated.neoforge.SimulatedNeoForgeClient}.
+ */
 public class SimNeoForgeClientEvents {
 
 	@SubscribeEvent
-	public static void preClientTick(final ClientTickEvent.Pre event) {
-		SimulatedCommonClientEvents.preClientTick(Minecraft.getInstance());
-	}
-
-	@SubscribeEvent
-	public static void postClientTick(final ClientTickEvent.Post event) {
-		SimulatedCommonClientEvents.postClientTick(Minecraft.getInstance());
+	public static void clientTick(final TickEvent.ClientTickEvent event) {
+		if (event.phase == TickEvent.Phase.START) {
+			SimulatedCommonClientEvents.preClientTick(Minecraft.getInstance());
+		} else {
+			SimulatedCommonClientEvents.postClientTick(Minecraft.getInstance());
+		}
 	}
 
 	@SubscribeEvent
 	public static void postRenderGui(final RenderGuiEvent.Post event) {
-		SimulatedCommonClientEvents.renderOverlays(event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaPartialTick(false));
+		SimulatedCommonClientEvents.renderOverlays(event.getGuiGraphics(), event.getPartialTick());
+	}
+
+	@SubscribeEvent
+	public static void interactionKeyMappingTriggered(final InputEvent.InteractionKeyMappingTriggered event) {
+		if (event.isUseItem()) {
+			if (SimulatedCommonClientEvents.useItemMappingTriggered()) {
+				event.setCanceled(true);
+				event.setSwingHand(false);
+			}
+		}
 	}
 
 	@SubscribeEvent
@@ -59,8 +72,8 @@ public class SimNeoForgeClientEvents {
 			}
 		}
 
-		if (event.getItemStack().is(SimItems.HONEY_GLUE)) {
-			event.setUseBlock(TriState.FALSE);
+		if (SimItems.HONEY_GLUE.isIn(event.getItemStack())) {
+			event.setUseBlock(Event.Result.DENY);
 			if (event.getLevel().isClientSide) {
 				SimClickInteractions.HONEY_GLUE_MANAGER.selectPos(event.getPos(), event.getEntity(), event.getItemStack());
 			}
@@ -74,7 +87,9 @@ public class SimNeoForgeClientEvents {
 		SimulatedCommonClientEvents.appendTooltip(event.getItemStack(), event.getFlags(), event.getEntity(), event.getToolTip());
 	}
 
-	@Mod.EventBusSubscriber(modid = Simulated.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+	/**
+	 * Registered on the mod event bus by {@link dev.simulated_team.simulated.neoforge.SimulatedNeoForgeClient}.
+	 */
 	public static class ModBusEvents {
 
 		@SubscribeEvent
@@ -83,8 +98,8 @@ public class SimNeoForgeClientEvents {
 		}
 
 		@SubscribeEvent
-		public static void registerGuiLayers(final RegisterGuiLayersEvent event) {
-			event.registerAbove(VanillaGuiOverlay.HOTBAR, Simulated.path("linked_typewriter_binding"), LinkedTypewriterItemBindHandler.OVERLAY);
+		public static void registerGuiOverlays(final RegisterGuiOverlaysEvent event) {
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "linked_typewriter_binding", LinkedTypewriterItemBindHandler.OVERLAY);
 		}
 
 		@SubscribeEvent

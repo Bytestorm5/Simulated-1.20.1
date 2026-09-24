@@ -8,6 +8,7 @@ import dev.eriksonn.aeronautics.content.blocks.hot_air.balloon.graph.BalloonLaye
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.BoundingBox3ic;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
+import dev.ryanhcode.sable.render.SableShaderUniforms;
 import dev.ryanhcode.sable.render.region.SimpleCulledRenderRegionBuilder;
 import dev.ryanhcode.sable.sublevel.ClientSubLevel;
 import dev.ryanhcode.sable.util.LevelAccelerator;
@@ -67,7 +68,7 @@ public class HeatedCulledRenderRegion implements NativeResource {
                 .translate((float) relativePos.x, (float) relativePos.y, (float) relativePos.z)
                 .rotate(globalOrientation);
 
-        shader.setDefaultUniforms(VertexFormat.Mode.QUADS, modelViewMatrix, projectionMatrix, client.getWindow());
+        SableShaderUniforms.setDefaultUniforms(shader, VertexFormat.Mode.QUADS, modelViewMatrix, projectionMatrix, client.getWindow());
         shader.apply();
 
         this.buffer.bind();
@@ -111,17 +112,19 @@ public class HeatedCulledRenderRegion implements NativeResource {
 
         builder.buildNoGreedy();
 
-        final BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, this.getVertexFormat());
+        final BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, this.getVertexFormat());
         builder.render(new Matrix4f(), bufferBuilder);
 
         this.balloon = null;
-        final MeshData builtData = bufferBuilder.build();
+        final BufferBuilder.RenderedBuffer builtData = bufferBuilder.end();
 
-        if (builtData != null) {
+        if (!builtData.isEmpty()) {
             this.buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             this.buffer.bind();
             this.buffer.upload(builtData);
         } else {
+            builtData.release();
             this.buffer = null;
         }
 

@@ -3,10 +3,12 @@ package dev.simulated_team.simulated.data.neoforge;
 import dev.simulated_team.simulated.content.blocks.portable_engine.PortableEngineBlock;
 import dev.simulated_team.simulated.index.SimBlocks;
 import dev.simulated_team.simulated.index.neoforge.SimNeoForgeRecipeTypes;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -15,16 +17,16 @@ import net.minecraftforge.common.Tags;
 
 public class PortableEngineDyeingRecipe extends CustomRecipe {
 
-    public PortableEngineDyeingRecipe(final CraftingBookCategory category) {
-        super(category);
+    public PortableEngineDyeingRecipe(final ResourceLocation id, final CraftingBookCategory category) {
+        super(id, category);
     }
 
     @Override
-    public boolean matches(final CraftingInput input, final Level level) {
+    public boolean matches(final CraftingContainer input, final Level level) {
         int engines = 0;
         int dyes = 0;
 
-        for (int i = 0; i < input.size(); ++i) {
+        for (int i = 0; i < input.getContainerSize(); ++i) {
             final ItemStack stack = input.getItem(i);
             if (!stack.isEmpty()) {
                 if (Block.byItem(stack.getItem()) instanceof PortableEngineBlock) {
@@ -45,11 +47,11 @@ public class PortableEngineDyeingRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(final CraftingInput input) {
+    public ItemStack assemble(final CraftingContainer input, final RegistryAccess registryAccess) {
         ItemStack engine = ItemStack.EMPTY;
         DyeColor color = DyeColor.RED;
 
-        for (int i = 0; i < input.size(); ++i) {
+        for (int i = 0; i < input.getContainerSize(); ++i) {
             final ItemStack stack = input.getItem(i);
             if (!stack.isEmpty()) {
                 if (Block.byItem(stack.getItem()) instanceof PortableEngineBlock) {
@@ -65,8 +67,8 @@ public class PortableEngineDyeingRecipe extends CustomRecipe {
 
         final ItemStack dyedEngine = SimBlocks.PORTABLE_ENGINES.get(color)
                 .asStack();
-        if (!engine.isComponentsPatchEmpty()) {
-            dyedEngine.applyComponents(engine.getComponentsPatch());
+        if (engine.hasTag()) {
+            dyedEngine.setTag(engine.getTag().copy());
         }
 
         return dyedEngine;

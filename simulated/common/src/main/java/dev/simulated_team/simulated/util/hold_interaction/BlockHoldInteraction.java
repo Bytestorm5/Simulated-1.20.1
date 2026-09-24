@@ -10,7 +10,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -58,7 +57,7 @@ public abstract class BlockHoldInteraction implements InteractCallback {
     public void renderOverlay(final GuiGraphics graphics, final int width1, final int height1, final boolean hideGui) {}
 
     public static double getInteractionRange(final Player player) {
-        return player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue();
+        return player.getBlockReach();
     }
 
     public static boolean inInteractionRange(final Player player, final Position target, final double reachBuffer) {
