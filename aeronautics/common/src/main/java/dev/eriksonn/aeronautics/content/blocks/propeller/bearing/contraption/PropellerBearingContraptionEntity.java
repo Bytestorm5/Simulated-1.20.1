@@ -12,6 +12,9 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -38,6 +41,12 @@ public class PropellerBearingContraptionEntity extends ControlledContraptionEnti
         entity.setControllerPos(controller.getBlockPosition());
         entity.setContraption(contraption);
         return entity;
+    }
+
+    @Override
+    protected float getEyeHeight(final @NotNull Pose pose, final @NotNull EntityDimensions dimensions) {
+        // 1.20.1: EntityType.Builder has no eyeHeight, so the eye height of 0 is set here
+        return 0.0f;
     }
 
     public PropellerBearingBlockEntity getBearingEntity() {

@@ -11,8 +11,8 @@ public class AeroLiftingGasTypes {
 
     public static final AeroRegistrate REGISTRATE = Aeronautics.getRegistrate();
 
-    public static RegistryEntry<LiftingGasType, DefaultLiftingGas> DEFAULT_GAS = REGISTRATE.liftingGasType("default", DefaultLiftingGas::new);
-    public static RegistryEntry<LiftingGasType, SteamLiftingGas> STEAM = REGISTRATE.liftingGasType("steam", SteamLiftingGas::new);
+    public static RegistryEntry<DefaultLiftingGas> DEFAULT_GAS = REGISTRATE.liftingGasType("default", DefaultLiftingGas::new);
+    public static RegistryEntry<SteamLiftingGas> STEAM = REGISTRATE.liftingGasType("steam", SteamLiftingGas::new);
 
     public static void init() {
         // no-op

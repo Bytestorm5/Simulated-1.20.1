@@ -1,32 +1,29 @@
 package dev.simulated_team.simulated.multiloader.inventory;
 
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponentType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * An info wrapper that holds an item type, and its associated component data. Primarly used for Simulated's multiloader inventory structure. <p>
+ * An info wrapper that holds an item type, and its associated NBT data. Primarly used for Simulated's multiloader inventory structure. <p>
  * In order to generate a wrapper from a given item easily, <b>{@link ItemInfoWrapper#generateFromStack(ItemStack) generateFromStack()}</b> can be used. <p>
  * In order to generate a new item from a given wrapper easily, <b>{@link ItemInfoWrapper#generateFromInfo(ItemInfoWrapper) generateFromInfo()}</b> can be used.
  *
  * @param type     The item type of this wrapper
- * @param patchMap The data components of this wrapper
+ * @param patchMap The NBT data of this wrapper, or null if the item has none (1.20.1: items store data in NBT instead of components)
  */
-public record ItemInfoWrapper(Item type, DataComponentPatch patchMap) {
+public record ItemInfoWrapper(Item type, @Nullable CompoundTag patchMap) {
 
     /**
      * Generates a new wrapper from the given item
      *
      * @param stack The item stack to gather information from.
-     * @return A <b>new</b> {@link ItemInfoWrapper} containing the type and data components from the given item.
+     * @return A <b>new</b> {@link ItemInfoWrapper} containing the type and NBT data from the given item.
      */
     public static ItemInfoWrapper generateFromStack(final ItemStack stack) {
-        return new ItemInfoWrapper(stack.getItem(), stack.getComponentsPatch());
+        return new ItemInfoWrapper(stack.getItem(), stack.hasTag() ? stack.getTag().copy() : null);
     }
 
     /**
@@ -36,20 +33,10 @@ public record ItemInfoWrapper(Item type, DataComponentPatch patchMap) {
      * @return A <b>new</b> {@link ItemStack} containing data from the given wrapper.
      */
     public static @NotNull ItemStack generateFromInfo(final ItemInfoWrapper info) {
-        final ItemStack newStack = info.type().getDefaultInstance();
-        final DataComponentPatch.Builder builder = DataComponentPatch.builder();
-        for (final Map.Entry<DataComponentType<?>, Optional<?>> set : info.patchMap().entrySet()) {
-            setDataComponent(set.getKey(), set.getValue(), builder);
+        final ItemStack newStack = new ItemStack(info.type());
+        if (info.patchMap() != null) {
+            newStack.setTag(info.patchMap().copy());
         }
-        newStack.applyComponents(builder.build());
         return newStack;
-    }
-
-    private static <T> void setDataComponent(final DataComponentType<?> type, final Optional<?> set, final DataComponentPatch.Builder builder) {
-        if (set.isEmpty()) {
-            builder.remove(type);
-        } else {
-            builder.set((DataComponentType<T>) type, (T) set.get());
-        }
     }
 }

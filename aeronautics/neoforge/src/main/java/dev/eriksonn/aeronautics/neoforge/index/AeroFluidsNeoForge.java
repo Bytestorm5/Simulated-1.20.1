@@ -42,7 +42,7 @@ public class AeroFluidsNeoForge {
 		FluidInteractionRegistry.InteractionInformation interaction = new FluidInteractionRegistry.InteractionInformation(LEVITITE_BLEND.getType(), (fluidState) ->
 				fluidState.isSource() ? Blocks.OBSIDIAN.defaultBlockState() : Blocks.CALCITE.defaultBlockState());
 
-		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.value(), interaction);
+		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), interaction);
 	}
 
 	public static void init() {

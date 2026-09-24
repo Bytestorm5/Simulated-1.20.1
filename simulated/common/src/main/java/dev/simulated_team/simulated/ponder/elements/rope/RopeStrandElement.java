@@ -136,7 +136,7 @@ public class RopeStrandElement extends AnimatedSceneElementBase implements Anima
                     .renderInto(ps, vb);
             ps.popPose();
 
-            if(renderPoint1 == renderPoints.getLast()) {
+            if(renderPoint1 == renderPoints.get(renderPoints.size() - 1)) {
                 ps.translate(0, length, 0);
                 knot.light(worldLight)
                         .renderInto(ps, vb);
@@ -196,7 +196,7 @@ public class RopeStrandElement extends AnimatedSceneElementBase implements Anima
             normal.set(runningNormal);
         }
 
-        ropeRenderPoints.add(new RopeStrandRenderer.RopeRenderPoint(new Quaternionf(runningRotation), points.getLast()));
+        ropeRenderPoints.add(new RopeStrandRenderer.RopeRenderPoint(new Quaternionf(runningRotation), points.get(points.size() - 1)));
         return ropeRenderPoints;
     }
 

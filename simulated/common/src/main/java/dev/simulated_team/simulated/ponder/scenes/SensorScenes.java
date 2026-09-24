@@ -34,15 +34,12 @@ import net.createmod.ponder.foundation.instruction.FadeOutOfSceneInstruction;
 import net.createmod.ponder.foundation.instruction.RotateSceneInstruction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.GlobalPos;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedStoneWireBlock;
@@ -51,7 +48,6 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class SensorScenes {
@@ -387,14 +383,14 @@ public class SensorScenes {
         world.toggleRedstonePower(util.select().position(3, 1, 3));
 
         world.modifyBlockEntityNBT(util.select().position(3, 1, 3), OpticalSensorBlockEntity.class,
-                nbt -> nbt.put("Filter", gold.saveOptional(world.getHolderLookupProvider())));
+                nbt -> nbt.put("Filter", gold.save(new CompoundTag())));
 
         scene.idle(20);
 
         scene.overlay().showControls(rightSlot, Pointing.DOWN, 40).withItem(iron);
 
         world.modifyBlockEntityNBT(util.select().position(1, 1, 3), OpticalSensorBlockEntity.class,
-                nbt -> nbt.put("Filter", iron.saveOptional(world.getHolderLookupProvider())));
+                nbt -> nbt.put("Filter", iron.save(new CompoundTag())));
 
         scene.idle(60);
 
@@ -532,7 +528,7 @@ public class SensorScenes {
 
         scene.overlay().showControls(sensorFilterPos, Pointing.DOWN, 40).withItem(dye);
 
-        world.modifyBlockEntityNBT(laserSensor, LaserSensorBlockEntity.class, nbt -> nbt.put("Filter", dye.saveOptional(world.getHolderLookupProvider())));
+        world.modifyBlockEntityNBT(laserSensor, LaserSensorBlockEntity.class, nbt -> nbt.put("Filter", dye.save(new CompoundTag())));
         world.toggleRedstonePower(laserSensor);
         laserSetRedstone(0, world, laserNixiePos, laserRedstonePos);
 
@@ -956,14 +952,16 @@ public class SensorScenes {
         final Selection lodestone = util.select().fromTo(5, 1, 1, 5, 2, 1);
         final Selection fullPlatform = util.select().fromTo(1, 2, 1, 5, 2, 5).add(centralRedstone).substract(lodestone);
 
-        final DataComponentPatch lodestoneComponent = DataComponentPatch.builder()
-                .set(DataComponents.LODESTONE_TRACKER, new LodestoneTracker(Optional.of(new GlobalPos(Level.OVERWORLD, new BlockPos(0, 0, 0))), true))
-                .build();
+        // 1.20.1: lodestone compasses store their target in NBT (see CompassItem#addLodestoneTags)
+        final CompoundTag lodestoneTag = new CompoundTag();
+        lodestoneTag.put("LodestonePos", NbtUtils.writeBlockPos(new BlockPos(0, 0, 0)));
+        lodestoneTag.putString("LodestoneDimension", Level.OVERWORLD.location().toString());
+        lodestoneTag.putBoolean("LodestoneTracked", true);
 
         final ItemStack map = Items.FILLED_MAP.getDefaultInstance();
         final ItemStack recoveryCompass = Items.RECOVERY_COMPASS.getDefaultInstance();
         final ItemStack lodestoneCompass = Items.COMPASS.getDefaultInstance();
-        lodestoneCompass.applyComponents(lodestoneComponent);
+        lodestoneCompass.setTag(lodestoneTag);
 
         scene.idle(20);
         world.showSection(allKinetics, Direction.DOWN);
@@ -1131,7 +1129,7 @@ public class SensorScenes {
         scene.overlay().showControls(util.vector().blockSurface(navigationTable2, Direction.UP), Pointing.DOWN, 50).withItem(lodestoneCompass);
         scene.idle(5);
         world.modifyBlockEntityNBT(util.select().position(navigationTable2), NavTableBlockEntity.class,
-                tag -> tag.put("CurrentStack", lodestoneCompass.saveOptional(world.getHolderLookupProvider())), true);
+                tag -> tag.put("CurrentStack", lodestoneCompass.save(new CompoundTag())), true);
         world.showSection(lodestone, Direction.SOUTH);
 
         world.toggleRedstonePower(navTable2Left);

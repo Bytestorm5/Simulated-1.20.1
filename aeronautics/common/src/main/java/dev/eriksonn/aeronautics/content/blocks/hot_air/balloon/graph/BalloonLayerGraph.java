@@ -186,7 +186,7 @@ public class BalloonLayerGraph {
         visited.add(startLayer);
 
         while (!queue.isEmpty()) {
-            final BalloonLayerData current = queue.removeLast();
+            final BalloonLayerData current = queue.remove(queue.size() - 1);
             final int currentY = current.getYLevel();
 
             for (int dy = -1; dy <= 1; dy += 2) {
@@ -220,7 +220,7 @@ public class BalloonLayerGraph {
         visited.add(startLayer);
 
         while (!frontier.isEmpty()) {
-            final BalloonLayerData current = frontier.removeLast();
+            final BalloonLayerData current = frontier.remove(frontier.size() - 1);
 
             for (final BalloonLayerData outward : current.outwardConnections) {
                 if (!visited.contains(outward)) {

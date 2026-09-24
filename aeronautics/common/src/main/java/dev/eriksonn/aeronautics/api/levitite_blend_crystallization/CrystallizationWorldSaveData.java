@@ -31,7 +31,7 @@ public class CrystallizationWorldSaveData extends SavedData {
 
 	public static CrystallizationWorldSaveData get(ServerLevel level) {
 		CrystallizationWorldSaveData data = level.getChunkSource().getDataStorage().computeIfAbsent(
-				new SavedData.Factory<>(CrystallizationWorldSaveData::new, (nbt, lookup) -> load(level, nbt, lookup), null),
+				nbt -> load(level, nbt), CrystallizationWorldSaveData::new,
 				CrystallizationWorldSaveData.ID);
 
 		data.level = level;

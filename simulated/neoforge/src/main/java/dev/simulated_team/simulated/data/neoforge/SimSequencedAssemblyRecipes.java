@@ -9,12 +9,10 @@ import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimItems;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.concurrent.CompletableFuture;
 
 public class SimSequencedAssemblyRecipes extends SequencedAssemblyRecipeGen {
 

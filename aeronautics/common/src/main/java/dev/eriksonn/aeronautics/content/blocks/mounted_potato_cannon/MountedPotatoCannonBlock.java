@@ -89,7 +89,7 @@ public class MountedPotatoCannonBlock extends DirectionalAxisKineticBlock implem
 			}
 		}
 
-		return super.useItemOn(heldItem, blockState, level, blockPos, player, interactionHand, blockHitResult);
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

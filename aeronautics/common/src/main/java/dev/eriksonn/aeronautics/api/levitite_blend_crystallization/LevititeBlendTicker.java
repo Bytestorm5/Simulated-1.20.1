@@ -23,7 +23,7 @@ public class LevititeBlendTicker {
 	// Constructor used for loading this levitite blend ticker
 	public LevititeBlendTicker(final CompoundTag toDeserialize, final Level level) {
 		this.level = level;
-		this.pos = NbtUtils.readBlockPos(toDeserialize, "pos").get();
+		this.pos = NbtUtils.readBlockPos(toDeserialize.getCompound("pos"));
 		this.context = AeroRegistries.LEVITITE_CRYSTAL_PROPAGATION_CONTEXT.asVanillaRegistry().get(new ResourceLocation(toDeserialize.getString("context")));
 
 		this.deserialize(toDeserialize);

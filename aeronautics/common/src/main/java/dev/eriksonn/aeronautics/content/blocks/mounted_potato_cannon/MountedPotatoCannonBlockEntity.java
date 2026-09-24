@@ -21,6 +21,7 @@ import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.nbt.NBTHelper;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +39,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
@@ -232,7 +232,7 @@ public class MountedPotatoCannonBlockEntity extends KineticBlockEntity implement
 				end,
 				ClipContext.Block.COLLIDER,
 				ClipContext.Fluid.NONE,
-				CollisionContext.empty()
+				(Entity) null
 		));
 		final Vector3dc projected = Sable.HELPER.projectOutOfSubLevel(this.getLevel(), JOMLConversion.toJOML(ray.getLocation()));
 		this.blocked = ray.getType() != HitResult.Type.MISS;
@@ -306,7 +306,10 @@ public class MountedPotatoCannonBlockEntity extends KineticBlockEntity implement
 		super.read(compound, clientPacket);
 
 		this.inventory.read(compound.getCompound("inventory"));
-		this.inventory.updateCachedType(this.inventory.slot.getStack());
+		// 1.20.1: read has no registry lookup, the level isn't set yet during the initial load (initialize() updates it then)
+		if (this.level != null) {
+			this.inventory.updateCachedType(this.level.registryAccess(), this.inventory.slot.getStack());
+		}
 		if (clientPacket && compound.getBoolean("NeedsUpdate")) {
 			this.resetAndUpdate();
 		}

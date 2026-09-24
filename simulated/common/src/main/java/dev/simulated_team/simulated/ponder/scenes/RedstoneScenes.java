@@ -21,7 +21,6 @@ import net.createmod.ponder.api.scene.*;
 import net.createmod.ponder.foundation.PonderScene;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -289,10 +288,9 @@ public class RedstoneScenes {
         scene.addInstruction((final PonderScene subScene) -> {
             final PonderLevel level = subScene.getWorld();
             final BlockEntity blockEntity = level.getBlockEntity(modulatingLink);
-            final RegistryAccess registryAccess = level.registryAccess();
-            final CompoundTag tag = blockEntity.saveWithFullMetadata(registryAccess);
-            tag.put(FrequencyLast, iron.save(registryAccess, new CompoundTag()));
-            blockEntity.loadWithComponents(tag, registryAccess);
+            final CompoundTag tag = blockEntity.saveWithFullMetadata();
+            tag.put(FrequencyLast, iron.save(new CompoundTag()));
+            blockEntity.load(tag);
         });
     }
 

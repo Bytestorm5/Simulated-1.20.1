@@ -35,7 +35,7 @@ public abstract class BlockBreakingTileEntityMixin extends SmartBlockEntity impl
         this.simulated$attachedGroup = distributor;
     }
 
-    @Inject(method = "lambda$onBlockBroken$0", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "lambda$onBlockBroken$0", at = @At("HEAD"), cancellable = true, remap = false)
     private void checkIfDepositable(final Vec3 vec, final ItemStack stack, final CallbackInfo ci) {
         if (this.depositItemStack(this.worldPosition, stack).isEmpty()) {
             ci.cancel();

@@ -518,7 +518,7 @@ public class HotAirScenes {
         scene.idle(7);
         scene.world().modifyBlocks(util.select().layers(5, 4),
                 state -> {
-                    if (state.is(AeroBlocks.WHITE_ENVELOPE_BLOCK)) {
+                    if (AeroBlocks.WHITE_ENVELOPE_BLOCK.has(state)) {
                         return AeroBlocks.DYED_ENVELOPE_BLOCKS.get(DyeColor.BLUE).getDefaultState();
                     }
                     return state;

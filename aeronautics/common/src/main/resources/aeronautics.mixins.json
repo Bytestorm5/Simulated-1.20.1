@@ -8,6 +8,7 @@
   "mixins": [
     "balloon.SimAssemblyHelperMixin",
     "balloon.SubLevelAssemblyHelperMixin",
+    "flammable.FireBlockAccessor",
     "flywheel_block_entity.FlywheelBlockEntityMixin",
     "item_converter.ItemEntityMixin",
     "levitite.BlockMixin",

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(HarvesterTicker.class)
 public class SableHarvesterTickerMixin {
 
-    @WrapMethod(method = "dropItem")
+    @WrapMethod(method = "dropItem", remap = false)
     private static void deferDrop(final Level level, ItemStack dropped, final BlockPos sable$selfPos, final Operation<Void> original) {
         final BlockEntity be = level.getBlockEntity(sable$selfPos);
         if (be instanceof final BlockHarvester bh) {

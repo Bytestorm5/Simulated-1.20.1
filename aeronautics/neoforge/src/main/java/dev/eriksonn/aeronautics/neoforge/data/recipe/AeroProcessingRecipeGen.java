@@ -1,7 +1,6 @@
 package dev.eriksonn.aeronautics.neoforge.data.recipe;
 
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -13,12 +12,12 @@ import java.util.concurrent.CompletableFuture;
 public class AeroProcessingRecipeGen {
 	protected static List<BaseRecipeProvider> GENERATORS = new ArrayList<>();
 
-	public static DataProvider registerAll(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-		GENERATORS.add(new AeroMixingRecipes(output, lookupProvider));
-		GENERATORS.add(new AeroCrushingRecipes(output, lookupProvider));
-		GENERATORS.add(new AeroMechanicalCraftingRecipes(output, lookupProvider));
-		GENERATORS.add(new AeroWashingRecipes(output, lookupProvider));
-		GENERATORS.add(new AeroDeployingRecipes(output, lookupProvider));
+	public static DataProvider registerAll(PackOutput output) {
+		GENERATORS.add(new AeroMixingRecipes(output));
+		GENERATORS.add(new AeroCrushingRecipes(output));
+		GENERATORS.add(new AeroMechanicalCraftingRecipes(output));
+		GENERATORS.add(new AeroWashingRecipes(output));
+		GENERATORS.add(new AeroDeployingRecipes(output));
 
 		return new DataProvider() {
 			@Override

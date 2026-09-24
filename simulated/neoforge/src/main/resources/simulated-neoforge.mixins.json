@@ -7,7 +7,7 @@
   "client": [
     "diagram.VisualizationManagerImplMixin",
     "diagram.VisualManagerImplMixin",
-    "tooltip_flag.ClientTooltipFlagMixin"
+    "use_item_on_block.MultiPlayerGameModeMixin"
   ],
   "mixins": [
     "harvesters.BlockBreakingTileEntityMixin",

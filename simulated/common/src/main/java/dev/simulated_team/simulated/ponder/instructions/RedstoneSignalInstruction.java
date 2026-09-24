@@ -36,9 +36,9 @@ public class RedstoneSignalInstruction extends WorldModifyInstruction {
             }
             if (BE instanceof final AnalogLeverBlockEntity lever) {
                 final CompoundTag tag = new CompoundTag();
-                lever.write(tag, level.registryAccess(), false);
+                lever.write(tag, false);
                 tag.putInt("State", this.signal);
-                lever.readClient(tag, level.registryAccess());
+                lever.readClient(tag);
             }
             final BlockState state = level.getBlockState(pos);
             BlockState newState = null;

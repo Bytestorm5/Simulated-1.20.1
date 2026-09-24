@@ -7,23 +7,25 @@ import dev.eriksonn.aeronautics.index.AeroLevititeBlendPropagationContexts;
 import dev.eriksonn.aeronautics.index.AeroTags;
 import dev.eriksonn.aeronautics.util.CatalyzerHelper;
 import foundry.veil.api.network.handler.ServerPacketContext;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import foundry.veil.backport.network.RegistryFriendlyByteBuf;
+import foundry.veil.backport.network.codec.ByteBufCodecs;
 import foundry.veil.backport.network.codec.StreamCodec;
 import foundry.veil.backport.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 import foundry.veil.backport.network.codec.VanillaStreamCodecs;
 public record LevititeCatalystCrystallizationPacket(BlockPos pos, InteractionHand hand) implements CustomPacketPayload {
 	public static final Type<LevititeCatalystCrystallizationPacket> TYPE = new Type<>(Aeronautics.path("levitite_blend_crystallize"));
 
+	private static final StreamCodec<ByteBuf, InteractionHand> HAND_CODEC = ByteBufCodecs.idMapper(i -> InteractionHand.values()[i], InteractionHand::ordinal);
+
 	public static final StreamCodec<RegistryFriendlyByteBuf, LevititeCatalystCrystallizationPacket> STREAM_CODEC = StreamCodec.composite(
 			VanillaStreamCodecs.BLOCK_POS, LevititeCatalystCrystallizationPacket::pos,
-			CatnipStreamCodecs.HAND, LevititeCatalystCrystallizationPacket::hand,
+			HAND_CODEC, LevititeCatalystCrystallizationPacket::hand,
 			LevititeCatalystCrystallizationPacket::new);
 
 	@Override
@@ -42,7 +44,7 @@ public record LevititeCatalystCrystallizationPacket(BlockPos pos, InteractionHan
 
 		if (!item.is(AeroTags.ItemTags.LEVITITE_CATALYZER_NO_CONSUME)) {
 			if (item.isDamageableItem()) {
-				item.hurtAndBreak(1, player, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+				item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(this.hand));
 			} else if (item.isStackable() && !context.player().getAbilities().instabuild) {
 				item.shrink(1);
 			}

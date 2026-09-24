@@ -5,16 +5,14 @@ import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.index.AeroBlocks;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
-import java.util.concurrent.CompletableFuture;
 
 public class AeroMechanicalCraftingRecipes extends MechanicalCraftingRecipeGen {
-	public AeroMechanicalCraftingRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-		super(output, registries, Aeronautics.MOD_ID);
+	public AeroMechanicalCraftingRecipes(PackOutput output) {
+		super(output, Aeronautics.MOD_ID);
 	}
 
 	private final GeneratedRecipe MOUNTED_POTATO_CANNON = this.create(AeroBlocks.MOUNTED_POTATO_CANNON::get)

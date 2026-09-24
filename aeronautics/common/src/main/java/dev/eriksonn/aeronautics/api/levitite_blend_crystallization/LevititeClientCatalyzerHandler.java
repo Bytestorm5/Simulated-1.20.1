@@ -8,7 +8,6 @@ import foundry.veil.api.network.VeilPacketManager;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -25,7 +24,7 @@ public class LevititeClientCatalyzerHandler implements InteractCallback {
     @NotNull
     private static ClipContext gatherContext(final Player player) {
         final Vec3 origin = player.getEyePosition();
-        final Vec3 target = getTraceTarget(player, player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE), origin);
+        final Vec3 target = getTraceTarget(player, player.getBlockReach(), origin);
         return new ClipContext(
                 origin,
                 target,

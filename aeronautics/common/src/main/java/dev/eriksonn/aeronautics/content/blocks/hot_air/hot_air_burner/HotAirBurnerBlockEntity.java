@@ -133,7 +133,7 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
 
     @Override
     public AABB getRenderBoundingBox() {
-        return AABB.encapsulatingFullBlocks(this.getBlockPos(), this.getBlockPos().above());
+        return new AABB(this.getBlockPos()).minmax(new AABB(this.getBlockPos().above()));
     }
 
     public void tick() {

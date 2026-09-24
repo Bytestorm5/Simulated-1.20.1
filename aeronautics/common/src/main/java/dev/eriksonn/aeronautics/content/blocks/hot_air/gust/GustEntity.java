@@ -20,6 +20,8 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
@@ -131,6 +133,12 @@ public class GustEntity extends Entity implements IEntityAdditionalSpawnData {
 
             this.spawnedInitialBurst = true;
         }
+    }
+
+    @Override
+    protected float getEyeHeight(final @NotNull Pose pose, final @NotNull EntityDimensions dimensions) {
+        // 1.20.1: EntityType.Builder has no eyeHeight, so the eye height of 0 is set here
+        return 0.0f;
     }
 
     @Override

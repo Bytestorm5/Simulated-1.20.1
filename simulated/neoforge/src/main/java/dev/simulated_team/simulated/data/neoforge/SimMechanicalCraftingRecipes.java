@@ -7,14 +7,12 @@ import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimBlocks;
 import dev.simulated_team.simulated.index.SimItems;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
-import java.util.concurrent.CompletableFuture;
 
 public class SimMechanicalCraftingRecipes extends MechanicalCraftingRecipeGen {
     private final GeneratedRecipe LINKED_TYPEWRITER = this.create(SimBlocks.LINKED_TYPEWRITER::get)
@@ -39,7 +37,7 @@ public class SimMechanicalCraftingRecipes extends MechanicalCraftingRecipeGen {
                     .key('R', SimItems.ROPE_COUPLING)
                     .key('A', AllItems.ANDESITE_ALLOY)
                     .key('M', AllItems.PRECISION_MECHANISM)
-                    .key('P', Tags.Items.SLIME_BALLS)
+                    .key('P', Tags.Items.SLIMEBALLS)
                     .key('F', AllBlocks.FLUID_PIPE)
             );
 

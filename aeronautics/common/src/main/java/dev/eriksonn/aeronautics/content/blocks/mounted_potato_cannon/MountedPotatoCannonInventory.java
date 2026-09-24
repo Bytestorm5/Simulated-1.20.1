@@ -7,6 +7,7 @@ import dev.simulated_team.simulated.multiloader.inventory.ContainerSlot;
 import dev.simulated_team.simulated.multiloader.inventory.ItemInfoWrapper;
 import dev.simulated_team.simulated.multiloader.inventory.SingleSlotContainer;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ public class MountedPotatoCannonInventory extends SingleSlotContainer {
 		}
 	}
 
-	public void updateCachedType(final ItemStack itemStack) {
+	public void updateCachedType(final RegistryAccess registries, final ItemStack itemStack) {
 		// why does PotatoCannonProjectileType.getTypeForItem() requires RegistryAccess specifically
 		this.cachedProjectileType = registries.lookupOrThrow(CreateRegistries.POTATO_PROJECTILE_TYPE)
 				.listElements()

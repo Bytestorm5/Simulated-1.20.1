@@ -21,7 +21,6 @@ public class AeroEntityTypes {
 										.clientTrackingRange(20)
 										.updateInterval(40)
 										.sized(1, 1)
-										.eyeHeight(0)
 										.fireImmune()))
 					.register();
 
@@ -31,7 +30,6 @@ public class AeroEntityTypes {
                     .transform((builder) -> builder.properties(b -> b
                             .clientTrackingRange(20)
                             .sized(1, 1)
-                            .eyeHeight(0)
                             .fireImmune()))
                     .register();
 

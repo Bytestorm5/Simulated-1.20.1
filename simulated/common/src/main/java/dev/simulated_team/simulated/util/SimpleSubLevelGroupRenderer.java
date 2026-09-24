@@ -5,12 +5,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Axis;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.entity.EntitySubLevelUtil;
 import dev.ryanhcode.sable.companion.math.BoundingBox3d;
 import dev.ryanhcode.sable.mixinhelpers.sublevel_render.vanilla.VanillaSubLevelBlockEntityRenderer;
 import dev.ryanhcode.sable.mixinterface.BlockEntityRenderDispatcherExtension;
+import dev.ryanhcode.sable.render.SableShaderUniforms;
 import dev.ryanhcode.sable.neoforge.mixinhelper.compatibility.flywheel.SubLevelEmbedding;
 import dev.ryanhcode.sable.sublevel.ClientSubLevel;
 import dev.ryanhcode.sable.sublevel.SubLevel;
@@ -27,6 +29,7 @@ import foundry.veil.api.client.render.framebuffer.AdvancedFbo;
 import foundry.veil.impl.client.render.perspective.LevelPerspectiveCamera;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.*;
@@ -101,7 +104,7 @@ public class SimpleSubLevelGroupRenderer {
         CAMERA.setup(cameraPosition, null, minecraft.level, orientation, 0f);
 
         final PoseStack poseStack = new PoseStack();
-        poseStack.mulPose(TRANSFORM.set(modelView));
+        poseStack.mulPoseMatrix(TRANSFORM.set(modelView));
         poseStack.mulPose(CAMERA.rotation());
 
         BACKUP_PROJECTION.set(RenderSystem.getProjectionMatrix());
@@ -110,24 +113,26 @@ public class SimpleSubLevelGroupRenderer {
         final CameraMatrices matrices = VeilRenderSystem.renderer().getCameraMatrices();
         matrices.backup(BACKUP_CAMERA_MATRICES);
 
-        final Matrix4fStack matrix4fstack = RenderSystem.getModelViewStack();
-        matrix4fstack.pushMatrix();
-        matrix4fstack.identity();
-        matrix4fstack.mul(poseStack.last().pose());
+        final PoseStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushPose();
+        modelViewStack.setIdentity();
+        modelViewStack.mulPoseMatrix(poseStack.last().pose());
         RenderSystem.applyModelViewMatrix();
 
         final AdvancedFbo drawFbo = VeilRenderSystem.renderer().getDynamicBufferManger().getDynamicFbo(fbo);
         drawFbo.bind(true);
 
         try {
-            Lighting.setupNetherLevel();
+            // 1.20.1: light directions are given in the space of the vertex normals, which here is world space
+            // (the camera rotation lives in the model-view matrix), matching 1.21's matrix-less setup
+            Lighting.setupNetherLevel(new Matrix4f());
             ((LightTextureExtension) lightTexture).simulated$makeDiagramLightTexture(0.65f);
 
             SimpleSubLevelGroupRenderer.RENDERING_SIMPLE = true;
             for (final RenderType layer : RenderType.chunkBufferLayers()) {
                 layer.setupRenderState();
                 final ShaderInstance shader = RenderSystem.getShader();
-                shader.setDefaultUniforms(VertexFormat.Mode.QUADS, RenderSystem.getModelViewMatrix(), projectionMat, minecraft.getWindow());
+                SableShaderUniforms.setDefaultUniforms(shader, VertexFormat.Mode.QUADS, RenderSystem.getModelViewMatrix(), projectionMat, minecraft.getWindow());
                 shader.apply();
                 SubLevelRenderDispatcher.get().renderSectionLayer(subLevels, layer, shader, cameraPosition.x, cameraPosition.y, cameraPosition.z, RenderSystem.getModelViewMatrix(), projectionMat, partialTicks);
 
@@ -180,7 +185,7 @@ public class SimpleSubLevelGroupRenderer {
 
                     final PoseStack beMatrices = new PoseStack();
                     beMatrices.pushPose();
-                    beMatrices.mulPose(transformation);
+                    beMatrices.mulPoseMatrix(transformation);
                     beRenderer.renderBlockEntities(embeddingInfo.blockEntities(), beMatrices, partialTicks, -chunkOffset.x, -chunkOffset.y, -chunkOffset.z);
                     beMatrices.popPose();
 
@@ -196,7 +201,7 @@ public class SimpleSubLevelGroupRenderer {
 
                 final PoseStack entityPoseStack = new PoseStack();
                 entityPoseStack.pushPose();
-                entityPoseStack.mulPose(TRANSFORM.set(modelView));
+                entityPoseStack.mulPoseMatrix(TRANSFORM.set(modelView));
 
                 for (final Entity entity : entities) {
                     if (Sable.HELPER.getContaining(entity) != entitySubLevel && Sable.HELPER.getTrackingOrVehicleSubLevel(entity) != entitySubLevel) {
@@ -207,7 +212,8 @@ public class SimpleSubLevelGroupRenderer {
                         continue;
                     }
 
-                    final float partialTick = minecraft.getTimer().getGameTimeDeltaPartialTick(!level.tickRateManager().isEntityFrozen(entity));
+                    // 1.20.1: no tick rate manager, entities are never frozen
+                    final float partialTick = minecraft.getFrameTime();
 
                     minecraft.levelRenderer.renderEntity(entity, cameraPosition.x, cameraPosition.y, cameraPosition.z, partialTick, entityPoseStack, bufferSource);
                 }
@@ -220,15 +226,20 @@ public class SimpleSubLevelGroupRenderer {
 
             bufferSource.endBatch();
         } finally {
+            // 1.20.1: level lighting is set up relative to the camera view rotation (as GameRenderer#renderLevel does)
+            final Camera mainCamera = gameRenderer.getMainCamera();
+            final Matrix4f levelView = new Matrix4f()
+                    .rotate(Axis.XP.rotationDegrees(mainCamera.getXRot()))
+                    .rotate(Axis.YP.rotationDegrees(mainCamera.getYRot() + 180.0F));
             if (level.effects().constantAmbientLight()) {
-                Lighting.setupNetherLevel();
+                Lighting.setupNetherLevel(levelView);
             } else {
-                Lighting.setupLevel();
+                Lighting.setupLevel(levelView);
             }
 
             matrices.restore(BACKUP_CAMERA_MATRICES);
 
-            matrix4fstack.popMatrix();
+            modelViewStack.popPose();
             RenderSystem.applyModelViewMatrix();
 
             gameRenderer.resetProjectionMatrix(BACKUP_PROJECTION);

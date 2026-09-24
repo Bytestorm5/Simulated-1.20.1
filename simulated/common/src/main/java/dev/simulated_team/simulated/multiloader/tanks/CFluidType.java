@@ -1,36 +1,39 @@
 package dev.simulated_team.simulated.multiloader.tanks;
 
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.DataResult;
-import dev.simulated_team.simulated.Simulated;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * A loader-independent representation of a fluid
+ *
+ * @param data The fluid's NBT data, or null if it has none (1.20.1: fluids carry NBT instead of data components)
  */
-public record CFluidType(Fluid fluid, DataComponentPatch data) {
+public record CFluidType(Fluid fluid, @Nullable CompoundTag data) {
+    public CFluidType {
+        // an empty tag means the same as no tag, like an empty component patch did
+        if (data != null && data.isEmpty()) {
+            data = null;
+        }
+    }
+
     public boolean isBlank() {
         return this.equals(BLANK);
     }
 
-    public static final CFluidType BLANK = new CFluidType(Fluids.EMPTY, DataComponentPatch.EMPTY);
+    public static final CFluidType BLANK = new CFluidType(Fluids.EMPTY, null);
 
     public CompoundTag write() {
         final CompoundTag tag = new CompoundTag();
         tag.putString("Fluid", BuiltInRegistries.FLUID.getKey(this.fluid).toString());
 
-        final DataResult<Tag> result = DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, this.data);
-        if (result.isError()) {
-            Simulated.LOGGER.warn(result.error().get().message());
-        } else {
-            tag.put("data", result.result().get());
+        if (this.data != null) {
+            tag.put("data", this.data.copy());
         }
 
         return tag;
@@ -38,14 +41,9 @@ public record CFluidType(Fluid fluid, DataComponentPatch data) {
 
     public static CFluidType read(final CompoundTag tag) {
         final Fluid fluid = BuiltInRegistries.FLUID.get(new ResourceLocation(tag.getString("Fluid")));
-        DataComponentPatch data = DataComponentPatch.EMPTY;
+        CompoundTag data = null;
         if (tag.contains("data")) {
-            final DataResult<Pair<DataComponentPatch, Tag>> result = DataComponentPatch.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("data"));
-            if (result.isError()) {
-                Simulated.LOGGER.warn(result.error().get().message());
-            } else {
-                data = result.result().get().get(0);
-            }
+            data = tag.getCompound("data").copy();
         }
 
         return new CFluidType(fluid, data);
@@ -59,7 +57,7 @@ public record CFluidType(Fluid fluid, DataComponentPatch data) {
 
         if (obj instanceof final CFluidType other) {
             // both haves tag, or both no haves tag
-            return this.fluid.isSame(other.fluid()) && this.data.equals(other.data());
+            return this.fluid.isSame(other.fluid()) && Objects.equals(this.data, other.data());
         }
         return false;
     }

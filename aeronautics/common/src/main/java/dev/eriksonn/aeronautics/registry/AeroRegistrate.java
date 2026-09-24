@@ -12,7 +12,7 @@ public class AeroRegistrate extends SimulatedRegistrate {
         super(initialSection, modId);
     }
 
-    public <T extends LiftingGasType> RegistryEntry<LiftingGasType, T> liftingGasType(final String name, final NonNullSupplier<T> type) {
+    public <T extends LiftingGasType> RegistryEntry<T> liftingGasType(final String name, final NonNullSupplier<T> type) {
         return this.simple(this.self(), name, AeroRegistries.Keys.LIFTING_GAS_TYPE, type);
     }
 }

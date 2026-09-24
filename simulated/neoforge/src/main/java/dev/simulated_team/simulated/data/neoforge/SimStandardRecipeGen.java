@@ -2,19 +2,18 @@ package dev.simulated_team.simulated.data.neoforge;
 
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
 import dev.simulated_team.simulated.Simulated;
-import net.minecraft.core.HolderLookup;
+import dev.simulated_team.simulated.index.neoforge.SimNeoForgeRecipeTypes;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class SimStandardRecipeGen extends BaseRecipeProvider {
 
-    GeneratedRecipe PORTABLE_ENGINE_DYEING = this.createSpecial(PortableEngineDyeingRecipe::new, "crafting", "portable_engine_dyeing");
+    GeneratedRecipe PORTABLE_ENGINE_DYEING = this.createSpecial(SimNeoForgeRecipeTypes.PORTABLE_ENGINE_DYEING::getSerializer, "crafting", "portable_engine_dyeing");
 
     public SimStandardRecipeGen(final PackOutput output) {
         super(output, Simulated.MOD_ID);
@@ -25,11 +24,12 @@ public class SimStandardRecipeGen extends BaseRecipeProvider {
         return "Simulated's Surprisingly Standard Recipes";
     }
 
-    private GeneratedRecipe createSpecial(final Function<CraftingBookCategory, Recipe<?>> builder, final String recipeType, final String path) {
+    // 1.20.1: special recipes are built from their serializer instead of a recipe factory
+    private GeneratedRecipe createSpecial(final Supplier<RecipeSerializer<? extends CraftingRecipe>> serializer, final String recipeType, final String path) {
         final ResourceLocation location = Simulated.path(recipeType + "/" + path);
 
         return this.register(consumer -> {
-            final SpecialRecipeBuilder b = SpecialRecipeBuilder.special(builder);
+            final SpecialRecipeBuilder b = SpecialRecipeBuilder.special(serializer.get());
             b.save(consumer, location.toString());
         });
     }

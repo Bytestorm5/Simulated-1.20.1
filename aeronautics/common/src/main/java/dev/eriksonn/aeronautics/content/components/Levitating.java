@@ -12,7 +12,7 @@ public record Levitating(Float dragFraction, Optional<ParticleOptions> particle)
 	public static final Codec<Levitating> CODEC = RecordCodecBuilder.create(
 			i -> i.group(
 							Codec.FLOAT.optionalFieldOf("drag_fraction", 0.93f).forGetter(Levitating::dragFraction),
-							ParticleTypes.CODEC.lenientOptionalFieldOf("particle").forGetter(Levitating::particle))
+							ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(Levitating::particle))
 					.apply(i, Levitating::new));
 
 	public static final Levitating DEFAULT = new Levitating(0.93f, Optional.empty());

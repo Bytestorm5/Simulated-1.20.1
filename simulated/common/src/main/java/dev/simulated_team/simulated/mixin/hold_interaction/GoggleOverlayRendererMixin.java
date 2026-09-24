@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GoggleOverlayRenderer.class)
 public class GoggleOverlayRendererMixin {
-    @Shadow public static int hoverTicks;
+    @Shadow(remap = false) public static int hoverTicks;
 
     @Inject(method = "renderOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", shift = At.Shift.BEFORE))
     private static void decrementRenderTicks(final CallbackInfo ci) {

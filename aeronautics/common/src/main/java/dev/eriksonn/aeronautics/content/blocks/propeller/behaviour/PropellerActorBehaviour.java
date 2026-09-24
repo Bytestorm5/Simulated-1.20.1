@@ -34,7 +34,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
@@ -201,7 +200,7 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
                             mojEnd,
                             ClipContext.Block.COLLIDER,
                             ClipContext.Fluid.ANY,
-                            CollisionContext.empty()
+                            (Entity) null
                     );
 
                     if (this.getWorld().clip(ctx).getType() == HitResult.Type.MISS) {
@@ -323,7 +322,8 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
             if (other != null)
                 other.logicalPose().orientation().transformInverse(particleVelocity);
 
-            this.getWorld().addParticle(ParticleTypes.DUST_PLUME, hitPos.x, hitPos.y, hitPos.z, particleVelocity.x, particleVelocity.y, particleVelocity.z);
+            // 1.20.1: dust plume particles don't exist yet, poof is the closest velocity driven dust cloud
+            this.getWorld().addParticle(ParticleTypes.POOF, hitPos.x, hitPos.y, hitPos.z, particleVelocity.x, particleVelocity.y, particleVelocity.z);
             if (hitState.is(BlockTags.MINEABLE_WITH_SHOVEL)) {
                 this.getWorld().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, hitState), hitPos.x, hitPos.y, hitPos.z, particleVelocity.x, particleVelocity.y, particleVelocity.z);
             } else if (fluid.isSame(Fluids.WATER)) {

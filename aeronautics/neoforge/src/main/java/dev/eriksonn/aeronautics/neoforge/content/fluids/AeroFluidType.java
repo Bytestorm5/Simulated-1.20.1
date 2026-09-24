@@ -13,9 +13,10 @@ import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class AeroFluidType extends FluidType implements IClientFluidTypeExtensions {
+public abstract class AeroFluidType extends FluidType {
 	private Vector3f fogColor;
 	private Supplier<Float> fogDistance;
 	private final ResourceLocation stillTexture;
@@ -40,32 +41,40 @@ public abstract class AeroFluidType extends FluidType implements IClientFluidTyp
 		AeroFluidType create(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture);
 	}
 
+	/**
+	 * 1.20.1: client fluid type extensions are supplied here instead of through RegisterClientExtensionsEvent
+	 */
 	@Override
-	public @NotNull ResourceLocation getStillTexture() {
-		return this.stillTexture;
-	}
+	public void initializeClient(final Consumer<IClientFluidTypeExtensions> consumer) {
+		consumer.accept(new IClientFluidTypeExtensions() {
+			@Override
+			public @NotNull ResourceLocation getStillTexture() {
+				return AeroFluidType.this.stillTexture;
+			}
 
-	@Override
-	public @NotNull ResourceLocation getFlowingTexture() {
-		return this.flowingTexture;
-	}
+			@Override
+			public @NotNull ResourceLocation getFlowingTexture() {
+				return AeroFluidType.this.flowingTexture;
+			}
 
-	@Override
-	public Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-		Vector3f customFogColor = this.getCustomFogColor();
-		return customFogColor == null ? fluidFogColor : customFogColor;
-	}
+			@Override
+			public @NotNull Vector3f modifyFogColor(final Camera camera, final float partialTick, final ClientLevel level, final int renderDistance, final float darkenWorldAmount, final Vector3f fluidFogColor) {
+				final Vector3f customFogColor = AeroFluidType.this.getCustomFogColor();
+				return customFogColor == null ? fluidFogColor : customFogColor;
+			}
 
-	@Override
-	public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, FogShape shape) {
-		IClientFluidTypeExtensions.super.modifyFogRender(camera, mode, renderDistance, partialTick, nearDistance, farDistance, shape);
-		float modifier = this.getFogDistanceModifier();
-		float baseWaterFog = 96.0f;
-		if(modifier != 1.0f) {
-			RenderSystem.setShaderFogShape(FogShape.CYLINDER);
-			RenderSystem.setShaderFogStart(-8);
-			RenderSystem.setShaderFogEnd(baseWaterFog * modifier);
-		}
+			@Override
+			public void modifyFogRender(final Camera camera, final FogRenderer.FogMode mode, final float renderDistance, final float partialTick, final float nearDistance, final float farDistance, final FogShape shape) {
+				IClientFluidTypeExtensions.super.modifyFogRender(camera, mode, renderDistance, partialTick, nearDistance, farDistance, shape);
+				final float modifier = AeroFluidType.this.getFogDistanceModifier();
+				final float baseWaterFog = 96.0f;
+				if (modifier != 1.0f) {
+					RenderSystem.setShaderFogShape(FogShape.CYLINDER);
+					RenderSystem.setShaderFogStart(-8);
+					RenderSystem.setShaderFogEnd(baseWaterFog * modifier);
+				}
+			}
+		});
 	}
 
 	public Vector3f getCustomFogColor() {

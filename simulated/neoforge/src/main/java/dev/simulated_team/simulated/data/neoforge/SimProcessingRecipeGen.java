@@ -2,7 +2,6 @@ package dev.simulated_team.simulated.data.neoforge;
 
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
 import dev.simulated_team.simulated.Simulated;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;

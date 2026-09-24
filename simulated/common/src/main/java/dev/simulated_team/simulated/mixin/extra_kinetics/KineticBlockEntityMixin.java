@@ -29,16 +29,16 @@ public abstract class KineticBlockEntityMixin extends SmartBlockEntity implement
         super(type, pos, state);
     }
 
-    @Shadow
+    @Shadow(remap = false)
     public abstract boolean hasSource();
 
-    @Shadow
+    @Shadow(remap = false)
     protected float speed;
 
-    @Shadow
+    @Shadow(remap = false)
     public abstract void initialize();
 
-    @Shadow private int validationCountdown;
+    @Shadow(remap = false) private int validationCountdown;
     @Unique
     private boolean simulated$extraKineticsConnected = false;
 
