@@ -213,3 +213,15 @@ Where 1.20.1 can't do exactly what 1.21 does, the code uses the closest equivale
 - **Sable config reload:** Sable builds before `af027cc` reload shaders from Forge's config watcher thread. When
   `sable-client.toml` is created or corrected, this logs a harmless "No GLCapabilities instance set" error.
 - **`simulated/neoforge/src/generated` is stale:** it's leftover upstream output that no build uses.
+- **Create: Power Grid 0.6.2 (1.20.1) has no Sable support.** Its 1.21.1 builds ship a Sable integration, but the
+  1.20.1 build doesn't have one. Tested in a production client with Power Grid 0.6.2 and Create Big Cannons 5.11.4:
+  - Assembling a contraption breaks any hanging wire whose connectors are inside it, and the wire drops as an item.
+    The 1.21.1 build moves such wires with the blocks.
+  - A wire made between two connectors on a contraption exists on the server, but it's invisible until its chunk
+    reloads. Sable moves the entity out to world space while its endpoints stay in plot space.
+  - A connector in the world can't be wired to one on a contraption: Power Grid measures the plot-space distance,
+    about 29 million blocks.
+  - Death, respawn, save and reload worked normally with both mods loaded (the save took 0.5 s). The reported
+    memory runaway while wiring on a contraption hasn't been reproduced yet.
+
+  Create Big Cannons 5.11.4 (1.20.1) also lacks the Sable/Simulated compat its 1.21.1 builds ship.
