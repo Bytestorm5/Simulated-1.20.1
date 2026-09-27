@@ -156,7 +156,9 @@ pluginManager.withPlugin('net.neoforged.moddev.legacyforge') {
         doFirst {
             classpath = files(productionClasspath())
             def extra = project.hasProperty('alsoCheck') ? project.property('alsoCheck').toString().split(',').toList() : []
-            args = [jarFile().path] + extra
+            // Dev -> intermediate method names, to find mixin methods meant as overrides that weren't remapped
+            def mappings = layout.buildDirectory.file('moddev/artifacts/namedToIntermediate.tsrg').get().asFile
+            args = (mappings.exists() ? ['--mappings', mappings.path] : []) + [jarFile().path] + extra
         }
     }
 }

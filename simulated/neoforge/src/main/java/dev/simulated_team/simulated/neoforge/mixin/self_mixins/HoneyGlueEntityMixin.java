@@ -6,19 +6,23 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.network.NetworkHooks;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.network.NetworkHooks;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 
+/**
+ * 1.20.1: extends {@link Entity} so that {@link #getAddEntityPacket()} is a real override. As a plain mixin method it
+ * kept its dev name in the reobfuscated jar while {@code Entity#getAddEntityPacket} is {@code m_5654_}, so in
+ * production it overrode nothing, Forge's spawn packet was never used and the spawn data never reached clients.
+ */
 @Mixin(HoneyGlueEntity.class)
-public abstract class HoneyGlueEntityMixin implements IEntityAdditionalSpawnData {
+public abstract class HoneyGlueEntityMixin extends Entity implements IEntityAdditionalSpawnData {
 
-    @Shadow
-    public abstract void addAdditionalSaveData(CompoundTag tag);
-
-    @Shadow
-    public abstract void readAdditionalSaveData(CompoundTag tag);
+    private HoneyGlueEntityMixin(final EntityType<?> type, final Level level) {
+        super(type, level);
+    }
 
     @Override
     public void writeSpawnData(final FriendlyByteBuf buf) {
@@ -35,7 +39,8 @@ public abstract class HoneyGlueEntityMixin implements IEntityAdditionalSpawnData
     /**
      * 1.20.1: Forge only sends the additional spawn data with its own spawn packet
      */
+    @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket((Entity) (Object) this);
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }
